@@ -1,8 +1,8 @@
 import React from "react"
 import { GetServerSideProps } from "next"
 import ReactMarkdown from "react-markdown"
-import Layout from "@/Components/Layout"
-import { PostProps } from "@/Components/Post"
+import Layout from "@/components/Layout"
+import { PostProps } from "@/components/Post"
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = {
