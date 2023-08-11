@@ -18,6 +18,9 @@
     "react-markdown": "8.0.0"
   },
   "devDependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.4",
     "@types/node": "17.0.14",
     "@types/react": "17.0.38",
     "prisma": "^5.1.1",
