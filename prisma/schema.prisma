@@ -1,0 +1,27 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = "mysql://u634370218_admin:u6N3E$AOCCt@89.117.9.154:3306/u634370218_admin"
+}
+
+model Book {
+    id              String           @default(cuid()) @id
+    barcodeId       String
+    title           String
+    copies          Int
+    members         LibraryMember[]  
+}
+
+model LibraryMember {
+    id                String     @default(cuid()) @id
+    firstName         String
+    lastName          String 
+    email             String
+    phone             String?
+    checkedOut        Book[]    
+    history           String     
+}
