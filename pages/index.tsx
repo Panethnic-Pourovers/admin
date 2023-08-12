@@ -18,6 +18,7 @@ const Blog: React.FC = () => {
       </div>
       <style jsx>{`
         /* Your styling code */
+        
       `}</style>
     </Layout>
   )
