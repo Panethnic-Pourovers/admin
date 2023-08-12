@@ -4,7 +4,7 @@ import jsonData from '../dummyData.json';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'UUID', width: 200 },
-  { field: 'title', headerName: 'Book Title', width: 200, flex: 1 },
+  { field: 'title', headerName: 'Book Title', width: 400 },
   { field: 'author', headerName: 'Author', width: 200 },
   { field: 'genres', headerName: 'Genre(s)', width: 200 },
   { field: 'regions', headerName: 'Region(s)', width: 200 },
