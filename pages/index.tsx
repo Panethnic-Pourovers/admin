@@ -13,11 +13,10 @@ const Blog: React.FC = () => {
   return (
     <Layout>
       <div className="page">
-        <h1>Book Catalog</h1> {/* Only display the header */}
+        <h1>Book Catalog</h1>
         <Table />
       </div>
       <style jsx>{`
-        /* Your styling code */
       `}</style>
     </Layout>
   )
