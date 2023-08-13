@@ -1,19 +1,20 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+  MenuItem
+} from '@mui/material';
 
-const pages = ['Book Catalog', 'Members', 'Cafe Schedule', 'Staff'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { PAGES, SETTINGS } from 'src/utils/constants';
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -53,6 +54,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
+          {/* TODO: Change to use svg */}
           <img src="/images/panethnic-pourovers-logo-292x97.png" alt="Logo" style={{ maxWidth: '100%', height: 'auto' }}/>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -84,11 +86,11 @@ function Navbar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+            {PAGES.map((page) => (
+              <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">{page.name}</Typography>
+              </MenuItem>
+            ))}
             </Menu>
           </Box>
           <Typography
@@ -110,9 +112,9 @@ function Navbar() {
             <img src="/images/panethnic-pourovers-logo-292x97.png" alt="Logo"/>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }}}>
-            {pages.map((page) => (
+          {PAGES.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={handleCloseNavMenu}
                 sx={{ 
                   my: 2,
@@ -126,7 +128,7 @@ function Navbar() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>
@@ -153,7 +155,7 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {SETTINGS.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
