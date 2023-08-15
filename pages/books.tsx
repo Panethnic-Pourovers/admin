@@ -1,13 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import { GetStaticProps } from "next";
 import Layout from "@/components/Layout";
+
+import {BookCatalog} from "@/components/Table";
 
 const Catalog = () => {
   return (
     <Layout>
       <div className="page">
-        <h1>Book Catalog</h1>
-        <div className="post">{/* Content of each book post */}</div>
+        <h1>Book Catalog</h1> {/* Only display the header */}
+        <BookCatalog />
       </div>
       <style jsx>{`
         .post {

@@ -22,7 +22,7 @@ const Layout: React.FC<Props> = (props) => {
   const router = useRouter();
 
   const filterFunc = (item) =>{
-    return item[1].link === router.pathname.slice(1)
+    return item[1].link === router.pathname
   }
   
   const currentPage = () => {
@@ -38,8 +38,11 @@ const Layout: React.FC<Props> = (props) => {
     </Head>
     <div>
       <Header />
-      <h2>{currentPage()}</h2>
-      <div className="layout">{props.children}</div>
+      
+      <div className="layout">
+        <h1>{currentPage()}</h1>
+        {props.children}
+      </div>
       <style jsx global>{`
         html {
           box-sizing: border-box;

@@ -13,7 +13,7 @@ const columns: GridColDef[] = [
   { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
 ];
 
-export default function BookCatalog() {
+export function BookCatalog() {
   const rows = jsonData.data.response;
 
   return (
