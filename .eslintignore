@@ -1,0 +1,8 @@
+#ignore git
+**/.git
+
+#ignore non-es files
+*.php
+
+#ignore node_modules
+/node_modules
