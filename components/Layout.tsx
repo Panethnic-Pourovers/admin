@@ -15,8 +15,6 @@ type Props = {
   children: ReactNode;
 };
 
-
-
 const Layout: React.FC<Props> = (props) => {
 
   const router = useRouter();
