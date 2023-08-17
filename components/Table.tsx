@@ -1,9 +1,19 @@
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+// React import
+import React from 'react';
 
+// datagrid dependency imports
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-export default function Table(props) {
-  const {rows, columns} = props;
+// proptypes
+type tableProps = {
+  rows: Record<string, unknown>[],
+  columns: GridColDef[],
+  page?: number
+  pageSize?: number
+}
+
+export default function Table(props: tableProps) {
+  const {rows, columns, page, pageSize } = props;
 
   return (
     <div style={{ width: '100%' }}>
@@ -12,7 +22,7 @@ export default function Table(props) {
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 5, pageSize: 10 },
+            paginationModel: { page: page || 5, pageSize: pageSize || 10 },
           },
         }}
         pageSizeOptions={[5, 10]}
