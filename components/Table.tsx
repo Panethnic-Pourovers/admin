@@ -1,20 +1,9 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import jsonData from '../dummyData.json';
+import { DataGrid } from '@mui/x-data-grid';
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'UUID', width: 200 },
-  { field: 'title', headerName: 'Book Title', width: 200, flex: 1 },
-  { field: 'author', headerName: 'Author', width: 200 },
-  { field: 'genres', headerName: 'Genre(s)', width: 200 },
-  { field: 'regions', headerName: 'Region(s)', width: 200 },
-  { field: 'location', headerName: 'Location', width: 200 },
-  { field: 'member', headerName: 'Member', width: 200 },
-  { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
-];
 
-export function BookCatalogTable() {
-  const rows = jsonData.data.response;
+export default function Table(props) {
+  const {rows, columns} = props;
 
   return (
     <div style={{ width: '100%' }}>
