@@ -1,30 +1,35 @@
+// React imports
 import React, {useState} from "react";
-import { GetStaticProps } from "next";
-import Layout from "@/components/Layout";
 
-import {BookCatalog} from "@/components/Table";
+// MUI components
+import {Button} from '@mui/material'
+
+// custom components
+import Layout from "@/components/Layout";
+import {BookCatalogTable} from "@/components/Table";
+
+const addBookHandler = () => {}
+const checkInBookHandler = () => {}
+const checkOutBookHandler = () => {}
 
 const Catalog = () => {
   return (
     <Layout>
-      <div className="page">
-        <h1>Book Catalog</h1> {/* Only display the header */}
-        <BookCatalog />
+      <div id="bookCatalog" className="page bookCatalog">
+        <h1>Book Catalog</h1>
+        <div className="bookCatalog-topbar">
+          <div className="bookCatalog-topbar-search"></div>
+          <div className="bookCatalog-topbar-buttons">
+            <Button>Add Book</Button>
+          </div>
+        </div>
+        <BookCatalogTable />
+        <div className="bookCatalog-checkButtons">
+          <Button>Check In</Button>
+          <Button>Check Out</Button>
+        </div>
       </div>
       <style jsx>{`
-        .post {
-          background: white;
-          transition: box-shadow 0.1s ease-in;
-          /* Other styling properties */
-        }
-
-        .post:hover {
-          box-shadow: 1px 1px 3px #aaa;
-        }
-
-        .post + .post {
-          margin-top: 2rem;
-        }
       `}</style>
     </Layout>
   );
