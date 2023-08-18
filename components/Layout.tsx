@@ -27,7 +27,6 @@ const Layout: React.FC<Props> = (props) => {
     // if(router.pathname === '/') return 'Home'
     // const entry = Object.entries(PAGES).filter(filterFunc)
     // return entry[0][1].name;
-
   return (
   <>
     <Head>
