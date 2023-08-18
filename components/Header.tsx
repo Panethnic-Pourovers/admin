@@ -1,14 +1,15 @@
+// React Imports
 import React from "react";
-import Link from "next/link";
+
+// Next Imports
 import { useRouter } from "next/router";
+
+// Material Imports
 import { ThemeProvider } from '@mui/material/styles';
 
-// 
-import Navbar from "./Navbar";
-import theme from './Theme';
-
-// local imports
-import { PAGES } from "src/utils/constants";
+// Component Imports
+import Navbar from "@/components/Navbar";
+import theme from '@/components/Theme';
 
 const Header: React.FC = () => {
   const router = useRouter();
