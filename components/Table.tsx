@@ -22,10 +22,10 @@ export default function Table(props: tableProps) {
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: page || 5, pageSize: pageSize || 10 },
+            paginationModel: { page: page || 0, pageSize: pageSize || 10 },
           },
         }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={[5, 10, 25, 50, 100]}
         autoHeight
       />
     </div>
