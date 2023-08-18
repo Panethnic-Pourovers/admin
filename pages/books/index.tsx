@@ -50,7 +50,7 @@ const Catalog = () => {
   return (
     <Layout>
       <div id={styles['bookCatalog']}>
-        <h1>Book Catalog</h1>
+        {/* <h1>Book Catalog</h1> */}
         <div className={styles['bookCatalog-topbar']}>
           <div className={styles['bookCatalog-topbar-search']}></div>
           <div className={styles['bookCatalog-topbar-buttons']}>

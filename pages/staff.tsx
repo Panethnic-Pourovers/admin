@@ -6,7 +6,7 @@ const Staff = () => {
   return (
     <Layout>
       <div className="page">
-        <h1>Employees</h1>
+        {/* <h1>Employees</h1> */}
         <div className="post">{/* Content of each book post */}</div>
       </div>
       <style jsx>{`

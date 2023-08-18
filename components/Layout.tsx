@@ -19,15 +19,14 @@ const Layout: React.FC<Props> = (props) => {
 
   const router = useRouter();
 
-  const filterFunc = (item) =>{
-    return item[1].link === router.pathname
-  }
+  // const filterFunc = (item) =>{
+  //   return item[1].link === router.pathname
+  // }
   
-  const currentPage = () => {
-    if(router.pathname === '/') return 'Home'
-    const entry = Object.entries(PAGES).filter(filterFunc)
-    return entry[0][1].name;
-  }
+  const currentPage = () => PAGES.find((page) => page.link === router.pathname)?.name || "Home"
+    // if(router.pathname === '/') return 'Home'
+    // const entry = Object.entries(PAGES).filter(filterFunc)
+    // return entry[0][1].name;
 
   return (
   <>

@@ -6,7 +6,7 @@ const Schedule = () => {
   return (
     <Layout>
       <div className="page">
-        <h1>Cafe Schedule</h1>
+        {/* <h1>Cafe Schedule</h1> */}
       </div>
       <style jsx>{`
         .post {
