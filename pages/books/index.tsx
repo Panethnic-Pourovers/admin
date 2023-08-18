@@ -47,6 +47,8 @@ const Catalog = () => {
     { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
   ];
 
+  const { response } = jsonData?.data;
+
   return (
     <Layout>
       <div id={styles['bookCatalog']}>
@@ -62,7 +64,7 @@ const Catalog = () => {
             >Add Book</Button>
           </div>
         </div>
-        <Table rows={jsonData.data.response} columns={columns} />
+        <Table rows={response || []} columns={columns} />
         <div className={styles['bookCatalog-checkButtons']}>
           <Button 
             ref={checkIn} 
