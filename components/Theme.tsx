@@ -6,10 +6,22 @@ const theme = createTheme({
     primary: {
       main: '#FFCC00',
     },
+    secondary: {
+      main: '#000'
+    }
   },
   typography: {
     fontFamily: '"Work Sans", sans-serif',
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          margin: '1em'
+        }
+      }
+    }
+  }
 });
 
 export default theme;
