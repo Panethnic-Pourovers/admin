@@ -17,7 +17,8 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          margin: '1em'
+          margin: '1em',
+          boxShadow: "0px 3px 1px -2px rgba(0, 0, 0, 0.2)"
         }
       }
     }
