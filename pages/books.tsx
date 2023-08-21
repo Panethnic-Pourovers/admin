@@ -53,7 +53,6 @@ const Catalog = () => {
   return (
     <Layout>
     <div id='bookCatalog'>
-      {/* <h1>Book Catalog</h1> */}
       <Box sx={{
         display: "flex",
         flexFlow: "row nowrap",
@@ -91,37 +90,6 @@ const Catalog = () => {
       </Box>
     </div>
   </Layout>
-    // <Layout>
-    //   <div id={styles['bookCatalog']}>
-    //     {/* <h1>Book Catalog</h1> */}
-    //     <div className={styles['bookCatalog-topbar']}>
-    //       <div className={styles['bookCatalog-topbar-search']}></div>
-    //       <div className={styles['bookCatalog-topbar-buttons']}>
-    //         <Button 
-    //           ref={addBook} 
-    //           className={[global.pepoButton, global['pepoButton-outline']].join(' ')} 
-    //           variant="outlined"
-    //           onClick={() => addBookHandler(addBook)}
-    //         >Add Book</Button>
-    //       </div>
-    //     </div>
-    //     <Table rows={response || []} columns={columns} />
-    //     <div className={styles['bookCatalog-checkButtons']}>
-    //       <Button 
-    //         ref={checkIn} 
-    //         className={global.pepoButton} 
-    //         variant="text"
-    //         onClick={() => checkInBookHandler(checkIn)}
-    //       >Check In</Button>
-    //       <Button 
-    //         ref={checkOut} 
-    //         className={global.pepoButton} 
-    //         variant="text"
-    //         onClick={() => checkOutBookHandler(checkOut)}
-    //       >Check Out</Button>
-    //     </div>
-    //   </div>
-    // </Layout>
   );
 };
 
