@@ -54,7 +54,11 @@ const Catalog = () => {
     <Layout>
     <div id='bookCatalog'>
       {/* <h1>Book Catalog</h1> */}
-      <div className='bookCatalog-topbar'>
+      <Box sx={{
+        display: "flex",
+        flexFlow: "row nowrap",
+        justifyContent: "space-between"
+      }} className='bookCatalog-topbar'>
         <div className='bookCatalog-topbar-search'></div>
         <div className='bookCatalog-topbar-buttons'>
           <Button 
@@ -65,7 +69,7 @@ const Catalog = () => {
             onClick={() => addBookHandler(addBook)}
           >Add Book</Button>
         </div>
-      </div>
+      </Box>
       <Table rows={response || []} columns={columns} />
       <Box 
         className='bookCatalog-checkButtons' 
