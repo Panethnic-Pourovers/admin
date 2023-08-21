@@ -10,10 +10,6 @@ import Table from "@/components/Table";
 
 import { GridColDef } from '@mui/x-data-grid';
 
-//styles
-import global from '@/styles/global.module.css'
-import styles from './books.module.css'
-
 // dummy data import
 import jsonData from 'dummyData.json';
 import Box from "@mui/material/Box";
