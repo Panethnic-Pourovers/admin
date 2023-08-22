@@ -1,0 +1,71 @@
+{
+  "extends": [
+    "eslint:recommended", 
+    "plugin:@typescript-eslint/recommended",
+    "prettier", 
+    "next/core-web-vitals"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "root": true,
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "sourceType": "module",
+    "ecmaVersion": 2022,
+    "ecmaFeatures": {
+      "jsx": true,
+      "impliedStrict": true
+    }
+  },
+  "globals":{
+    "JSX": "readonly"
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error", 
+      {
+        "endOfLine": "lf",
+        "singleQuote": true,
+        "block-closing-brace-newline-after": "always-multi-line",
+        "block-closing-brace-empty-line-before": "never",
+        "block-closing-brace-space-before": "always",
+        "block-opening-brace-space-after": "always",
+        "block-opening-brace-space-before": "always",
+        "block-closing-brace-newline-before": "always-multi-line",
+        "block-opening-brace-newline-after": "always-multi-line",
+        "tabs": false,
+        "indent_size": 2,
+        "comma-dangle": ["error", {
+          "arrays": "never",
+          "objects": "never",
+          "imports": "never",
+          "exports": "never",
+          "functions": "never"
+        }]
+      }
+    ],
+    "no-console": "warn",
+    "no-undef": "error",
+    "no-unused-vars": "warn",
+    "semi": 2,
+    "no-extra-semi": 2,
+    "quotes": [2, "single", "avoid-escape"]
+    
+    // "indent": ["error", 2],
+    
+  },
+  "overrides": [{
+    "files": ["*.cjs", "*.js"],
+    "rules":{
+      "@typescript-eslint/no-var-requires": "off"
+    }
+  }]
+}

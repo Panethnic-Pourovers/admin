@@ -1,0 +1,11 @@
+#ignore git
+**/.git
+
+#ignore node_modules
+**/node_modules
+
+#ignore es files
+# *.js
+# *.jsx
+# *.ts
+# *.tsx
