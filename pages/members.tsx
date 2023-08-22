@@ -6,7 +6,7 @@ const Members = () => {
   return (
     <Layout>
       <div className="page">
-        <h1>Members</h1>
+        {/* <h1>Members</h1> */}
       </div>
       <style jsx>{`
         .post {

@@ -1,20 +1,19 @@
-import * as React from 'react';
+// React import
+import React from 'react';
+
+// datagrid dependency imports
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import jsonData from '../dummyData.json';
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'UUID', width: 200 },
-  { field: 'title', headerName: 'Book Title', width: 400 },
-  { field: 'author', headerName: 'Author', width: 200 },
-  { field: 'genres', headerName: 'Genre(s)', width: 200 },
-  { field: 'regions', headerName: 'Region(s)', width: 200 },
-  { field: 'location', headerName: 'Location', width: 200 },
-  { field: 'member', headerName: 'Member', width: 200 },
-  { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
-];
+// proptypes
+type tableProps = {
+  rows: Record<string, unknown>[],
+  columns: GridColDef[],
+  page?: number
+  pageSize?: number
+}
 
-export default function BookCatalog() {
-  const rows = jsonData.data.response;
+export default function Table(props: tableProps) {
+  const {rows, columns, page, pageSize } = props;
 
   return (
     <div style={{ width: '100%' }}>
@@ -23,10 +22,10 @@ export default function BookCatalog() {
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 5, pageSize: 10 },
+            paginationModel: { page: page || 0, pageSize: pageSize || 10 },
           },
         }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={[5, 10, 25, 50, 100]}
         autoHeight
       />
     </div>
