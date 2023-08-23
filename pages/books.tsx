@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 
 // MUI components
-import { Button } from '@mui/material';
+import { Button, Box, Modal } from '@mui/material';
 
 // custom components
 import Layout from '@/components/Layout';
@@ -12,7 +12,6 @@ import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
 import jsonData from 'dummyData.json';
-import Box from '@mui/material/Box';
 
 const addBookHandler = (ref) => {
   console.log(ref);
@@ -95,6 +94,23 @@ const Catalog = () => {
           >
             Check Out
           </Button>
+        </Box>
+        <Box>
+          <Modal open={false} aria-modal-name="addBookModal">
+            <Box>
+              <h1>Modal</h1>
+            </Box>
+          </Modal>
+          <Modal open={false} aria-modal-name="checkOutBookModal">
+            <Box>
+              <h1>Modal</h1>
+            </Box>
+          </Modal>
+          <Modal open={false} aria-modal-name="checkInBookModal">
+            <Box>
+              <h1>Modal</h1>
+            </Box>
+          </Modal>
         </Box>
       </div>
     </Layout>
