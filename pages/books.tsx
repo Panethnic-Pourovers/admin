@@ -7,6 +7,7 @@ import { Button, Box, Modal } from '@mui/material';
 // custom components
 import Layout from '@/components/Layout';
 import Table from '@/components/Table';
+import Search from '@/components/Search';
 
 import { GridColDef } from '@mui/x-data-grid';
 
@@ -59,7 +60,9 @@ const Catalog = () => {
           }}
           className="bookCatalog-topbar"
         >
-          <div className="bookCatalog-topbar-search"></div>
+          <div className="bookCatalog-topbar-search">
+            <Search search={searchValue} setSearch={setSearch} />
+          </div>
           <div className="bookCatalog-topbar-buttons">
             <Button
               ref={addBook}
@@ -101,7 +104,7 @@ const Catalog = () => {
               <h1>Modal</h1>
             </Box>
           </Modal>
-          <Modal open={false} aria-modal-name="checkOutBookModal">
+          {/* <Modal open={false} aria-modal-name="checkOutBookModal">
             <Box>
               <h1>Modal</h1>
             </Box>
@@ -110,7 +113,7 @@ const Catalog = () => {
             <Box>
               <h1>Modal</h1>
             </Box>
-          </Modal>
+          </Modal> */}
         </Box>
       </div>
     </Layout>
