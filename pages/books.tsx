@@ -28,12 +28,15 @@ const Catalog = () => {
   //refs
   // apparently eslint doesn't like this :(
   // const [addBook, checkIn, checkOut] = Array.from(Array(3), () => useRef());
-  const addBook = useRef();
+  const addBookButton = useRef();
   const checkIn = useRef();
   const checkOut = useRef();
 
+  const addBookModal = useRef();
+
   //state
   const [searchValue, setSearch] = useState('');
+  const [addBookOpen, setAddBookOpen] = useState(false);
 
   //dummy data
   const columns: GridColDef[] = [
@@ -46,6 +49,9 @@ const Catalog = () => {
     { field: 'member', headerName: 'Member', width: 200 },
     { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
   ];
+
+  const addBookOpenHandler = () => setAddBookOpen(true);
+  const addBookCloseHandler = () => setAddBookOpen(false);
 
   const { response } = jsonData.data;
 
@@ -65,11 +71,11 @@ const Catalog = () => {
           </div>
           <div className="bookCatalog-topbar-buttons">
             <Button
-              ref={addBook}
+              ref={addBookButton}
               className="pepoButton-outline"
               variant="outlined"
               color={'secondary'}
-              onClick={() => addBookHandler(addBook)}
+              onClick={() => addBookOpenHandler()}
             >
               Add Book
             </Button>
@@ -99,7 +105,11 @@ const Catalog = () => {
           </Button>
         </Box>
         <Box>
-          <Modal open={false} aria-modal-name="addBookModal">
+          <Modal
+            ref={addBookModal}
+            open={addBookOpen}
+            onClose={() => addBookCloseHandler()}
+          >
             <Box>
               <h1>Modal</h1>
             </Box>
