@@ -21,7 +21,6 @@ const Header: React.FC = () => {
       <nav>
         <Navbar />
       </nav>
-
     </ThemeProvider>
   );
 };

@@ -7,6 +7,7 @@ import {Button} from '@mui/material'
 // custom components
 import Layout from "@/components/Layout";
 import Table from "@/components/Table";
+import CheckInOrOut from "@/components/CheckInOrOut";
 
 import { GridColDef } from '@mui/x-data-grid';
 
@@ -17,17 +18,11 @@ import Box from "@mui/material/Box";
 const addBookHandler = (ref) => {
   console.log(ref);
 }
-const checkInBookHandler = (ref) => {
-  console.log(ref);
-}
-const checkOutBookHandler = (ref) => {
-  console.log(ref);
-}
 
 
 const Catalog = () => {
   //refs
-  const [addBook, checkIn, checkOut] = Array.from(Array(3), () => useRef());
+  const [addBook] = Array.from(Array(3), () => useRef());
 
   //state
   const [searchValue, setSearch] = useState('');
@@ -48,44 +43,36 @@ const Catalog = () => {
 
   return (
     <Layout>
-    <div id='bookCatalog'>
-      <Box sx={{
-        display: "flex",
-        flexFlow: "row nowrap",
-        justifyContent: "space-between"
-      }} className='bookCatalog-topbar'>
-        <div className='bookCatalog-topbar-search'></div>
-        <div className='bookCatalog-topbar-buttons'>
-          <Button 
-            ref={addBook} 
-            className='pepoButton-outline' 
-            variant="outlined"
-            color={'secondary'}
-            onClick={() => addBookHandler(addBook)}
-          >Add Book</Button>
-        </div>
-      </Box>
-      <Table rows={response || []} columns={columns} />
-      <Box 
-        className='bookCatalog-checkButtons' 
+      <div id='bookCatalog'>
+        <Box sx={{
+          display: "flex",
+          flexFlow: "row nowrap",
+          justifyContent: "space-between"
+        }} className='bookCatalog-topbar'>
+          <div className='bookCatalog-topbar-search'></div>
+          <div className='bookCatalog-topbar-buttons'>
+            <Button 
+              ref={addBook} 
+              className='pepoButton-outline' 
+              variant="outlined"
+              color={'secondary'}
+              onClick={() => addBookHandler(addBook)}
+            >Add Book</Button>
+          </div>
+        </Box>
+        <Table rows={response || []} columns={columns} />
+      </div>
+      <Box
         sx={{
-          display: 'flex',
-          flexFlow: 'row-reverse nowrap'
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "16px",
         }}
       >
-        <Button 
-          ref={checkIn} 
-          variant="contained"
-          onClick={() => checkInBookHandler(checkIn)}
-        >Check In</Button>
-        <Button 
-          ref={checkOut} 
-          variant="contained"
-          onClick={() => checkOutBookHandler(checkOut)}
-        >Check Out</Button>
+        <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
+        <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
       </Box>
-    </div>
-  </Layout>
+    </Layout>
   );
 };
 
