@@ -1,33 +1,36 @@
 // React imports
-import React, {useState, useRef} from "react";
+import React, { useState, useRef } from 'react';
 
 // MUI components
-import {Button} from '@mui/material'
+import { Button } from '@mui/material';
 
 // custom components
-import Layout from "@/components/Layout";
-import Table from "@/components/Table";
+import Layout from '@/components/Layout';
+import Table from '@/components/Table';
 
 import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
 import jsonData from 'dummyData.json';
-import Box from "@mui/material/Box";
+import Box from '@mui/material/Box';
 
 const addBookHandler = (ref) => {
   console.log(ref);
-}
+};
 const checkInBookHandler = (ref) => {
   console.log(ref);
-}
+};
 const checkOutBookHandler = (ref) => {
   console.log(ref);
-}
-
+};
 
 const Catalog = () => {
   //refs
-  const [addBook, checkIn, checkOut] = Array.from(Array(3), () => useRef());
+  // apparently eslint doesn't like this :(
+  // const [addBook, checkIn, checkOut] = Array.from(Array(3), () => useRef());
+  const addBook = useRef();
+  const checkIn = useRef();
+  const checkOut = useRef();
 
   //state
   const [searchValue, setSearch] = useState('');
@@ -44,48 +47,57 @@ const Catalog = () => {
     { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
   ];
 
-  const { response } = jsonData?.data;
+  const { response } = jsonData.data;
 
   return (
     <Layout>
-    <div id='bookCatalog'>
-      <Box sx={{
-        display: "flex",
-        flexFlow: "row nowrap",
-        justifyContent: "space-between"
-      }} className='bookCatalog-topbar'>
-        <div className='bookCatalog-topbar-search'></div>
-        <div className='bookCatalog-topbar-buttons'>
-          <Button 
-            ref={addBook} 
-            className='pepoButton-outline' 
-            variant="outlined"
-            color={'secondary'}
-            onClick={() => addBookHandler(addBook)}
-          >Add Book</Button>
-        </div>
-      </Box>
-      <Table rows={response || []} columns={columns} />
-      <Box 
-        className='bookCatalog-checkButtons' 
-        sx={{
-          display: 'flex',
-          flexFlow: 'row-reverse nowrap'
-        }}
-      >
-        <Button 
-          ref={checkIn} 
-          variant="contained"
-          onClick={() => checkInBookHandler(checkIn)}
-        >Check In</Button>
-        <Button 
-          ref={checkOut} 
-          variant="contained"
-          onClick={() => checkOutBookHandler(checkOut)}
-        >Check Out</Button>
-      </Box>
-    </div>
-  </Layout>
+      <div id="bookCatalog">
+        <Box
+          sx={{
+            display: 'flex',
+            flexFlow: 'row nowrap',
+            justifyContent: 'space-between',
+          }}
+          className="bookCatalog-topbar"
+        >
+          <div className="bookCatalog-topbar-search"></div>
+          <div className="bookCatalog-topbar-buttons">
+            <Button
+              ref={addBook}
+              className="pepoButton-outline"
+              variant="outlined"
+              color={'secondary'}
+              onClick={() => addBookHandler(addBook)}
+            >
+              Add Book
+            </Button>
+          </div>
+        </Box>
+        <Table rows={response || []} columns={columns} />
+        <Box
+          className="bookCatalog-checkButtons"
+          sx={{
+            display: 'flex',
+            flexFlow: 'row-reverse nowrap',
+          }}
+        >
+          <Button
+            ref={checkIn}
+            variant="contained"
+            onClick={() => checkInBookHandler(checkIn)}
+          >
+            Check In
+          </Button>
+          <Button
+            ref={checkOut}
+            variant="contained"
+            onClick={() => checkOutBookHandler(checkOut)}
+          >
+            Check Out
+          </Button>
+        </Box>
+      </div>
+    </Layout>
   );
 };
 
