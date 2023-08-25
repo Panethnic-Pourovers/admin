@@ -2,7 +2,9 @@
 import React, { useState, useRef } from 'react';
 
 // MUI components
-import { Button, Box, Card, Modal } from '@mui/material';
+import { Button, Box, Card, Modal, Select, TextField } from '@mui/material';
+
+import styles from './AddBook.module.scss';
 
 // dummy data import
 import jsonData from 'dummyData.json';
@@ -11,7 +13,13 @@ type newBookProps = {
   title: string;
   author: string;
 };
+
+type flowProps = {
+  bookExists: true | false | null;
+  formObject: { title: string; author: string };
+};
 const AddNewBookForm = (props: newBookProps) => {
+  console.log(props);
   const addNewBookSubmitHandler = (e) => {
     e.preventDefault();
     const form = Array.from(e.nativeEvent.srcElement);
@@ -57,13 +65,23 @@ const AddNewBookForm = (props: newBookProps) => {
     window.location.reload();
   };
   return (
-    <form onSubmit={addNewBookSubmitHandler}>
+    <form
+      className={[styles.form, styles.addNewForm].join(' ')}
+      onSubmit={addNewBookSubmitHandler}
+    >
       <label htmlFor="genre">Genre</label>
-      <input type="text" name="genre" id="genre" />
+      <Select variant="standard" name="genre" id="genre" />
       <label htmlFor="region">Region</label>
-      <input type="text" name="region" id="region" />
+      <Select variant="standard" name="region" id="region" />
       <label htmlFor="regionTwo">Region (optional)</label>
-      <input type="text" name="regionTwo" id="regionTwo" />
+      <Select variant="standard" name="regionTwo" id="regionTwo" />
+      <Button
+        variant="outlined"
+        color={'secondary'}
+        sx={{ width: 'max-content' }}
+      >
+        Add New Book
+      </Button>
     </form>
   );
 };
@@ -71,26 +89,26 @@ const AddNewBookForm = (props: newBookProps) => {
 const BookFound = (book) => {
   const [addNewBook, setAddNewBook] = useState(false);
   return (
-    <Box>
-      <p>Book found in catalog</p>
-      <p>Book ID: {book.id}</p>
-      <Button
-        className="pepoButton-outline"
-        variant="outlined"
-        color={'secondary'}
-        onClick={() => setAddNewBook(true)}
-      >
-        Add New Copy
-      </Button>
+    <>
+      <Box className={styles.bookFound}>
+        <p>Book found in catalog</p>
+        <p>Book ID: {book.id}</p>
+        <Button
+          className="pepoButton-outline"
+          variant="outlined"
+          color={'secondary'}
+          sx={{ marginLeft: '0', cursor: 'pointer' }}
+          onClick={() => setAddNewBook(true)}
+        >
+          Add New Copy
+        </Button>
+      </Box>
       {addNewBook ? AddNewBookForm(book) : <></>}
-    </Box>
+    </>
   );
 };
 
-const DynamicComponent = (props: {
-  bookExists: true | false | null;
-  formObject: { title: string; author: string };
-}) => {
+const AddBookModalFormFlow = (props: flowProps) => {
   if (props.bookExists === null) return <></>;
   return props.bookExists
     ? BookFound(props.formObject)
@@ -166,16 +184,36 @@ const AddBook = () => {
           open={addBookOpen}
           onClose={() => addBookCloseHandler()}
         >
-          <Card>
-            <h1>Modal</h1>
-            <form ref={formRef} onSubmit={bookFormHanlder}>
+          <Card className={styles.modalCard}>
+            <Box className={styles['modalCard-close']}>
+              <a onClick={() => addBookCloseHandler()}>&times;</a>
+            </Box>
+            <h1>Add Book</h1>
+            <form
+              className={styles['modalCard-form']}
+              ref={formRef}
+              onSubmit={bookFormHanlder}
+            >
               <label htmlFor="title">Title</label>
-              <input type="text" name="title" id="title" />
+              <TextField
+                variant="standard"
+                type="text"
+                name="title"
+                id="title"
+              />
               <label htmlFor="author">Author</label>
-              <input type="text" name="author" id="author" />
+              <TextField
+                variant="standard"
+                type="text"
+                name="author"
+                id="author"
+              />
               <input type="submit" value="Search Book Catalog" />
             </form>
-            <DynamicComponent bookExists={bookExists} formObject={formObject} />
+            <AddBookModalFormFlow
+              bookExists={bookExists}
+              formObject={formObject}
+            />
           </Card>
         </Modal>
       </Box>

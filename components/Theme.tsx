@@ -30,7 +30,11 @@ const theme = createTheme({
     },
     MuiModal: {
       styleOverrides: {
-        root: {},
+        root: {
+          maxWidth: '40vw',
+          minWidth: '25em',
+          margin: '1em auto',
+        },
       },
     },
   },

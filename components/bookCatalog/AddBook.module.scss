@@ -1,0 +1,51 @@
+.modalCard {
+  padding: 1em;
+  min-height: 35em;
+  overflow-y: scroll;
+  &-close {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 1em;
+    margin: 0;
+    font-size: 2em;
+    > a {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0.5em;
+      cursor: pointer;
+    }
+  }
+  &-form {
+    display: flex;
+    flex-flow: column wrap;
+
+    input[type="submit"] {
+      margin-top: 1em;
+      background-color: transparent;
+      border: none;
+      width: max-content;
+      text-decoration: underline;
+    }
+  }
+  .bookFound {
+    background-color: #ffcc00;
+    margin-top: 1.5em;
+    padding: 0.1em 1em;
+    border: 1px solid transparent;
+    border-radius: 10px;
+  }
+  .addNewForm {
+    background-color: #ffcc00;
+    margin: 2.5em;
+    padding: 1em;
+    border: 1px solid transparent;
+    border-radius: 10px;
+  }
+}
+
+.form {
+  margin-top: 1em;
+  display: flex;
+  flex-flow: column wrap;
+}
