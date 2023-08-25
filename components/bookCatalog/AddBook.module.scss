@@ -1,7 +1,13 @@
 .modalCard {
   padding: 1em;
   min-height: 35em;
+  max-height: max-content;
   overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &-close {
     display: flex;
     justify-content: flex-end;
