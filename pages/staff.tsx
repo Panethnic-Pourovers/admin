@@ -1,6 +1,6 @@
-import React from "react";
-import { GetStaticProps } from "next";
-import Layout from "@/components/Layout";
+import React from 'react';
+import { GetStaticProps } from 'next';
+import Layout from '@/components/Layout';
 
 const Staff = () => {
   return (
