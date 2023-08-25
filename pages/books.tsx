@@ -2,41 +2,24 @@
 import React, { useState, useRef } from 'react';
 
 // MUI components
-import { Button, Box, Modal } from '@mui/material';
+import { Button, Box, Card, Modal } from '@mui/material';
 
 // custom components
 import Layout from '@/components/Layout';
 import Table from '@/components/Table';
 import Search from '@/components/Search';
+import AddBook from '@/components/bookCatalog/AddBook';
 
 import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
 import jsonData from 'dummyData.json';
 
-const addBookHandler = (ref) => {
-  console.log(ref);
-};
-const checkInBookHandler = (ref) => {
-  console.log(ref);
-};
-const checkOutBookHandler = (ref) => {
-  console.log(ref);
-};
-
 const Catalog = () => {
   //refs
-  // apparently eslint doesn't like this :(
-  // const [addBook, checkIn, checkOut] = Array.from(Array(3), () => useRef());
-  const addBookButton = useRef();
-  const checkIn = useRef();
-  const checkOut = useRef();
-
-  const addBookModal = useRef();
 
   //state
   const [searchValue, setSearch] = useState('');
-  const [addBookOpen, setAddBookOpen] = useState(false);
 
   //dummy data
   const columns: GridColDef[] = [
@@ -49,9 +32,6 @@ const Catalog = () => {
     { field: 'member', headerName: 'Member', width: 200 },
     { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
   ];
-
-  const addBookOpenHandler = () => setAddBookOpen(true);
-  const addBookCloseHandler = () => setAddBookOpen(false);
 
   const { response } = jsonData.data;
 
@@ -70,15 +50,7 @@ const Catalog = () => {
             <Search search={searchValue} setSearch={setSearch} />
           </div>
           <div className="bookCatalog-topbar-buttons">
-            <Button
-              ref={addBookButton}
-              className="pepoButton-outline"
-              variant="outlined"
-              color={'secondary'}
-              onClick={() => addBookOpenHandler()}
-            >
-              Add Book
-            </Button>
+            <AddBook />
           </div>
         </Box>
         <Table rows={response || []} columns={columns} />
@@ -90,40 +62,17 @@ const Catalog = () => {
           }}
         >
           <Button
-            ref={checkIn}
             variant="contained"
-            onClick={() => checkInBookHandler(checkIn)}
+            // onClick={() => checkInBookHandler(checkIn)}
           >
             Check In
           </Button>
           <Button
-            ref={checkOut}
             variant="contained"
-            onClick={() => checkOutBookHandler(checkOut)}
+            // onClick={() => checkOutBookHandler(checkOut)}
           >
             Check Out
           </Button>
-        </Box>
-        <Box>
-          <Modal
-            ref={addBookModal}
-            open={addBookOpen}
-            onClose={() => addBookCloseHandler()}
-          >
-            <Box>
-              <h1>Modal</h1>
-            </Box>
-          </Modal>
-          {/* <Modal open={false} aria-modal-name="checkOutBookModal">
-            <Box>
-              <h1>Modal</h1>
-            </Box>
-          </Modal>
-          <Modal open={false} aria-modal-name="checkInBookModal">
-            <Box>
-              <h1>Modal</h1>
-            </Box>
-          </Modal> */}
         </Box>
       </div>
     </Layout>

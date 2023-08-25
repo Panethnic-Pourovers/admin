@@ -1,6 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 import '@fontsource/work-sans';
 
+declare module '@mui/material/Box' {
+  interface BoxPropsVariantOverrides {
+    modalBox: true;
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: {
