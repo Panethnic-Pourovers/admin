@@ -9,6 +9,7 @@ import Layout from '@/components/Layout';
 import Table from '@/components/Table';
 import Search from '@/components/Search';
 import AddBook from '@/components/bookCatalog/AddBook';
+import CheckInOrOut from '@/components/bookCatalog/CheckInOrOut';
 
 import { GridColDef } from '@mui/x-data-grid';
 
