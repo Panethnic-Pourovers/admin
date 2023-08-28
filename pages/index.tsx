@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { GetStaticProps } from 'next';
 import Layout from '@/components/Layout';
-import Search from '@/components/Search';
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {},
   };
 };
 
-const Blog: React.FC = () => {
-  const [search, setSearch] = useState<string>('');
-
+const Home: React.FC = () => {
+  useEffect(() => {
+    window.location.pathname = '/books';
+  });
   return (
     <Layout>
       <div className="page"></div>
@@ -18,4 +18,4 @@ const Blog: React.FC = () => {
   );
 };
 
-export default Blog;
+export default Home;

@@ -1,6 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 import '@fontsource/work-sans';
 
+declare module '@mui/material/Box' {
+  interface BoxPropsVariantOverrides {
+    modalBox: true;
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -18,7 +24,16 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           margin: '1em',
-          padding: '6px 10px',
+          boxShadow: '0px 3px 1px -2px rgba(0, 0, 0, 0.2)',
+        },
+      },
+    },
+    MuiModal: {
+      styleOverrides: {
+        root: {
+          maxWidth: '40vw',
+          minWidth: '25em',
+          margin: '1em auto',
         },
       },
     },

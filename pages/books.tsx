@@ -2,27 +2,20 @@
 import React, { useState, useRef } from 'react';
 
 // MUI components
-import { Button } from '@mui/material';
+import { Button, Box, Card, Modal } from '@mui/material';
 
 // custom components
 import Layout from '@/components/Layout';
 import Table from '@/components/Table';
-import CheckInOrOut from '@/components/CheckInOrOut';
+import Search from '@/components/Search';
+import AddBook from '@/components/bookCatalog/AddBook';
 
 import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
 import jsonData from 'dummyData.json';
-import Box from '@mui/material/Box';
-
-const addBookHandler = (ref) => {
-  console.log(ref);
-};
 
 const Catalog = () => {
-  //refs
-  const [addBook] = Array.from(Array(3), () => useRef());
-
   //state
   const [searchValue, setSearch] = useState('');
 
@@ -38,7 +31,7 @@ const Catalog = () => {
     { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
   ];
 
-  const { response } = jsonData?.data;
+  const { response } = jsonData.data;
 
   return (
     <Layout>
@@ -51,31 +44,25 @@ const Catalog = () => {
           }}
           className="bookCatalog-topbar"
         >
-          <div className="bookCatalog-topbar-search"></div>
+          <div className="bookCatalog-topbar-search">
+            <Search search={searchValue} setSearch={setSearch} />
+          </div>
           <div className="bookCatalog-topbar-buttons">
-            <Button
-              ref={addBook}
-              className="pepoButton-outline"
-              variant="outlined"
-              color={'secondary'}
-              onClick={() => addBookHandler(addBook)}
-            >
-              Add Book
-            </Button>
+            <AddBook />
           </div>
         </Box>
         <Table rows={response || []} columns={columns} />
+        <Box
+          className="bookCatalog-checkButtons"
+          sx={{
+            display: 'flex',
+            flexFlow: 'row-reverse nowrap',
+          }}
+        >
+          <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
+          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
+        </Box>
       </div>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginTop: '16px',
-        }}
-      >
-        <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
-        <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
-      </Box>
     </Layout>
   );
 };
