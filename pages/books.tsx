@@ -16,8 +16,6 @@ import { GridColDef } from '@mui/x-data-grid';
 import jsonData from 'dummyData.json';
 
 const Catalog = () => {
-  //refs
-
   //state
   const [searchValue, setSearch] = useState('');
 
