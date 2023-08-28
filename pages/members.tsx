@@ -1,13 +1,11 @@
-import React from "react";
-import { GetStaticProps } from "next";
-import Layout from "@/components/Layout";
+import React from 'react';
+import { GetStaticProps } from 'next';
+import Layout from '@/components/Layout';
 
 const Members = () => {
   return (
     <Layout>
-      <div className="page">
-        {/* <h1>Members</h1> */}
-      </div>
+      <div className="page">{/* <h1>Members</h1> */}</div>
       <style jsx>{`
         .post {
           background: white;

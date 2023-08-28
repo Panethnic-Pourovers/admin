@@ -1,14 +1,14 @@
 // React Imports
-import React from "react";
+import React from 'react';
 
 // Next Imports
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 // Material Imports
 import { ThemeProvider } from '@mui/material/styles';
 
 // Component Imports
-import Navbar from "@/components/Navbar";
+import Navbar from '@/components/Navbar';
 import theme from '@/components/Theme';
 
 const Header: React.FC = () => {
@@ -21,7 +21,6 @@ const Header: React.FC = () => {
       <nav>
         <Navbar />
       </nav>
-
     </ThemeProvider>
   );
 };

@@ -1,6 +1,6 @@
-import React from "react";
-import { useRouter } from "next/router";
-import MenuIcon from "@mui/icons-material/Menu";
+import React from 'react';
+import { useRouter } from 'next/router';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Box,
@@ -13,9 +13,9 @@ import {
   Button,
   Tooltip,
   MenuItem,
-} from "@mui/material";
+} from '@mui/material';
 
-import { PAGES, SETTINGS } from "src/utils/constants";
+import { PAGES, SETTINGS } from 'src/utils/constants';
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -53,22 +53,22 @@ function Navbar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "Work Sans, sans-serif",
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'Work Sans, sans-serif',
               fontWeight: 400,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
             }}
           >
             {/* TODO: Change to use svg */}
             <img
               src="/images/panethnic-pourovers-logo-292x97.png"
               alt="Logo"
-              style={{ maxWidth: "100%", height: "auto" }}
+              style={{ maxWidth: '100%', height: 'auto' }}
             />
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -83,18 +83,18 @@ function Navbar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
+                vertical: 'bottom',
+                horizontal: 'left',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
+                vertical: 'top',
+                horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: { xs: 'block', md: 'none' },
               }}
             >
               {PAGES.map((page) => (
@@ -111,18 +111,18 @@ function Navbar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: "flex", md: "none" },
+              display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: "Work Sans, sans-serif",
+              fontFamily: 'Work Sans, sans-serif',
               fontWeight: 400,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
             }}
           >
             <img src="/images/panethnic-pourovers-logo-292x97.png" alt="Logo" />
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {PAGES.map((page) => (
               <Button
                 key={page.name}
@@ -132,14 +132,14 @@ function Navbar() {
                 }}
                 sx={{
                   my: 2,
-                  fontSize: "1.1em",
+                  fontSize: '1.1em',
                   mx: 1,
-                  color: "black",
-                  display: "block",
-                  "&:hover": {
-                    color: "white",
+                  color: 'black',
+                  display: 'block',
+                  '&:hover': {
+                    color: 'white',
                   },
-                  whiteSpace: "nowrap",
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {page.name}
@@ -154,17 +154,17 @@ function Navbar() {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
+              sx={{ mt: '45px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
