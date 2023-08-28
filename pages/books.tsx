@@ -59,18 +59,8 @@ const Catalog = () => {
             flexFlow: 'row-reverse nowrap',
           }}
         >
-          <Button
-            variant="contained"
-            // onClick={() => checkInBookHandler(checkIn)}
-          >
-            Check In
-          </Button>
-          <Button
-            variant="contained"
-            // onClick={() => checkOutBookHandler(checkOut)}
-          >
-            Check Out
-          </Button>
+          <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
+          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
         </Box>
       </div>
     </Layout>
