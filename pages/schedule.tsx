@@ -1,13 +1,11 @@
-import React from "react";
-import { GetStaticProps } from "next";
-import Layout from "@/components/Layout";
+import React from 'react';
+import { GetStaticProps } from 'next';
+import Layout from '@/components/Layout';
 
 const Schedule = () => {
   return (
     <Layout>
-      <div className="page">
-        {/* <h1>Cafe Schedule</h1> */}
-      </div>
+      <div className="page">{/* <h1>Cafe Schedule</h1> */}</div>
       <style jsx>{`
         .post {
           background: white;

@@ -1,24 +1,23 @@
 // React imports
-import React, {useState, useRef} from "react";
+import React, { useState, useRef } from 'react';
 
 // MUI components
-import {Button} from '@mui/material'
+import { Button } from '@mui/material';
 
 // custom components
-import Layout from "@/components/Layout";
-import Table from "@/components/Table";
-import CheckInOrOut from "@/components/CheckInOrOut";
+import Layout from '@/components/Layout';
+import Table from '@/components/Table';
+import CheckInOrOut from '@/components/CheckInOrOut';
 
 import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
 import jsonData from 'dummyData.json';
-import Box from "@mui/material/Box";
+import Box from '@mui/material/Box';
 
 const addBookHandler = (ref) => {
   console.log(ref);
-}
-
+};
 
 const Catalog = () => {
   //refs
@@ -43,30 +42,35 @@ const Catalog = () => {
 
   return (
     <Layout>
-      <div id='bookCatalog'>
-        <Box sx={{
-          display: "flex",
-          flexFlow: "row nowrap",
-          justifyContent: "space-between"
-        }} className='bookCatalog-topbar'>
-          <div className='bookCatalog-topbar-search'></div>
-          <div className='bookCatalog-topbar-buttons'>
-            <Button 
-              ref={addBook} 
-              className='pepoButton-outline' 
+      <div id="bookCatalog">
+        <Box
+          sx={{
+            display: 'flex',
+            flexFlow: 'row nowrap',
+            justifyContent: 'space-between',
+          }}
+          className="bookCatalog-topbar"
+        >
+          <div className="bookCatalog-topbar-search"></div>
+          <div className="bookCatalog-topbar-buttons">
+            <Button
+              ref={addBook}
+              className="pepoButton-outline"
               variant="outlined"
               color={'secondary'}
               onClick={() => addBookHandler(addBook)}
-            >Add Book</Button>
+            >
+              Add Book
+            </Button>
           </div>
         </Box>
         <Table rows={response || []} columns={columns} />
       </div>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "16px",
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginTop: '16px',
         }}
       >
         <CheckInOrOut title="Check In" CheckInOrOut="Check In" />

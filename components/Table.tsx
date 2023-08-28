@@ -6,14 +6,14 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 // proptypes
 type tableProps = {
-  rows: Record<string, unknown>[],
-  columns: GridColDef[],
-  page?: number
-  pageSize?: number
-}
+  rows: Record<string, unknown>[];
+  columns: GridColDef[];
+  page?: number;
+  pageSize?: number;
+};
 
 export default function Table(props: tableProps) {
-  const {rows, columns, page, pageSize } = props;
+  const { rows, columns, page, pageSize } = props;
 
   return (
     <div style={{ width: '100%' }}>

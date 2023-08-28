@@ -7,8 +7,8 @@ const theme = createTheme({
       main: '#FFCC00',
     },
     secondary: {
-      main: '#000'
-    }
+      main: '#000',
+    },
   },
   typography: {
     fontFamily: '"Work Sans", sans-serif',
@@ -19,10 +19,10 @@ const theme = createTheme({
         root: {
           margin: '1em',
           padding: '6px 10px',
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });
 
 export default theme;
