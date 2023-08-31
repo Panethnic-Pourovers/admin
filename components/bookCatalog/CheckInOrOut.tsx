@@ -8,7 +8,7 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import theme from '@/components/Theme';
+import theme from '@/styles/Theme';
 
 const style = {
   position: 'absolute' as const,
