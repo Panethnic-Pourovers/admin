@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,19 +8,38 @@ datasource db {
 }
 
 model Book {
-    id              String           @default(cuid()) @id
-    barcodeId       String
-    title           String
-    copies          Int
-    members         LibraryMember[]  
+  id             String          @id @default(cuid())
+  barcodeId      String
+  title          String
+  author         String
+  genres         Genre[]
+  regions        Region[]
+  location       String
+  members        LibraryMember[]
+  lastCheckedOut DateTime
+  copies         Int
+}
+
+model Genre {
+  id     String  @id @default(cuid())
+  name   String
+  Book   Book?   @relation(fields: [bookId], references: [id])
+  bookId String?
+}
+
+model Region {
+  id     String  @id @default(cuid())
+  name   String
+  Book   Book?   @relation(fields: [bookId], references: [id])
+  bookId String?
 }
 
 model LibraryMember {
-    id                String     @default(cuid()) @id
-    firstName         String
-    lastName          String 
-    email             String
-    phone             String?
-    checkedOut        Book[]    
-    history           String     
+  id         String  @id @default(cuid())
+  firstName  String
+  lastName   String
+  email      String
+  phone      String?
+  checkedOut Book[]
+  history    String
 }
