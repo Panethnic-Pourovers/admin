@@ -46,7 +46,17 @@ const Catalog = ({
   //state
   const [searchValue, setSearch] = useState('');
 
-  console.log(process.env.NODE_ENV, data);
+  // const columns: GridColDef[] = [
+  //   { field: 'id', headerName: 'UUID', width: 200 },
+  //   { field: 'title', headerName: 'Book Title', width: 200, flex: 1 },
+  //   { field: 'author', headerName: 'Author', width: 200 },
+  //   { field: 'genres', headerName: 'Genre(s)', width: 200 },
+  //   { field: 'regions', headerName: 'Region(s)', width: 200 },
+  //   { field: 'location', headerName: 'Location', width: 200 },
+  //   { field: 'member', headerName: 'Member', width: 200 },
+  //   { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
+  // ];
+
   const columns: GridColDef[] = data.schema.map((column) => {
     return { field: column, headerName: column, flex: 1 };
   });
