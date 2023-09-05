@@ -1,5 +1,5 @@
 // React imports
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 
 // MUI components
 import { Button, Box, Card, Modal } from '@mui/material';
@@ -34,6 +34,19 @@ const Catalog = () => {
 
   const { response } = jsonData.data;
 
+  //search query filters based on all fields, with memoization
+  const filteredItems = useMemo(() => {
+    const keys: string[] = Object.keys(response[0]);
+    return response.filter((item) => {
+      return keys.some((key) => {
+        return (
+          item[key] &&
+          item[key].toString().toLowerCase().includes(searchValue.toLowerCase())
+        );
+      });
+    });
+  }, [response, searchValue]);
+
   return (
     <Layout>
       <div id="bookCatalog">
@@ -52,7 +65,7 @@ const Catalog = () => {
             <AddBook />
           </div>
         </Box>
-        <Table rows={response || []} columns={columns} />
+        <Table rows={filteredItems || []} columns={columns} />
         <Box
           className="bookCatalog-checkButtons"
           sx={{
