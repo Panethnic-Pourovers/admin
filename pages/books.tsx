@@ -2,7 +2,7 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 
 // MUI components
 import { Box } from '@mui/material';
@@ -59,14 +59,18 @@ const Catalog = ({
 
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
-  const { response } = jsonData.data;
+  const { books, schema } = data;
+  console.log(data);
+  const columns: GridColDef[] = schema.map((column) => {
+    return { field: column, headerName: column, flex: 1 };
+  });
 
-  //search query filters based on all fields, with memoization
+  // search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
-    return response.filter((item) => {
+    return books.filter((item) => {
       return new RegExp(searchValue, 'i').test(Object.values(item).toString());
     });
-  }, [response, searchValue]);
+  }, [books, searchValue]);
 
   return (
     <Layout>
@@ -86,7 +90,8 @@ const Catalog = ({
             <AddBook />
           </div>
         </Box>
-        <Table rows={data.books || []} columns={columns} />
+        <Table rows={filteredItems || []} columns={columns} />
+        {/* <Table rows={data.books || []} columns={columns} /> */}
         <Box
           className="bookCatalog-checkButtons"
           sx={{
