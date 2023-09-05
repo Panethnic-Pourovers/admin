@@ -2,7 +2,7 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useState, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 
 // MUI components
 import { Box } from '@mui/material';
