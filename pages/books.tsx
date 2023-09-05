@@ -2,7 +2,7 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 
 // MUI components
 import { Box } from '@mui/material';
@@ -60,6 +60,19 @@ const Catalog = ({
   const columns: GridColDef[] = data.schema.map((column) => {
     return { field: column, headerName: column, flex: 1 };
   });
+
+  //search query filters based on all fields, with memoization
+  const filteredItems = useMemo(() => {
+    const keys: string[] = Object.keys(response[0]);
+    return response.filter((item) => {
+      return keys.some((key) => {
+        return (
+          item[key] &&
+          item[key].toString().toLowerCase().includes(searchValue.toLowerCase())
+        );
+      });
+    });
+  }, [response, searchValue]);
 
   return (
     <Layout>
