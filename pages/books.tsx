@@ -1,5 +1,5 @@
 // React imports
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 
 // MUI components
 import { Button, Box, Card, Modal } from '@mui/material';
@@ -32,7 +32,16 @@ const Catalog = () => {
     { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
   ];
 
+  // TODO: as the data gets larger, do not pull the entire JSON response from database
+  // TODO: Add an API endpoint between database call and frontend for more robust caching
   const { response } = jsonData.data;
+
+  //search query filters based on all fields, with memoization
+  const filteredItems = useMemo(() => {
+    return response.filter((item) => {
+      return new RegExp(searchValue, 'i').test(Object.values(item).toString());
+    });
+  }, [response, searchValue]);
 
   return (
     <Layout>
@@ -52,7 +61,7 @@ const Catalog = () => {
             <AddBook />
           </div>
         </Box>
-        <Table rows={response || []} columns={columns} />
+        <Table rows={filteredItems || []} columns={columns} />
         <Box
           className="bookCatalog-checkButtons"
           sx={{
