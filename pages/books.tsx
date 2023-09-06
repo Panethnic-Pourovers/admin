@@ -39,7 +39,10 @@ const Catalog = () => {
   //search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
     return response.filter((item) => {
-      return new RegExp(searchValue, 'i').test(Object.values(item).toString());
+      return new RegExp(
+        searchValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        'i'
+      ).test(Object.values(item).toString());
     });
   }, [response, searchValue]);
 
