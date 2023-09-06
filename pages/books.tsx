@@ -19,6 +19,7 @@ import jsonData from 'dummyData.json';
 const Catalog = () => {
   //state
   const [searchValue, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
 
   //dummy data
   const columns: GridColDef[] = [
@@ -33,6 +34,19 @@ const Catalog = () => {
   ];
 
   const { response } = jsonData.data;
+
+    const loadData = () => {
+      setIsLoading(true);
+  
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    };
+  
+    // Call loadData when searching
+    React.useEffect(() => {
+      loadData();
+    }, [searchValue]);
 
   return (
     <Layout>
@@ -52,7 +66,13 @@ const Catalog = () => {
             <AddBook />
           </div>
         </Box>
-        <Table rows={response || []} columns={columns} />
+
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <Table rows={response || []} columns={columns} />
+        )}
+
         <Box
           className="bookCatalog-checkButtons"
           sx={{
