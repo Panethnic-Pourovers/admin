@@ -57,20 +57,14 @@ const Catalog = ({
   //   { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
   // ];
 
-  const columns: GridColDef[] = data.schema.map((column) => {
-    return { field: column, headerName: column, flex: 1 };
-  });
+  // TODO: as the data gets larger, do not pull the entire JSON response from database
+  // TODO: Add an API endpoint between database call and frontend for more robust caching
+  const { response } = jsonData.data;
 
   //search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
-    const keys: string[] = Object.keys(response[0]);
     return response.filter((item) => {
-      return keys.some((key) => {
-        return (
-          item[key] &&
-          item[key].toString().toLowerCase().includes(searchValue.toLowerCase())
-        );
-      });
+      return new RegExp(searchValue, 'i').test(Object.values(item).toString());
     });
   }, [response, searchValue]);
 
