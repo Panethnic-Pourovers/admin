@@ -1,15 +1,21 @@
-// React import
 import React from 'react';
+import { DataGrid, GridColDef, GridOverlay } from '@mui/x-data-grid';
+import CircularProgress from '@mui/material/CircularProgress';
 
-// datagrid dependency imports
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-
-// proptypes
 type tableProps = {
   rows: Record<string, unknown>[];
   columns: GridColDef[];
   page?: number;
   pageSize?: number;
+};
+
+const CustomNoRowsOverlay = () => {
+  return (
+    <GridOverlay>
+      <CircularProgress />
+      <div style={{ margin: '5px' }}>Book Catalog is loading</div>
+    </GridOverlay>
+  );
 };
 
 export default function Table(props: tableProps) {
@@ -27,6 +33,9 @@ export default function Table(props: tableProps) {
         }}
         pageSizeOptions={[5, 10, 25, 50, 100]}
         autoHeight
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay
+        }}
       />
     </div>
   );

@@ -67,11 +67,7 @@ const Catalog = () => {
           </div>
         </Box>
 
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <Table rows={response || []} columns={columns} />
-        )}
+        <Table rows={isLoading ? [] : response || []} columns={columns} />
 
         <Box
           className="bookCatalog-checkButtons"
@@ -80,8 +76,8 @@ const Catalog = () => {
             flexFlow: 'row-reverse nowrap',
           }}
         >
-          <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
           <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
+          <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
         </Box>
       </div>
     </Layout>
