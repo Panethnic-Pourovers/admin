@@ -9,7 +9,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 // Component Imports
 import Navbar from '@/components/Navbar';
-import theme from '@/components/Theme';
+import theme from '@/styles/Theme';
 
 const Header: React.FC = () => {
   const router = useRouter();

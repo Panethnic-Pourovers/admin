@@ -1,8 +1,11 @@
+//next imports
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+
 // React imports
 import React, { useState, useRef, useMemo } from 'react';
 
 // MUI components
-import { Button, Box, Card, Modal } from '@mui/material';
+import { Box } from '@mui/material';
 
 // custom components
 import Layout from '@/components/Layout';
@@ -14,34 +17,62 @@ import CheckInOrOut from '@/components/bookCatalog/CheckInOrOut';
 import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
-import jsonData from 'dummyData.json';
+import axios from 'axios';
 
-const Catalog = () => {
+// const getBooks = async (): Promise<any | undefined> => {
+//   return new Promise((resolve, reject) => {});
+// };
+
+export const getServerSideProps: GetServerSideProps<{
+  data: Record<string, any>;
+}> = async () => {
+  const url =
+    process.env.NODE_ENV === 'production'
+      ? 'http://localhost:3000'
+      : 'http://localhost:3000';
+  try {
+    const response = await axios.get(`${url}/api/books`);
+    console.log(response);
+    return { props: { data: response.data } };
+  } catch {
+    console.log('error');
+    return { props: { data: { error: 'Error loading books' } } };
+  }
+};
+
+const Catalog = ({
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //state
   const [searchValue, setSearch] = useState('');
 
-  //dummy data
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'UUID', width: 200 },
-    { field: 'title', headerName: 'Book Title', width: 200, flex: 1 },
-    { field: 'author', headerName: 'Author', width: 200 },
-    { field: 'genres', headerName: 'Genre(s)', width: 200 },
-    { field: 'regions', headerName: 'Region(s)', width: 200 },
-    { field: 'location', headerName: 'Location', width: 200 },
-    { field: 'member', headerName: 'Member', width: 200 },
-    { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
-  ];
+  // const columns: GridColDef[] = [
+  //   { field: 'id', headerName: 'UUID', width: 200 },
+  //   { field: 'title', headerName: 'Book Title', width: 200, flex: 1 },
+  //   { field: 'author', headerName: 'Author', width: 200 },
+  //   { field: 'genres', headerName: 'Genre(s)', width: 200 },
+  //   { field: 'regions', headerName: 'Region(s)', width: 200 },
+  //   { field: 'location', headerName: 'Location', width: 200 },
+  //   { field: 'member', headerName: 'Member', width: 200 },
+  //   { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
+  // ];
 
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
-  const { response } = jsonData.data;
+  const { books, schema } = data;
+  console.log(data);
+  const columns: GridColDef[] = schema.map((column) => {
+    return { field: column, headerName: column, flex: 1 };
+  });
 
-  //search query filters based on all fields, with memoization
+  // search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
-    return response.filter((item) => {
+    return books.filter((item) => {
       return new RegExp(searchValue, 'i').test(Object.values(item).toString());
     });
-  }, [response, searchValue]);
+  }, [books, searchValue]);
+  // TODO: as the data gets larger, do not pull the entire JSON response from database
+  // TODO: Add an API endpoint between database call and frontend for more robust caching
 
   return (
     <Layout>
@@ -62,6 +93,7 @@ const Catalog = () => {
           </div>
         </Box>
         <Table rows={filteredItems || []} columns={columns} />
+        {/* <Table rows={data.books || []} columns={columns} /> */}
         <Box
           className="bookCatalog-checkButtons"
           sx={{

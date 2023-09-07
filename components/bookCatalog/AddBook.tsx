@@ -19,7 +19,6 @@ type flowProps = {
   formObject: { title: string; author: string };
 };
 const AddNewBookForm = (props: newBookProps) => {
-  console.log(props);
   const addNewBookSubmitHandler = (e) => {
     e.preventDefault();
     const form = Array.from(e.nativeEvent.srcElement);
