@@ -74,13 +74,6 @@ const Catalog = ({
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
-  //search query filters based on all fields, with memoization
-  const filteredItems = useMemo(() => {
-    return response.filter((item) => {
-      return new RegExp(searchValue, 'i').test(Object.values(item).toString());
-    });
-  }, [response, searchValue]);
-
   return (
     <Layout>
       <div id="bookCatalog">
