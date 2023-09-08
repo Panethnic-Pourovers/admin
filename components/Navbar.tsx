@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import MenuIcon from '@mui/icons-material/Menu';
+import LogoSVG from '../public/images/LogoSVG';
 import {
   AppBar,
   Box,
@@ -61,12 +62,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            {/* TODO: Change to use svg */}
-            <img
-              src="/images/panethnic-pourovers-logo-292x97.png"
-              alt="Logo"
-              style={{ maxWidth: '100%', height: 'auto' }}
-            />
+            <LogoSVG />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -120,7 +116,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            <img src="/images/panethnic-pourovers-logo-292x97.png" alt="Logo" />
+            <LogoSVG />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {PAGES.map((page) => (
