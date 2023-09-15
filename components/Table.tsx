@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // React import
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,7 +18,10 @@ type tableProps = {
 export default function Table(props: tableProps) {
   const { rows, columns, page, pageSize } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRowData, setSelectedRowData] = useState<Record<string, unknown> | null>(null);
+  const [selectedRowData, setSelectedRowData] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
 
   const renderAvailabilityColumn = (params: any) => {
     const availability = params.value as boolean;
@@ -73,7 +77,7 @@ export default function Table(props: tableProps) {
             backgroundColor: 'white',
             padding: '25px 40px',
             borderRadius: '4px',
-            width: '80%', 
+            width: '80%',
             maxWidth: '400px',
           }}
         >
@@ -106,7 +110,8 @@ export default function Table(props: tableProps) {
                   if (key !== 'title' && key !== 'availability') {
                     return (
                       <li key={key} style={{ marginBottom: '8px' }}>
-                        <span style={{ fontWeight: 'bold' }}>{key}:</span> {value}
+                        <span style={{ fontWeight: 'bold' }}>{key}:</span>{' '}
+                        {value}
                       </li>
                     );
                   }
@@ -117,12 +122,14 @@ export default function Table(props: tableProps) {
           )}
 
           <div style={{ textAlign: 'right' }}>
-            <Button variant="outlined" color="error" style={{ marginLeft: '8px' }}>
+            <Button
+              variant="outlined"
+              color="error"
+              style={{ marginLeft: '8px' }}
+            >
               Delete
             </Button>
-            <Button variant="contained">
-              Edit
-            </Button>
+            <Button variant="contained">Edit</Button>
           </div>
         </div>
       </Modal>

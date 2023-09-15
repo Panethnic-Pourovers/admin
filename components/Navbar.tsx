@@ -14,7 +14,7 @@ import {
   MenuItem,
 } from '@mui/material';
 
-import { PAGES, SETTINGS } from 'src/utils/constants';
+import { PAGES } from 'src/utils/constants';
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -32,7 +32,11 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" elevation={0} sx={{ borderBottom: '1px solid black' }}>
+    <AppBar
+      position="static"
+      elevation={0}
+      sx={{ borderBottom: '1px solid black' }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

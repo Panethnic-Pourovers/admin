@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 //next imports
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState } from 'react';
 
 // MUI components
 import { Box } from '@mui/material';
@@ -33,10 +35,10 @@ export const getServerSideProps: GetServerSideProps<{
       : 'http://localhost:3000';
   try {
     const response = await axios.get(`${url}/api/books`);
-    console.log(response);
+    // console.log(response);
     return { props: { data: response.data } };
   } catch {
-    console.log('error');
+    // console.log('error');
     return { props: { data: { error: 'Error loading books' } } };
   }
 };
@@ -48,7 +50,7 @@ const Catalog = ({
   const [searchValue, setSearch] = useState('');
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'UUID', width: 100, flex: 1},
+    { field: 'id', headerName: 'UUID', width: 100, flex: 1 },
     { field: 'title', headerName: 'Title', width: 300 },
     { field: 'author', headerName: 'Author', width: 200 },
     { field: 'genres', headerName: 'Genre(s)', width: 200 },
@@ -60,7 +62,7 @@ const Catalog = ({
 
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
-  
+
   // const { books, schema } = data;
   // console.log(data);
 
