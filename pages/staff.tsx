@@ -4,7 +4,17 @@
 import React, { useState } from 'react';
 
 // MUI components
-import { Box, Button } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  Input,
+  InputLabel,
+  Modal,
+  ThemeProvider,
+  Typography,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 // custom components
 import Layout from '@/components/Layout';
@@ -15,10 +25,25 @@ import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
 import jsonData from 'dummyDataStaff.json';
+import theme from '@/styles/Theme';
+
+const style = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 350,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  padding: '32px 32px 12px 32px',
+};
 
 const Staff = () => {
   //state
   const [searchValue, setSearch] = useState('');
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'UUID', width: 100 },
@@ -44,9 +69,89 @@ const Staff = () => {
           </div>
         </Box>
         <Table rows={jsonData || []} columns={columns} />
-        <div style={{ textAlign: 'right' }}>
-          <Button variant="contained">Add Staff</Button>
-        </div>
+        <ThemeProvider theme={theme}>
+          <div>
+            <div style={{ textAlign: 'right' }}>
+              <Button variant="contained" onClick={handleOpen}>
+                Add Staff
+              </Button>
+            </div>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginBottom: '0px',
+                  }}
+                >
+                  <Button
+                    onClick={handleClose}
+                    sx={{
+                      color: 'black',
+                      boxShadow: 'none',
+                      position: 'absolute',
+                      top: '0px',
+                      right: '-5px',
+                      padding: 0,
+                    }}
+                  >
+                    <CloseIcon />
+                  </Button>
+                </div>
+                <Typography
+                  id="modal-modal-title"
+                  variant="h5"
+                  component="h2"
+                  sx={{ fontWeight: 'bold', margin: '1rem 0rem' }}
+                >
+                  Add a Staff
+                </Typography>
+                <FormControl
+                  variant="standard"
+                  style={{ marginBottom: '1rem' }}
+                >
+                  <InputLabel htmlFor="component-simple">First Name</InputLabel>
+                  <Input id="component-simple" placeholder="Value" />
+                </FormControl>
+                <FormControl
+                  variant="standard"
+                  style={{ marginBottom: '1rem' }}
+                >
+                  <InputLabel htmlFor="component-simple">Last Name</InputLabel>
+                  <Input id="component-simple" placeholder="Value" />
+                </FormControl>
+                <FormControl
+                  variant="standard"
+                  style={{ marginBottom: '1rem' }}
+                >
+                  <InputLabel htmlFor="component-simple">Email</InputLabel>
+                  <Input id="component-simple" placeholder="Value" />
+                </FormControl>
+                <FormControl
+                  variant="standard"
+                  style={{ marginBottom: '1rem' }}
+                >
+                  <InputLabel htmlFor="component-simple">
+                    Phone Number
+                  </InputLabel>
+                  <Input id="component-simple" placeholder="Value" />
+                </FormControl>
+
+                <div style={{ textAlign: 'right' }}>
+                  <Button variant="contained" onClick={handleOpen}>
+                    Add
+                  </Button>
+                </div>
+              </Box>
+            </Modal>
+          </div>
+        </ThemeProvider>
       </div>
     </Layout>
   );
