@@ -23,7 +23,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          margin: '1em',
+          margin: '1em 0em 1em 1em',
         },
       },
     },
