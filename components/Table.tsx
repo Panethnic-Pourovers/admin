@@ -15,11 +15,30 @@ type tableProps = {
 export default function Table(props: tableProps) {
   const { rows, columns, page, pageSize } = props;
 
+  const renderAvailabilityColumn = (params: any) => {
+    const availability = params.value as boolean;
+    return (
+      <div style={{ color: availability ? 'green' : 'red' }}>
+        {availability ? '✔ Available' : '✘ Checked Out'}
+      </div>
+    );
+  };
+
+  const updatedColumns = columns.map((column) => {
+    if (column.field === 'availability') {
+      return {
+        ...column,
+        renderCell: renderAvailabilityColumn,
+      };
+    }
+    return column;
+  });
+
   return (
     <div style={{ width: '100%' }}>
       <DataGrid
         rows={rows}
-        columns={columns}
+        columns={updatedColumns}
         initialState={{
           pagination: {
             paginationModel: { page: page || 0, pageSize: pageSize || 10 },
