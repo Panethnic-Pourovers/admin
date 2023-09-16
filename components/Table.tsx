@@ -2,6 +2,7 @@
 // React import
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import TableEditButton from './TableEditButton';
 
 // datagrid dependency imports
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -129,7 +130,9 @@ export default function Table(props: tableProps) {
             >
               Delete
             </Button>
-            <Button variant="contained">Edit</Button>
+            <Button>
+              <TableEditButton rowData={selectedRowData} columns={columns} />
+            </Button>
           </div>
         </div>
       </Modal>
