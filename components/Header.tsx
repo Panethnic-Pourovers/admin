@@ -1,9 +1,6 @@
 // React Imports
 import React from 'react';
 
-// Next Imports
-import { useRouter } from 'next/router';
-
 // Material Imports
 import { ThemeProvider } from '@mui/material/styles';
 
@@ -12,10 +9,6 @@ import Navbar from '@/components/Navbar';
 import theme from '@/styles/Theme';
 
 const Header: React.FC = () => {
-  const router = useRouter();
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
-
   return (
     <ThemeProvider theme={theme}>
       <nav>
