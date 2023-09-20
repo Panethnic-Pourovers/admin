@@ -86,6 +86,7 @@ const Catalog = ({
         </Box>
         <Table rows={filteredItems || []} columns={columns} />
         {/* <Table rows={data.books || []} columns={columns} /> */}
+        <Table rows={filteredItems || []} columns={columns} />
         <Box
           className="bookCatalog-checkButtons"
           sx={{
