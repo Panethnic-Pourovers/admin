@@ -11,6 +11,9 @@ import styles from './AddBook.module.scss';
 // dummy data import
 import jsonData from 'dummyData.json';
 
+// axios imports
+import axios from 'axios';
+
 type newBookProps = {
   title: string;
   author: string;
@@ -61,7 +64,7 @@ const AddNewBookForm = (props: newBookProps) => {
   };
   const sendNewBook = (book) => {
     //send api call to add new book
-
+    axios.post('/api/books');
     //after api call, reload page
     window.location.reload();
   };

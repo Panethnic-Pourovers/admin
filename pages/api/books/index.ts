@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import getHandler from './GET';
+import postHandler from './POST';
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,6 +14,9 @@ export default async function handler(
       }
       res.status(200).json(books);
       return;
+    } else if (req.method === 'POST') {
+      const message = await postHandler();
+      res.status(200).json(message);
     }
   } catch {
     res.status(500).json({ message: 'Something went wrong' });
