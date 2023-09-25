@@ -1,225 +1,262 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
-// React imports
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import {
+  Box,
+  Button,
+  Typography,
+  Modal,
+  TextField,
+  ThemeProvider,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import theme from '@/styles/Theme';
 
-// MUI components
-import { Button, Box, Card, Modal, Select, TextField } from '@mui/material';
-
-import styles from './AddBook.module.scss';
-
-// dummy data import
-import jsonData from 'dummyData.json';
-
-type newBookProps = {
-  title: string;
-  author: string;
+const style = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 350,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  padding: '32px 32px 12px 32px',
 };
 
-type flowProps = {
-  bookExists: true | false | null;
-  formObject: { title: string; author: string };
-};
-const AddNewBookForm = (props: newBookProps) => {
-  const addNewBookSubmitHandler = (e) => {
-    e.preventDefault();
-    const form = Array.from(e.nativeEvent.srcElement);
-    if (
-      !(form[0] instanceof HTMLInputElement) ||
-      !(form[1] instanceof HTMLInputElement)
-    )
-      return alert('Please enter a genre and region');
-    const { title, author } = props;
-    const genre = form[0].value;
-    const region = form[1].value;
-    const regionTwo =
-      form[2] instanceof HTMLInputElement ? form[2].value : null;
-    const bookObject = compileBookObject(
-      title,
-      author,
-      genre,
-      region,
-      regionTwo
-    );
-    sendNewBook(bookObject);
-  };
-  const compileBookObject = (
-    title: string,
-    author: string,
-    genre: string,
-    region: string,
-    regionTwo: string | null
-  ) => {
-    const bookObject = {
-      title,
-      author,
-      genre,
-      region,
-      regionTwo,
-    };
-    return bookObject;
-  };
-  const sendNewBook = (book) => {
-    //send api call to add new book
+export default function AddBook({ bookData }) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [showSearchCatalog, setSearchCatalog] = useState(false);
+  const [showAddBookCatalog, setAddBookCatalog] = useState(false);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [foundBookId, setFoundBookId] = useState(null);
 
-    //after api call, reload page
-    window.location.reload();
-  };
-  return (
-    <form
-      className={[styles.form, styles.addNewForm].join(' ')}
-      onSubmit={addNewBookSubmitHandler}
-    >
-      <label htmlFor="genre">Genre</label>
-      <Select variant="standard" name="genre" id="genre" />
-      <label htmlFor="region">Region</label>
-      <Select variant="standard" name="region" id="region" />
-      <label htmlFor="regionTwo">Region (optional)</label>
-      <Select variant="standard" name="regionTwo" id="regionTwo" />
-      <Button
-        variant="outlined"
-        color={'secondary'}
-        sx={{ width: 'max-content' }}
-      >
-        Add New Book
-      </Button>
-    </form>
-  );
-};
+  const handleClick = (title: string, author: string) => {
+    const booksArray = bookData.data.response;
 
-const BookFound = (book) => {
-  const [addNewBook, setAddNewBook] = useState(false);
-  return (
-    <>
-      <Box className={styles.bookFound}>
-        <p>Book found in catalog</p>
-        <p>Book ID: {book.id}</p>
-        <Button
-          className="pepoButton-outline"
-          variant="outlined"
-          color={'secondary'}
-          sx={{ marginLeft: '0', cursor: 'pointer' }}
-          onClick={() => setAddNewBook(true)}
-        >
-          Add New Copy
-        </Button>
-      </Box>
-      {addNewBook ? AddNewBookForm(book) : <></>}
-    </>
-  );
-};
+    // Find a book that matches the entered title and author
+    const bookFound = booksArray.find((book) => {
+      return book.title === title && book.author === author;
+    });
 
-const AddBookModalFormFlow = (props: flowProps) => {
-  if (props.bookExists === null) return <></>;
-  return props.bookExists
-    ? BookFound(props.formObject)
-    : AddNewBookForm(props.formObject);
-};
-
-const AddBook = () => {
-  const addBookModal = useRef();
-  const formRef = useRef<HTMLFormElement>();
-
-  //state
-  const [addBookOpen, setAddBookOpen] = useState(false);
-  const [bookExists, setBookExists] = useState(null);
-  const [formObject, setFormObject] = useState({ title: '', author: '' });
-
-  const addBookOpenHandler = () => setAddBookOpen(true);
-  const addBookCloseHandler = () => {
-    setAddBookOpen(false);
-    setBookExists(null);
-    if (formRef.current) formRef.current.reset();
-    setFormObject({ title: '', author: '' });
-  };
-
-  const verifyNewBook = (e) => {
-    e.preventDefault();
-    const getValues = () => {
-      const form = Array.from(e.nativeEvent.srcElement);
-      if (
-        !(form[0] instanceof HTMLInputElement) ||
-        !(form[1] instanceof HTMLInputElement)
-      ) {
-        return alert('Please enter a title and author');
-      }
-      const title = form[0].value;
-      const author = form[1].value;
-      return { title, author };
-    };
-    const values = getValues();
-    if (!values) return;
-    if (!values.author || !values.title) return;
-    //send api call to verify book
-    const { response } = jsonData.data;
-    const bookExists = Object.entries(response).filter(
-      (book) =>
-        book[1].title === values.title && book[1].author === values.author
-    );
-
-    return bookExists.length ? bookExists[0][1] : false;
-  };
-
-  const bookFormHanlder = (e) => {
-    const status = verifyNewBook(e);
-    if (!status) setBookExists(false);
-    else {
-      setBookExists(true);
-      setFormObject(status);
+    if (bookFound) {
+      setFoundBookId(bookFound.id);
+      setSearchCatalog(true);
+      setAddBookCatalog(false);
+    } else {
+      setFoundBookId(null);
+      setAddBookCatalog(true);
+      setSearchCatalog(false);
     }
   };
 
-  return (
-    <>
-      <Button
-        className="pepoButton-outline"
-        variant="outlined"
-        color={'secondary'}
-        onClick={() => addBookOpenHandler()}
-      >
-        Add Book
-      </Button>
-      <Box>
-        <Modal
-          ref={addBookModal}
-          open={addBookOpen}
-          onClose={() => addBookCloseHandler()}
-        >
-          <Card className={styles.modalCard}>
-            <Box className={styles['modalCard-close']}>
-              <a onClick={() => addBookCloseHandler()}>&times;</a>
-            </Box>
-            <h1>Add Book</h1>
-            <form
-              className={styles['modalCard-form']}
-              ref={formRef}
-              onSubmit={bookFormHanlder}
-            >
-              <label htmlFor="title">Title</label>
-              <TextField
-                variant="standard"
-                type="text"
-                name="title"
-                id="title"
-              />
-              <label htmlFor="author">Author</label>
-              <TextField
-                variant="standard"
-                type="text"
-                name="author"
-                id="author"
-              />
-              <input type="submit" value="Search Book Catalog" />
-            </form>
-            <AddBookModalFormFlow
-              bookExists={bookExists}
-              formObject={formObject}
-            />
-          </Card>
-        </Modal>
-      </Box>
-    </>
-  );
-};
+  const addBookStyle = {
+    color: 'black',
+    border: '1px solid black',
+    '&:hover': {
+      border: '1px solid black',
+    },
+  };
 
-export default AddBook;
+  const searchBookCatalogButton = {
+    margin: '1rem 0',
+    padding: '0',
+    color: 'black',
+    textDecoration: 'underline',
+  };
+
+  const showSearchCatalogStyle = {
+    padding: '1rem',
+    borderRadius: '0.4rem',
+    backgroundColor: '#FFCC00',
+    '& p': {
+      margin: '0.5rem 0',
+    },
+    '& .MuiTextField-root': { m: 1, width: '25ch' },
+  };
+
+  const searchBookCatalogStyle = {
+    color: 'black',
+    border: '1px solid black',
+    margin: '0.5rem 0',
+    '&:hover': {
+      border: '1px solid black',
+    },
+  };
+
+  const genre = [
+    {
+      value: 'Action',
+      label: 'Action',
+    },
+    {
+      value: 'Comedy',
+      label: 'Comedy',
+    },
+    {
+      value: 'History',
+      label: 'History',
+    },
+    {
+      value: 'Romance',
+      label: 'Romance',
+    },
+  ];
+
+  const region = [
+    {
+      value: 'China',
+      label: 'China',
+    },
+    {
+      value: 'India',
+      label: 'India',
+    },
+    {
+      value: 'Japan',
+      label: 'Japan',
+    },
+    {
+      value: 'Philippines',
+      label: 'Philippines',
+    },
+    {
+      value: 'Vietnam',
+      label: 'Vietnam',
+    },
+    {
+      value: 'South Korea',
+      label: 'South Korea',
+    },
+  ];
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div>
+        <Button onClick={handleOpen} variant="outlined" sx={addBookStyle}>
+          Add Book
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginBottom: '0px',
+              }}
+            >
+              <Button
+                onClick={handleClose}
+                sx={{
+                  color: 'black',
+                  boxShadow: 'none',
+                  position: 'absolute',
+                  top: '0px',
+                  right: '-5px',
+                  padding: 0,
+                }}
+              >
+                <CloseIcon />
+              </Button>
+            </div>
+            <Typography
+              id="modal-modal-title"
+              variant="h5"
+              component="h2"
+              sx={{ fontWeight: 'bold' }}
+            >
+              Add Book
+            </Typography>
+            <TextField
+              id="title"
+              label="Title"
+              defaultValue=""
+              variant="standard"
+              style={{ margin: '0.5rem 0' }}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <TextField
+              id="author"
+              label="Author"
+              defaultValue=""
+              variant="standard"
+              style={{ margin: '0.5rem 0' }}
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+            />
+            <Button
+              onClick={() => handleClick(title, author)}
+              disableRipple
+              variant="text"
+              sx={searchBookCatalogButton}
+            >
+              Search book catalog
+            </Button>
+            {showSearchCatalog && (
+              <Box sx={showSearchCatalogStyle}>
+                <p>Book found in catalog</p>
+                <p>Book ID: {foundBookId}</p>
+                <Button variant="outlined" sx={searchBookCatalogStyle}>
+                  Add new copy
+                </Button>
+              </Box>
+            )}
+            {showAddBookCatalog && (
+              <Box
+                component="form"
+                sx={showSearchCatalogStyle}
+                noValidate
+                autoComplete="off"
+              >
+                <p>Book not found in catalog</p>
+                <div>
+                  <TextField
+                    id="standard-select-currency-native"
+                    select
+                    label="Genre"
+                    defaultValue=""
+                    SelectProps={{
+                      native: true,
+                    }}
+                    variant="standard"
+                  >
+                    {genre.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
+                  <TextField
+                    id="standard-select-currency-native"
+                    select
+                    label="Region"
+                    defaultValue=""
+                    SelectProps={{
+                      native: true,
+                    }}
+                    variant="standard"
+                  >
+                    {region.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
+                  <Button variant="outlined" sx={searchBookCatalogStyle}>
+                    Add new book
+                  </Button>
+                </div>
+              </Box>
+            )}
+          </Box>
+        </Modal>
+      </div>
+    </ThemeProvider>
+  );
+}

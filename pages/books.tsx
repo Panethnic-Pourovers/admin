@@ -89,7 +89,7 @@ const Catalog = ({
             <Search search={searchValue} setSearch={setSearch} />
           </div>
           <div className="bookCatalog-topbar-buttons">
-            <AddBook />
+            <AddBook bookData={jsonData} />
           </div>
         </Box>
         {/* <Table rows={filteredItems || []} columns={columns} /> */}
