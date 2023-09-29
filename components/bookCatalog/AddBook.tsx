@@ -122,53 +122,101 @@ const AddBook = (books) => {
   const formRef = useRef<HTMLFormElement>();
 
   //state
-  const [addBookOpen, setAddBookOpen] = useState(false);
-  const [bookExists, setBookExists] = useState(null);
-  const [formObject, setFormObject] = useState({ title: '', author: '' });
+  const [addBookModalOpenStatus, setAddBookModalOpenStatus] = useState(false);
+  const [bookExistsInLibraryDb, setBookExistsInLibraryDb] = useState(null);
+  const [bookSearchFormValues, setBookSearchFormValues] = useState({
+    title: '',
+    author: '',
+  });
 
-  const addBookOpenHandler = () => setAddBookOpen(true);
-  const addBookCloseHandler = () => {
-    setAddBookOpen(false);
-    setBookExists(null);
+  const addBookModalOpenHandler = () => setAddBookModalOpenStatus(true);
+  const addBookModalCloseHandler = () => {
+    setAddBookModalOpenStatus(false);
+    setBookExistsInLibraryDb(null);
     if (formRef.current) formRef.current.reset();
-    setFormObject({ title: '', author: '' });
+    setBookSearchFormValues({ title: '', author: '' });
   };
 
-  const verifyNewBook = (e) => {
+  const checkIfBookExistsInLibraryDb = (e: React.SyntheticEvent): boolean => {
     e.preventDefault();
-    const getValues = () => {
-      const form = Array.from(e.nativeEvent.srcElement);
-      if (
-        !(form[0] instanceof HTMLInputElement) ||
-        !(form[1] instanceof HTMLInputElement)
-      ) {
-        return alert('Please enter a title and author');
+
+    type BookSearchFormValuesType = {
+      title: string;
+      author: string;
+    };
+
+    const getBookSearchFormValues = ():
+      | false
+      | { title: string; author: string } => {
+      const bookSearchFormElementArray: Element[] = Array.from(
+        e.nativeEvent.target as HTMLFormElement
+      );
+
+      const bookSearchFormInputsDontExist =
+        !(bookSearchFormElementArray[0] instanceof HTMLInputElement) ||
+        !(bookSearchFormElementArray[1] instanceof HTMLInputElement);
+
+      if (bookSearchFormInputsDontExist) {
+        alert(
+          'Apologies, there has been an error. Please try again in a few minutes.'
+        );
+        return false;
       }
 
-      const title = form[0].value;
-      const author = form[1].value;
-      setFormObject({ title, author });
-      return { title, author };
-    };
-    const values = getValues();
-    if (!values) return;
-    if (!values.author || !values.title) return;
-    //send api call to verify book
-    const bookExists = Object.values(books.books).filter((book: Book) => {
-      console.log(book);
-      book.title === values.title && book.author === values.author;
-    });
+      const titleElement = bookSearchFormElementArray[0] as HTMLInputElement;
+      const authorElement = bookSearchFormElementArray[1] as HTMLInputElement;
 
-    return bookExists.length ? bookExists[0][1] : false;
+      const titleValue = titleElement.value;
+      const authorValue = authorElement.value;
+
+      setBookSearchFormValues({ title: titleValue, author: authorValue });
+
+      return { title: titleValue, author: authorValue };
+    };
+    const bookSearchFormValues = getBookSearchFormValues();
+
+    function isBookSearchFormValuesType(
+      bookSearchFormValues: false | BookSearchFormValuesType
+    ): bookSearchFormValues is BookSearchFormValuesType {
+      const { title, author } =
+        bookSearchFormValues as BookSearchFormValuesType;
+
+      const titleIsUndefined = title === undefined;
+      const authorIsUndefined = author === undefined;
+      const bookSearchValuesUndefined = titleIsUndefined || authorIsUndefined;
+
+      const titleIsEmpty = title === '';
+      const authorIsEmpty = author === '';
+      const bookSearchValuesEmpty = titleIsEmpty || authorIsEmpty;
+
+      if (bookSearchValuesUndefined || bookSearchValuesEmpty) {
+        return false;
+      }
+
+      return true;
+    }
+
+    if (!isBookSearchFormValuesType(bookSearchFormValues)) {
+      alert('Please enter a title and author');
+      return false;
+    }
+
+    const { title, author } = bookSearchFormValues;
+
+    //send api call to verify book
+    const getAllInstancesOfBookInDb = Object.values(books.books).filter(
+      (book: Book) => {
+        const matchBookViaTitleandAuthor =
+          book.title === title && book.author === author;
+        return matchBookViaTitleandAuthor;
+      }
+    );
+    return getAllInstancesOfBookInDb.length > 0 ? true : false;
   };
 
   const bookFormHanlder = (e) => {
-    const status = verifyNewBook(e);
-    if (!status) setBookExists(false);
-    else {
-      setBookExists(true);
-      // setFormObject(status);
-    }
+    const status = checkIfBookExistsInLibraryDb(e);
+    status ? setBookExistsInLibraryDb(true) : setBookExistsInLibraryDb(false);
   };
 
   return (
@@ -177,19 +225,19 @@ const AddBook = (books) => {
         className="pepoButton-outline"
         variant="outlined"
         color={'secondary'}
-        onClick={() => addBookOpenHandler()}
+        onClick={() => addBookModalOpenHandler()}
       >
         Add Book
       </Button>
       <Box>
         <Modal
           ref={addBookModal}
-          open={addBookOpen}
-          onClose={() => addBookCloseHandler()}
+          open={addBookModalOpenStatus}
+          onClose={() => addBookModalCloseHandler()}
         >
           <Card className={styles.modalCard}>
             <Box className={styles['modalCard-close']}>
-              <a onClick={() => addBookCloseHandler()}>&times;</a>
+              <a onClick={() => addBookModalCloseHandler()}>&times;</a>
             </Box>
             <h1>Add Book</h1>
             <form
@@ -214,8 +262,8 @@ const AddBook = (books) => {
               <input type="submit" value="Search Book Catalog" />
             </form>
             <AddBookModalFormFlow
-              bookExists={bookExists}
-              formObject={formObject}
+              bookExists={bookExistsInLibraryDb}
+              formObject={bookSearchFormValues}
             />
           </Card>
         </Modal>
