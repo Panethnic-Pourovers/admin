@@ -36,7 +36,11 @@ export default async function postHandler(req: NextApiRequest) {
   };
 
   if (!isBook(body)) {
-    return { success: false, message: 'Invalid book' };
+    return {
+      success: false,
+      message:
+        'Invalid book, please check the book object and resend after correcting the data',
+    };
   }
 
   await prisma.book.create({ data: body });

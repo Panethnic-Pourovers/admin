@@ -19,7 +19,7 @@ export default async function handler(
       if (!message) {
         res.status(500).json({ message: 'Something went wrong' });
       } else if (message.success === false) {
-        res.status(500).json({ message: 'Invalid book' });
+        res.status(500).json({ message });
       }
       res.status(200).json(message);
     }
