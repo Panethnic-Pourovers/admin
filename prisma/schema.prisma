@@ -17,7 +17,6 @@ model Book {
   location       String
   members        LibraryMember[]
   lastCheckedOut DateTime
-  copies         Int
 }
 
 model Genre {
