@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 // React imports
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // MUI components
 import { Button, Box, Card, Modal, Select, TextField } from '@mui/material';
 
 import styles from './AddBook.module.scss';
 
-// dummy data import
-import jsonData from 'dummyData.json';
-
 // axios imports
 import axios from 'axios';
+import { Book } from '@prisma/client';
 
 type newBookProps = {
   title: string;
@@ -64,7 +62,7 @@ const AddNewBookForm = (props: newBookProps) => {
   };
   const sendNewBook = (book) => {
     //send api call to add new book
-    axios.post('/api/books');
+    axios.post('/api/books', book);
     //after api call, reload page
     window.location.reload();
   };
@@ -119,7 +117,7 @@ const AddBookModalFormFlow = (props: flowProps) => {
     : AddNewBookForm(props.formObject);
 };
 
-const AddBook = () => {
+const AddBook = (books) => {
   const addBookModal = useRef();
   const formRef = useRef<HTMLFormElement>();
 
@@ -146,19 +144,20 @@ const AddBook = () => {
       ) {
         return alert('Please enter a title and author');
       }
+
       const title = form[0].value;
       const author = form[1].value;
+      setFormObject({ title, author });
       return { title, author };
     };
     const values = getValues();
     if (!values) return;
     if (!values.author || !values.title) return;
     //send api call to verify book
-    const { response } = jsonData.data;
-    const bookExists = Object.entries(response).filter(
-      (book) =>
-        book[1].title === values.title && book[1].author === values.author
-    );
+    const bookExists = Object.values(books.books).filter((book: Book) => {
+      console.log(book);
+      book.title === values.title && book.author === values.author;
+    });
 
     return bookExists.length ? bookExists[0][1] : false;
   };
@@ -168,7 +167,7 @@ const AddBook = () => {
     if (!status) setBookExists(false);
     else {
       setBookExists(true);
-      setFormObject(status);
+      // setFormObject(status);
     }
   };
 

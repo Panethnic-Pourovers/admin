@@ -81,11 +81,9 @@ const Catalog = ({
             <Search search={searchValue} setSearch={setSearch} />
           </div>
           <div className="bookCatalog-topbar-buttons">
-            <AddBook />
+            <AddBook books={books} />
           </div>
         </Box>
-        <Table rows={filteredItems || []} columns={columns} />
-        {/* <Table rows={data.books || []} columns={columns} /> */}
         <Table rows={filteredItems || []} columns={columns} />
         <Box
           className="bookCatalog-checkButtons"

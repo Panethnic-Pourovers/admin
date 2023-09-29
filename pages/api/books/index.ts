@@ -15,7 +15,7 @@ export default async function handler(
       res.status(200).json(books);
       return;
     } else if (req.method === 'POST') {
-      const message = await postHandler();
+      const message = await postHandler(req);
       res.status(200).json(message);
     }
   } catch {
