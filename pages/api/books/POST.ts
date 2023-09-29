@@ -23,6 +23,22 @@ export default async function postHandler(req: NextApiRequest) {
   console.log(req.body);
   const { body } = req;
 
-  await prisma.book.create({ data: req.body });
-  return { message: 'POST' };
+  const isBook = (body: any): body is Book => {
+    return (
+      typeof body.barcodeID === 'string' &&
+      typeof body.title === 'string' &&
+      typeof body.author === 'string' &&
+      Array.isArray(body.genres) &&
+      Array.isArray(body.regions) &&
+      typeof body.location === 'string' &&
+      Array.isArray(body.members)
+    );
+  };
+
+  if (!isBook(body)) {
+    return { success: false, message: 'Invalid book' };
+  }
+
+  await prisma.book.create({ data: body });
+  return { success: true, message: 'POST' };
 }

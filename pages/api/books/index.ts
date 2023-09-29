@@ -16,6 +16,11 @@ export default async function handler(
       return;
     } else if (req.method === 'POST') {
       const message = await postHandler(req);
+      if (!message) {
+        res.status(500).json({ message: 'Something went wrong' });
+      } else if (message.success === false) {
+        res.status(500).json({ message: 'Invalid book' });
+      }
       res.status(200).json(message);
     }
   } catch {
