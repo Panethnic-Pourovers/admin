@@ -12,64 +12,64 @@ import styles from './AddBook.module.scss';
 import axios from 'axios';
 import { Book } from '@prisma/client';
 
-type newBookProps = {
+type BookSearchFormValuesType = {
   title: string;
   author: string;
 };
 
 type flowProps = {
-  bookExists: true | false | null;
-  formObject: { title: string; author: string };
+  bookExistsInLibraryDb: boolean;
+  formObject: BookSearchFormValuesType;
 };
-const AddNewBookForm = (props: newBookProps) => {
-  const addNewBookSubmitHandler = (e) => {
+
+const sendBookToAPI = (book) => {
+  //send api call to add new book
+  axios.post('/api/books', book);
+  //after api call, reload page
+  window.location.reload();
+};
+
+const AddNewBookFormComponent = (props: BookSearchFormValuesType) => {
+  const submitBookToAPIHandler = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const form = Array.from(e.nativeEvent.srcElement);
-    if (
-      !(form[0] instanceof HTMLInputElement) ||
-      !(form[1] instanceof HTMLInputElement)
-    )
-      return alert('Please enter a genre and region');
-    const { title, author } = props;
-    const genre = form[0].value;
-    const region = form[1].value;
-    const regionTwo =
-      form[2] instanceof HTMLInputElement ? form[2].value : null;
-    const bookObject = compileBookObject(
-      title,
-      author,
-      genre,
-      region,
-      regionTwo
+
+    const genreAndRegionFormElementArray: Element[] = Array.from(
+      e.nativeEvent.target as HTMLFormElement
     );
-    sendNewBook(bookObject);
-  };
-  const compileBookObject = (
-    title: string,
-    author: string,
-    genre: string,
-    region: string,
-    regionTwo: string | null
-  ) => {
-    const bookObject = {
+
+    const formInputsDontExist =
+      !(genreAndRegionFormElementArray[0] instanceof HTMLSelectElement) ||
+      !(genreAndRegionFormElementArray[1] instanceof HTMLSelectElement);
+
+    if (formInputsDontExist) return alert('Please enter a genre and region');
+
+    const genreElement = genreAndRegionFormElementArray[0] as HTMLSelectElement;
+    const regionElement =
+      genreAndRegionFormElementArray[1] as HTMLSelectElement;
+
+    const { title, author } = props;
+    const genreValue = genreElement.value;
+    const regionValue = regionElement.value;
+    const regionTwoValue =
+      genreAndRegionFormElementArray[2] instanceof HTMLSelectElement
+        ? genreAndRegionFormElementArray[2].value
+        : null;
+
+    const bookToSend = {
       title,
       author,
-      genre,
-      region,
-      regionTwo,
+      genre: genreValue,
+      region: regionValue,
+      regionTwo: regionTwoValue,
     };
-    return bookObject;
+
+    sendBookToAPI(bookToSend);
   };
-  const sendNewBook = (book) => {
-    //send api call to add new book
-    axios.post('/api/books', book);
-    //after api call, reload page
-    window.location.reload();
-  };
+
   return (
     <form
       className={[styles.form, styles.addNewForm].join(' ')}
-      onSubmit={addNewBookSubmitHandler}
+      onSubmit={submitBookToAPIHandler}
     >
       <label htmlFor="genre">Genre</label>
       <Select variant="standard" name="genre" id="genre" />
@@ -81,6 +81,7 @@ const AddNewBookForm = (props: newBookProps) => {
         variant="outlined"
         color={'secondary'}
         sx={{ width: 'max-content' }}
+        type="submit"
       >
         Add New Book
       </Button>
@@ -88,7 +89,7 @@ const AddNewBookForm = (props: newBookProps) => {
   );
 };
 
-const BookFound = (book) => {
+const BookFoundInDbAlertComponent = (book) => {
   const [addNewBook, setAddNewBook] = useState(false);
   return (
     <>
@@ -105,20 +106,20 @@ const BookFound = (book) => {
           Add New Copy
         </Button>
       </Box>
-      {addNewBook ? AddNewBookForm(book) : <></>}
+      {addNewBook ? AddNewBookFormComponent(book) : <></>}
     </>
   );
 };
 
 const AddBookModalFormFlow = (props: flowProps) => {
-  if (props.bookExists === null) return <></>;
-  return props.bookExists
-    ? BookFound(props.formObject)
-    : AddNewBookForm(props.formObject);
+  if (props.bookExistsInLibraryDb === null) return <></>;
+  return props.bookExistsInLibraryDb
+    ? BookFoundInDbAlertComponent(props.formObject)
+    : AddNewBookFormComponent(props.formObject);
 };
 
 const AddBook = (books) => {
-  const addBookModal = useRef();
+  const addBookModalRef = useRef();
   const formRef = useRef<HTMLFormElement>();
 
   //state
@@ -139,11 +140,6 @@ const AddBook = (books) => {
 
   const checkIfBookExistsInLibraryDb = (e: React.SyntheticEvent): boolean => {
     e.preventDefault();
-
-    type BookSearchFormValuesType = {
-      title: string;
-      author: string;
-    };
 
     const getBookSearchFormValues = ():
       | false
@@ -231,7 +227,7 @@ const AddBook = (books) => {
       </Button>
       <Box>
         <Modal
-          ref={addBookModal}
+          ref={addBookModalRef}
           open={addBookModalOpenStatus}
           onClose={() => addBookModalCloseHandler()}
         >
@@ -262,7 +258,7 @@ const AddBook = (books) => {
               <input type="submit" value="Search Book Catalog" />
             </form>
             <AddBookModalFormFlow
-              bookExists={bookExistsInLibraryDb}
+              bookExistsInLibraryDb={bookExistsInLibraryDb}
               formObject={bookSearchFormValues}
             />
           </Card>
