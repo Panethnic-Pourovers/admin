@@ -40,5 +40,5 @@ export default async function postHandler(req: NextApiRequest) {
   }
 
   await prisma.book.create({ data: body });
-  return { success: true, message: 'POST' };
+  return { success: true, message: 'Book Successfully Created' };
 }
