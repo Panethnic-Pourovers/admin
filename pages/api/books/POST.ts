@@ -1,48 +1,46 @@
 import prisma from '@/prisma/prisma';
 import { NextApiRequest } from 'next';
 
-const dummyBook = {
-  title: 'titleValue',
-  author: 'authorValue',
-  genre: 'genreValue',
-  region: 'regionValue',
-  regionTwo: 'regionTwoValue',
-};
-
 type Book = {
-  barcodeID: string;
+  id: string;
   title: string;
   author: string;
   genres: string[];
   regions: string[];
   location: string;
   members: string[];
+  lastCheckedOut?: Date;
 };
 
 export default async function postHandler(req: NextApiRequest) {
   console.log(req.body);
   const { body } = req;
 
-  const isBook = (body: any): body is Book => {
+  const checkIfObjectIsBook = (body: any): body is Book => {
     return (
-      typeof body.barcodeID === 'string' &&
+      typeof body.id === 'string' &&
       typeof body.title === 'string' &&
       typeof body.author === 'string' &&
       Array.isArray(body.genres) &&
       Array.isArray(body.regions) &&
       typeof body.location === 'string' &&
-      Array.isArray(body.members)
+      Array.isArray(body.members) &&
     );
   };
 
-  if (!isBook(body)) {
+  if (!checkIfObjectIsBook(body)) {
     return {
       success: false,
       message:
         'Invalid book, please check the book object and resend after correcting the data',
     };
   }
+  
+  const bookToSend = body;
+  if(!bookToSend.lastCheckedOut) {
+    bookToSend.lastCheckedOut = new Date();
+  }
 
-  await prisma.book.create({ data: body });
+  await prisma.book.create({ data: bookToSend });
   return { success: true, message: 'Book Successfully Created' };
 }
