@@ -13,7 +13,7 @@ model Book {
   author         String
   genres         Genre[]
   regions        Region[]
-  location       Location        @relation(fields: [locationId], references: [id])
+  location       Location?       @relation(fields: [locationId], references: [id])
   members        LibraryMember[]
   lastCheckedOut DateTime
   locationId     String
