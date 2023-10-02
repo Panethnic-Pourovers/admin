@@ -7,21 +7,24 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    if (req.method === 'GET') {
-      const books = await getHandler();
-      if (!books) {
-        res.status(500).json({ message: 'Something went wrong' });
+    switch (req.method) {
+      case 'GET': {
+        const books = await getHandler();
+        if (!books) {
+          res.status(500).json({ message: 'Something went wrong' });
+        }
+        res.status(200).json(books);
+        return;
       }
-      res.status(200).json(books);
-      return;
-    } else if (req.method === 'POST') {
-      const message = await postHandler(req);
-      if (!message) {
-        res.status(500).json({ message: 'Something went wrong' });
-      } else if (message.success === false) {
-        res.status(500).json({ message });
+      case 'POST': {
+        const message = await postHandler(req);
+        if (!message) {
+          res.status(500).json({ message: 'Something went wrong' });
+        } else if (message.success === false) {
+          res.status(500).json({ message });
+        }
+        res.status(200).json(message);
       }
-      res.status(200).json(message);
     }
   } catch {
     res.status(500).json({ message: 'Something went wrong' });
