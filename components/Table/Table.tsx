@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // React import
-import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import React, { useState } from 'react';
 import TableEditButton from './TableEditButton';
 
 // datagrid dependency imports
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import { Modal, Button } from '@mui/material';
+import { Button, Modal } from '@mui/material';
 
 type tableProps = {
   rows: Record<string, unknown>[];
