@@ -9,6 +9,7 @@ datasource db {
 
 model Book {
   id             String          @id @default(cuid())
+  barcodeId      String          @unique @default(cuid())
   title          String
   author         String
   genres         Genre[]

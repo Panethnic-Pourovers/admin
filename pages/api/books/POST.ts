@@ -3,6 +3,7 @@ import { NextApiRequest } from 'next';
 
 type Book = {
   id: string;
+  barcodeId: string;
   title: string;
   author: string;
   genres: string[];
@@ -19,12 +20,13 @@ export default async function postHandler(req: NextApiRequest) {
   const checkIfObjectIsBook = (body: any): body is Book => {
     return (
       typeof body.id === 'string' &&
+      typeof body.barcodeId === 'string' &&
       typeof body.title === 'string' &&
       typeof body.author === 'string' &&
       Array.isArray(body.genres) &&
       Array.isArray(body.regions) &&
       typeof body.location === 'string' &&
-      Array.isArray(body.members) &&
+      Array.isArray(body.members)
     );
   };
 
@@ -35,9 +37,9 @@ export default async function postHandler(req: NextApiRequest) {
         'Invalid book, please check the book object and resend after correcting the data',
     };
   }
-  
+
   const bookToSend = body;
-  if(!bookToSend.lastCheckedOut) {
+  if (!bookToSend.lastCheckedOut) {
     bookToSend.lastCheckedOut = new Date();
   }
 
