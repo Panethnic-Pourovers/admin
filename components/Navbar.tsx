@@ -1,34 +1,34 @@
-import React from 'react';
-import { useRouter } from 'next/router';
 import MenuIcon from '@mui/icons-material/Menu';
-import LogoSVG from '../public/images/LogoSVG';
 import {
   AppBar,
   Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Menu,
-  Container,
   Button,
+  Container,
+  IconButton,
+  Menu,
   MenuItem,
+  Toolbar,
+  Typography,
 } from '@mui/material';
+import { useRouter } from 'next/router';
+import React from 'react';
+import LogoSVG from '../public/images/LogoSVG';
 
 import { PAGES } from 'src/utils/constants';
 
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
+  // the anchorEl prop on the menu is the button that will open the mobile nav menu. When set, the menu will open.
+  const [mobileAnchorElForNav, setMobileAnchorElForNav] =
+    React.useState<null | HTMLElement>(null);
 
   const router = useRouter();
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
+  const handleOpenMobileNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileAnchorElForNav(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleCloseMobileNavMenu = () => {
+    setMobileAnchorElForNav(null);
   };
 
   return (
@@ -62,14 +62,14 @@ function Navbar() {
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={handleOpenMobileNavMenu}
               color="inherit"
             >
               <MenuIcon />
             </IconButton>
             <Menu
               id="menu-appbar"
-              anchorEl={anchorElNav}
+              anchorEl={mobileAnchorElForNav}
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'left',
@@ -79,14 +79,14 @@ function Navbar() {
                 vertical: 'top',
                 horizontal: 'left',
               }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              open={Boolean(mobileAnchorElForNav)}
+              onClose={handleCloseMobileNavMenu}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
             >
               {PAGES.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                <MenuItem key={page.name} onClick={handleCloseMobileNavMenu}>
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
@@ -115,7 +115,7 @@ function Navbar() {
               <Button
                 key={page.name}
                 onClick={() => {
-                  handleCloseNavMenu();
+                  handleCloseMobileNavMenu();
                   router.push(`/${page.link}`); // Navigate to the corresponding link
                 }}
                 sx={{
