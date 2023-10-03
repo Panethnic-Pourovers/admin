@@ -1,7 +1,7 @@
 import prisma from '@/prisma/prisma';
 import { NextApiRequest } from 'next';
 
-type Book = {
+type BookObject = {
   id: string;
   barcodeId: string;
   title: string;
@@ -14,10 +14,9 @@ type Book = {
 };
 
 export default async function postHandler(req: NextApiRequest) {
-  console.log(req.body);
   const { body } = req;
 
-  const checkIfObjectIsBook = (body: any): body is Book => {
+  const checkIfObjectIsBook = (body: any): body is BookObject => {
     return (
       typeof body.id === 'string' &&
       typeof body.barcodeId === 'string' &&
