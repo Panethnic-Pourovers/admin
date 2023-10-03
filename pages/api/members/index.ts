@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import getHandler from './GET';
 import deleteHandler from './DELETE';
 import postHandler from './POST';
-import updateHandler from './UPDATE';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,23 +10,13 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET': {
-        if (!req.query.id) {
-          const members = await getHandler();
-          if (!members) {
-            res.status(500).json({ message: 'Unable to retrieve members.' });
-          } else {
-            res.status(200).json(members);
-          }
-          return res;
+        const members = await getHandler();
+        if (!members) {
+          res.status(500).json({ message: 'Unable to retrieve members.' });
         } else {
-          const member = await getHandler(req.query.id.toString());
-          if (!member) {
-            res.status(404).json({ message: 'Member ID not found.' });
-          } else {
-            res.status(200).json(member);
-          }
-          return res;
+          res.status(200).json(members);
         }
+        return res;
       }
       case 'POST': {
         const newMember = await postHandler(req.body);
@@ -38,23 +27,11 @@ export default async function handler(
         return res;
       }
       case 'DELETE': {
-        const deletedMember = await deleteHandler(req.query.id.toString());
-        if (!deletedMember) {
-          res
-            .status(404)
-            .json({ message: 'Member ID not found, delete failed.' });
-        } else {
-          res.status(200).json(deletedMember);
+        const deleted = await deleteHandler();
+        if (!deleted) {
+          res.status(500).json({ message: 'Members failed to be deleted.' });
         }
-        return res;
-      }
-      case 'PATCH': {
-        const updatedMember = await updateHandler(req.body);
-        if (!updatedMember) {
-          res.status(500).json({ message: 'Failed to update member.' });
-        } else {
-          res.status(200).json(updatedMember);
-        }
+        res.status(200).json(deleted);
         return res;
       }
       default: {
