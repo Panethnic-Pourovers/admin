@@ -49,7 +49,7 @@ const Catalog = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //state
   const [searchValue, setSearch] = useState('');
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'UUID', width: 100, flex: 1 },
@@ -62,18 +62,18 @@ const Catalog = ({
   ];
   const { response } = jsonData.data;
 
-    const loadData = () => {
-      setIsLoading(true);
-  
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    };
-  
-    // Call loadData when searching
-    React.useEffect(() => {
-      loadData();
-    }, [searchValue]);
+  const loadData = () => {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  // Call loadData when searching
+  React.useEffect(() => {
+    loadData();
+  }, [searchValue]);
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
