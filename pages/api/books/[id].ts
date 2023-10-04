@@ -5,6 +5,7 @@ export default async function getBookById(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // test
   const { id } = req.query;
   const book = await prisma.book.findUnique({
     where: {
