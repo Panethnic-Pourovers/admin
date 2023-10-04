@@ -71,7 +71,7 @@ export default function Table(props: tableProps) {
         pageSizeOptions={[5, 10, 25, 50, 100]}
         autoHeight
         slots={{
-          noRowsOverlay: CustomNoRowsOverlay
+          noRowsOverlay: CustomNoRowsOverlay,
         }}
         onRowClick={handleRowClick}
       />
