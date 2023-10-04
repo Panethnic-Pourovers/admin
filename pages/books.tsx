@@ -12,8 +12,8 @@ import { Box } from '@mui/material';
 
 // custom components
 import Layout from '@/components/Layout';
-import Table from '@/components/Table';
 import Search from '@/components/Search';
+import Table from '@/components/Table';
 import AddBook from '@/components/bookCatalog/AddBook';
 import CheckInOrOut from '@/components/bookCatalog/CheckInOrOut';
 
@@ -36,10 +36,8 @@ export const getServerSideProps: GetServerSideProps<{
       : 'http://localhost:3000';
   try {
     const response = await axios.get(`${url}/api/books`);
-    // console.log(response);
     return { props: { data: response.data } };
   } catch {
-    // console.log('error');
     return { props: { data: { error: 'Error loading books' } } };
   }
 };
