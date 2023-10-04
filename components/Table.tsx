@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// React import
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import TableEditButton from './TableEditButton';
-
-// datagrid dependency imports
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-
+import { DataGrid, GridColDef, GridOverlay } from '@mui/x-data-grid';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Modal, Button } from '@mui/material';
 
 type tableProps = {
@@ -14,6 +10,15 @@ type tableProps = {
   columns: GridColDef[];
   page?: number;
   pageSize?: number;
+};
+
+const CustomNoRowsOverlay = () => {
+  return (
+    <GridOverlay>
+      <CircularProgress />
+      <div style={{ margin: '5px' }}>Book Catalog is loading</div>
+    </GridOverlay>
+  );
 };
 
 export default function Table(props: tableProps) {
@@ -65,6 +70,9 @@ export default function Table(props: tableProps) {
         }}
         pageSizeOptions={[5, 10, 25, 50, 100]}
         autoHeight
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay
+        }}
         onRowClick={handleRowClick}
       />
 
