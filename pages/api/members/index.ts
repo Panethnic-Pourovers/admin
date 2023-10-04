@@ -27,7 +27,7 @@ export default async function handler(
         return res;
       }
       case 'DELETE': {
-        const deleted = await deleteHandler();
+        const deleted = await deleteHandler(null, req.body);
         if (!deleted) {
           res.status(500).json({ message: 'Members failed to be deleted.' });
         }
