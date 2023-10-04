@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 
 // MUI components
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Button,
@@ -14,18 +15,17 @@ import {
   ThemeProvider,
   Typography,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 
 // custom components
 import Layout from '@/components/Layout';
-import Table from '@/components/Table';
 import Search from '@/components/Search';
+import Table from '@/components/Table';
 
 import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
-import jsonData from 'dummyDataStaff.json';
 import theme from '@/styles/Theme';
+import jsonData from 'dummyDataStaff.json';
 
 const style = {
   position: 'absolute' as const,

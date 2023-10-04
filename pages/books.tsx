@@ -12,8 +12,8 @@ import { Box } from '@mui/material';
 
 // custom components
 import Layout from '@/components/Layout';
-import Table from '@/components/Table';
 import Search from '@/components/Search';
+import Table from '@/components/Table';
 import AddBook from '@/components/bookCatalog/AddBook';
 import CheckInOrOut from '@/components/bookCatalog/CheckInOrOut';
 
@@ -36,10 +36,8 @@ export const getServerSideProps: GetServerSideProps<{
       : 'http://localhost:3000';
   try {
     const response = await axios.get(`${url}/api/books`);
-    // console.log(response);
     return { props: { data: response.data } };
   } catch {
-    // console.log('error');
     return { props: { data: { error: 'Error loading books' } } };
   }
 };
@@ -49,6 +47,7 @@ const Catalog = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //state
   const [searchValue, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'UUID', width: 100, flex: 1 },
@@ -61,6 +60,18 @@ const Catalog = ({
   ];
   const { response } = jsonData.data;
 
+  const loadData = () => {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  // Call loadData when searching
+  React.useEffect(() => {
+    loadData();
+  }, [searchValue]);
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
@@ -92,9 +103,8 @@ const Catalog = ({
             <AddBook bookData={jsonData} />
           </div>
         </Box>
-        {/* <Table rows={filteredItems || []} columns={columns} /> */}
-        {/* <Table rows={data.books || []} columns={columns} /> */}
-        <Table rows={filteredItems || []} columns={columns} />
+
+        <Table rows={isLoading ? [] : filteredItems || []} columns={columns} />
         <Box
           className="bookCatalog-checkButtons"
           sx={{
