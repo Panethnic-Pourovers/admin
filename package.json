@@ -14,7 +14,7 @@
     "@fontsource/work-sans": "^5.0.8",
     "@mui/icons-material": "^5.14.3",
     "@mui/x-data-grid": "^6.11.1",
-    "@prisma/client": "^5.1.1",
+    "@prisma/client": "4.16.2",
     "next": "12.0.10",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -28,6 +28,7 @@
     "@types/react": "17.0.38",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.59.7",
+    "axios": "^1.5.0",
     "bulma": "^0.9.4",
     "eslint": "^8.41.0",
     "eslint-config-next": "13.4.3",
@@ -36,6 +37,6 @@
     "prettier": "^2.8.8",
     "prisma": "^5.1.1",
     "sass": "^1.66.1",
-    "typescript": "4.5.5"
+    "typescript": "^4.7.0"
   }
 }

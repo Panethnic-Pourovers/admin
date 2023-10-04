@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 // React imports
 import React, { useState, useRef } from 'react';
 
@@ -19,7 +21,6 @@ type flowProps = {
   formObject: { title: string; author: string };
 };
 const AddNewBookForm = (props: newBookProps) => {
-  console.log(props);
   const addNewBookSubmitHandler = (e) => {
     e.preventDefault();
     const form = Array.from(e.nativeEvent.srcElement);
