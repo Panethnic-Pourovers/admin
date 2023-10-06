@@ -63,19 +63,21 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
       noValidate
       autoComplete="off"
     >
-      <p>Book not found in catalog</p>
+      <h3>Add New Book to Catalog</h3>
       <form>
         <TextField
-          label="title"
+          label="Title"
           variant="standard"
           type="text"
+          defaultValue={props.title || ''}
           name="title"
           id="title"
         />
         <TextField
-          label="author"
+          label="Author"
           variant="standard"
           type="text"
+          defaultValue={props.author || ''}
           name="author"
           id="author"
         />

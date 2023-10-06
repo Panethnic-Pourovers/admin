@@ -16,13 +16,26 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
   const [showSearchCatalog, setShowSearchCatalog] = useState(false);
   const [showAddBookCatalog, setShowAddBookCatalog] = useState(false);
   const [hideStepOne, setHideStepOne] = useState(false);
+  const [stepTwoPrompt, setStepTwoPrompt] = useState(false);
   const [hideStepTwo, setHideStepTwo] = useState(true);
   const [foundBookId, setFoundBookId] = useState(null);
+
+  const goToStepOne = () => {
+    setHideStepOne(false);
+    setHideStepTwo(true);
+  };
+  const goToStepTwo = () => {
+    setShowSearchCatalog(false);
+    setHideStepOne(true);
+    setHideStepTwo(false);
+    console.log('goToStepTwo');
+  };
 
   const handleSearchBookCatalogButtonClick = (
     title: string,
     author: string
   ) => {
+    setStepTwoPrompt(false);
     const { data } = props.bookData;
     if (!data) return;
     const booksArray = props.bookData.data.response;
@@ -40,14 +53,8 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
       setFoundBookId(null);
       setShowAddBookCatalog(true);
       setShowSearchCatalog(false);
-      setHideStepOne(true);
-      setHideStepTwo(false);
+      setStepTwoPrompt(true);
     }
-  };
-
-  const goBackToStepOne = () => {
-    setHideStepOne(false);
-    setHideStepTwo(true);
   };
 
   return (
@@ -95,23 +102,38 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
         >
           Search book catalog
         </Button>
-        {showSearchCatalog && <BookFoundModalForm foundBookId={foundBookId} />}
+        {showSearchCatalog && (
+          <BookFoundModalForm
+            foundBookId={foundBookId}
+            showSecondStepFunction={goToStepTwo}
+          />
+        )}
+        {stepTwoPrompt && (
+          <>
+            <p>Book not found, please add it to the catalog:</p>
+            <Button
+              onClick={goToStepTwo}
+              variant="contained"
+              sx={{ margin: 0 }}
+            >
+              Add new book to catalog
+            </Button>
+          </>
+        )}
       </Box>
       <Box
         id="addBookFormFlow-stepTwo"
         sx={hideStepTwo ? { display: 'none' } : { display: 'block' }}
       >
-        {showAddBookCatalog && (
-          <>
-            <Button
-              onClick={goBackToStepOne}
-              sx={{ marginBottom: '0', color: 'black' }}
-            >
-              {'< Back'}
-            </Button>
-            <AddNewCopyOfBookForm />
-          </>
-        )}
+        <>
+          <Button
+            onClick={goToStepOne}
+            sx={{ marginBottom: '0', color: 'black' }}
+          >
+            {'< Back'}
+          </Button>
+          <AddNewCopyOfBookForm />
+        </>
       </Box>
     </>
   );
