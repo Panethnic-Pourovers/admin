@@ -7,7 +7,7 @@ import AddBookModalForm from './AddBookModalForm';
 
 import { addBookStyle } from './styles/addBookStyles';
 
-export default function AddBook({ bookData }) {
+export default function AddBookModal({ bookData }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

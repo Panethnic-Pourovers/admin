@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { modalDiv } from '@/components/Modal/styles/modalStyles';
+import {
+  closeModalButtonStyles,
+  modalContentContainerStyles,
+  modalHeaderStyles,
+} from '@/components/Modal/styles/modalStyles';
 
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, Modal as MUIModal } from '@mui/material';
@@ -15,25 +19,9 @@ const Modal = (props: modalProps) => {
   return (
     <div style={{ width: '100%' }}>
       <MUIModal open={props.modalIsOpen}>
-        <Box sx={modalDiv}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginBottom: '0px',
-            }}
-          >
-            <Button
-              onClick={props.modalClose}
-              sx={{
-                color: 'black',
-                boxShadow: 'none',
-                position: 'absolute',
-                top: '0px',
-                right: '-5px',
-                padding: 0,
-              }}
-            >
+        <Box sx={modalContentContainerStyles}>
+          <div style={modalHeaderStyles}>
+            <Button onClick={props.modalClose} sx={closeModalButtonStyles}>
               <CloseIcon />
             </Button>
           </div>
