@@ -7,15 +7,14 @@ type UpdateBody = {
   author: string;
   genres: string[];
   regions: string[];
+  location: string;
 };
 
 export default async function postHandler(body: UpdateBody) {
-  const { barcodeId, title, author, genres, regions } = body;
+  const { barcodeId, title, author, genres, regions, location } = body;
 
-  const [matchingGenres, matchingRegions] = await matchRelations(
-    genres,
-    regions
-  );
+  const [matchingGenres, matchingRegions, matchingLocation] =
+    await matchRelations(genres, regions, location);
 
   try {
     const newBook = await prisma.book.create({
@@ -23,8 +22,8 @@ export default async function postHandler(body: UpdateBody) {
         barcodeId,
         title,
         author,
-        location: '',
         lastCheckedOut: new Date(), // should this be null on create?
+        locationId: matchingLocation[0],
         genres: {
           connect: matchingGenres,
         },
