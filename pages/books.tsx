@@ -11,11 +11,11 @@ import React, { useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 
 // custom components
+import AddBook from '@/components/BookCatalog/AddBook';
+import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
-import AddBook from '@/components/bookCatalog/AddBook';
-import CheckInOrOut from '@/components/bookCatalog/CheckInOrOut';
 
 import { GridColDef } from '@mui/x-data-grid';
 
@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 };
 
-const Catalog = ({
+const BooksCatalog = ({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //state
@@ -120,4 +120,4 @@ const Catalog = ({
   );
 };
 
-export default Catalog;
+export default BooksCatalog;
