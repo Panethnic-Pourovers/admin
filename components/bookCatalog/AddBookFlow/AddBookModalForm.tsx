@@ -45,6 +45,11 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
     }
   };
 
+  const goBackToStepOne = () => {
+    setHideStepOne(false);
+    setHideStepTwo(true);
+  };
+
   return (
     <>
       <Box
@@ -96,7 +101,17 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
         id="addBookFormFlow-stepTwo"
         sx={hideStepTwo ? { display: 'none' } : { display: 'block' }}
       >
-        {showAddBookCatalog && <AddNewCopyOfBookForm />}
+        {showAddBookCatalog && (
+          <>
+            <Button
+              onClick={goBackToStepOne}
+              sx={{ marginBottom: '0', color: 'black' }}
+            >
+              {'< Back'}
+            </Button>
+            <AddNewCopyOfBookForm />
+          </>
+        )}
       </Box>
     </>
   );

@@ -50,7 +50,12 @@ const regions = [
   },
 ];
 
-const AddNewCopyOfBookForm = () => {
+type addNewCopyOfBookFormProps = {
+  title?: string;
+  author?: string;
+};
+
+const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
   return (
     <Box
       component="form"
@@ -59,7 +64,21 @@ const AddNewCopyOfBookForm = () => {
       autoComplete="off"
     >
       <p>Book not found in catalog</p>
-      <div>
+      <form>
+        <TextField
+          label="title"
+          variant="standard"
+          type="text"
+          name="title"
+          id="title"
+        />
+        <TextField
+          label="author"
+          variant="standard"
+          type="text"
+          name="author"
+          id="author"
+        />
         <TextField
           id="standard-select-currency-native"
           select
@@ -95,7 +114,7 @@ const AddNewCopyOfBookForm = () => {
         <Button variant="outlined" sx={searchBookCatalogStyle}>
           Add new book
         </Button>
-      </div>
+      </form>
     </Box>
   );
 };
