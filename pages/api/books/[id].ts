@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/prisma/prisma';
 import getHandler from './GET';
 import deleteHandler from './DELETE';
 import updateHandler from './PATCH';
@@ -47,15 +46,6 @@ export default async function getBookById(
     }
   } catch (e) {
     res.status(500).json({ message: e });
+    return res;
   }
-
-  const book = await prisma.book.findUnique({
-    where: {
-      id,
-    },
-  });
-  if (!book) {
-    return res.status(404).json({ error: 'Book not found.' });
-  }
-  res.status(200).json(book);
 }

@@ -13,11 +13,10 @@ type UpdateBody = {
 export default async function updateHandler(id: string, body: UpdateBody) {
   const { barcodeId, title, author, genres, regions, location } = body;
 
-  const [matchingGenres, matchingRegions] = await matchRelations(
-    genres,
-    regions
-  );
+  const [matchingGenres, matchingRegions, matchingLocation] =
+    await matchRelations(genres, regions, location);
 
+  // add locationId once schema changes are merged
   try {
     const updated = await prisma.book.update({
       where: {
@@ -27,7 +26,6 @@ export default async function updateHandler(id: string, body: UpdateBody) {
         barcodeId,
         title,
         author,
-        location,
         genres: {
           set: [],
           connect: matchingGenres,
