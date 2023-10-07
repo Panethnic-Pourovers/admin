@@ -26,6 +26,7 @@ export default async function updateHandler(id: string, body: UpdateBody) {
         barcodeId,
         title,
         author,
+        location: null, // change this once schema changes are merged
         genres: {
           set: [],
           connect: matchingGenres,

@@ -25,6 +25,7 @@ export default async function postHandler(body: UpdateBody) {
         author,
         lastCheckedOut: new Date(), // should this be null on create?
         // locationId: matchingLocation.id,
+        location: null,
         genres: {
           connect: matchingGenres,
         },
