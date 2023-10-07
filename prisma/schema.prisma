@@ -8,37 +8,59 @@ datasource db {
 }
 
 model Book {
-  id             String          @id @default(cuid())
+  id             String     @id @default(cuid())
   barcodeId      String
   title          String
   author         String
   genres         Genre[]
   regions        Region[]
-  location       String
-  members        LibraryMember[]
+  location       Location?  @relation(fields: [locationId], references: [id])
   lastCheckedOut DateTime
+  available      Boolean    @default(true)
+  checkout       Checkout[]
+  locationId     String?
+}
+
+model Location {
+  id     String @id @default(cuid())
+  name   String
+  book   Book[]
+  bookId String
 }
 
 model Genre {
   id     String  @id @default(cuid())
   name   String
-  Book   Book?   @relation(fields: [bookId], references: [id])
+  book   Book?   @relation(fields: [bookId], references: [id])
   bookId String?
 }
 
 model Region {
   id     String  @id @default(cuid())
   name   String
-  Book   Book?   @relation(fields: [bookId], references: [id])
+  book   Book?   @relation(fields: [bookId], references: [id])
   bookId String?
 }
 
 model LibraryMember {
-  id         String  @id @default(cuid())
-  firstName  String
-  lastName   String
-  email      String
-  phone      String?
-  checkedOut Book[]
-  history    String
+  id        String     @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  isStaff   Boolean    @default(false)
+  checkout  Checkout[]
+}
+
+model Checkout {
+  id           String        @id @default(cuid())
+  book         Book          @relation(fields: [bookId], references: [id])
+  member       LibraryMember @relation(fields: [memberId], references: [id])
+  memberId     String
+  bookId       String
+  checkoutDate DateTime
+  dueDate      DateTime
+  checkinDate  DateTime?
+
+  @@unique([memberId, bookId, checkinDate])
 }
