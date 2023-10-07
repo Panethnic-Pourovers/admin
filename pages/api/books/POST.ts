@@ -1,5 +1,4 @@
 import prisma from '@/prisma/prisma';
-import matchRelations from './helperFunctions';
 
 type UpdateBody = {
   barcodeId: string;
@@ -13,10 +12,9 @@ type UpdateBody = {
 export default async function postHandler(body: UpdateBody) {
   const { barcodeId, title, author, genres, regions, location } = body;
 
-  const [matchingGenres, matchingRegions, matchingLocation] =
-    await matchRelations(genres, regions, location);
+  const formattedGenres = genres.map((str) => ({ id: str }));
+  const formattedRegions = regions.map((str) => ({ id: str }));
 
-  // need to add location field once schema changes from database branch are merge
   try {
     const newBook = await prisma.book.create({
       data: {
@@ -24,17 +22,18 @@ export default async function postHandler(body: UpdateBody) {
         title,
         author,
         lastCheckedOut: new Date(), // should this be null on create?
-        // locationId: matchingLocation.id,
+        locationId: location,
         genres: {
-          connect: matchingGenres,
+          connect: formattedGenres,
         },
         regions: {
-          connect: matchingRegions,
+          connect: formattedRegions,
         },
       },
       include: {
         genres: true,
         regions: true,
+        location: true,
       },
     });
     return newBook;

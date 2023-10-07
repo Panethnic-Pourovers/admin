@@ -1,5 +1,4 @@
 import prisma from '@/prisma/prisma';
-import matchRelations from './helperFunctions';
 
 type UpdateBody = {
   barcodeId: string;
@@ -13,10 +12,9 @@ type UpdateBody = {
 export default async function updateHandler(id: string, body: UpdateBody) {
   const { barcodeId, title, author, genres, regions, location } = body;
 
-  const [matchingGenres, matchingRegions, matchingLocation] =
-    await matchRelations(genres, regions, location);
+  const formattedGenres = genres.map((str) => ({ id: str }));
+  const formattedRegions = regions.map((str) => ({ id: str }));
 
-  // add locationId once schema changes are merged
   try {
     const updated = await prisma.book.update({
       where: {
@@ -26,18 +24,20 @@ export default async function updateHandler(id: string, body: UpdateBody) {
         barcodeId,
         title,
         author,
+        locationId: location,
         genres: {
           set: [],
-          connect: matchingGenres,
+          connect: formattedGenres,
         },
         regions: {
           set: [],
-          connect: matchingRegions,
+          connect: formattedRegions,
         },
       },
       include: {
         genres: true,
         regions: true,
+        location: true,
       },
     });
     return updated;

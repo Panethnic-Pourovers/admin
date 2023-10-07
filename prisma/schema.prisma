@@ -14,18 +14,17 @@ model Book {
   author         String
   genres         Genre[]
   regions        Region[]
-  location       Location?  @relation(fields: [locationId], references: [id])
+  location       Location   @relation(fields: [locationId], references: [id])
   lastCheckedOut DateTime
   available      Boolean    @default(true)
   checkout       Checkout[]
-  locationId     String?
+  locationId     String
 }
 
 model Location {
-  id     String @id @default(cuid())
-  name   String
-  book   Book[]
-  bookId String
+  id    String @id @default(cuid())
+  name  String
+  books Book[]
 }
 
 model Genre {

@@ -11,6 +11,7 @@ export default async function getHandler(id?: string) {
       include: {
         genres: true,
         regions: true,
+        location: true,
       },
     });
   } else {
@@ -18,6 +19,7 @@ export default async function getHandler(id?: string) {
       include: {
         genres: true,
         regions: true,
+        location: true,
       },
     });
   }
