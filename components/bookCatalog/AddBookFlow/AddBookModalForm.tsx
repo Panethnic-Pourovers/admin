@@ -14,28 +14,29 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
   const [authorStateString, setAuthor] = useState('');
 
   const [showSearchCatalog, setShowSearchCatalog] = useState(false);
-  const [showAddBookCatalog, setShowAddBookCatalog] = useState(false);
+  const [promptToProceedToStepTwo, setShowStepTwoPrompt] = useState(false);
+
   const [hideStepOne, setHideStepOne] = useState(false);
-  const [stepTwoPrompt, setStepTwoPrompt] = useState(false);
   const [hideStepTwo, setHideStepTwo] = useState(true);
+
   const [foundBookId, setFoundBookId] = useState(null);
 
   const goToStepOne = () => {
     setHideStepOne(false);
     setHideStepTwo(true);
   };
+
   const goToStepTwo = () => {
     setShowSearchCatalog(false);
     setHideStepOne(true);
     setHideStepTwo(false);
-    console.log('goToStepTwo');
   };
 
   const handleSearchBookCatalogButtonClick = (
     title: string,
     author: string
   ) => {
-    setStepTwoPrompt(false);
+    setShowStepTwoPrompt(false);
     const { data } = props.bookData;
     if (!data) return;
     const booksArray = props.bookData.data.response;
@@ -48,12 +49,10 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
     if (bookFound) {
       setFoundBookId(bookFound.id);
       setShowSearchCatalog(true);
-      setShowAddBookCatalog(false);
     } else {
       setFoundBookId(null);
-      setShowAddBookCatalog(true);
       setShowSearchCatalog(false);
-      setStepTwoPrompt(true);
+      setShowStepTwoPrompt(true);
     }
   };
 
@@ -108,7 +107,7 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
             showSecondStepFunction={goToStepTwo}
           />
         )}
-        {stepTwoPrompt && (
+        {promptToProceedToStepTwo && (
           <>
             <p>Book not found, please add it to the catalog:</p>
             <Button
