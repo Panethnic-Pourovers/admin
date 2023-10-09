@@ -28,6 +28,7 @@ export const getServerSideProps: GetServerSideProps<{
       : 'http://localhost:3000';
   try {
     const response = await axios.get(`${url}/api/books`);
+    console.log(response);
     return { props: { data: response.data } };
   } catch {
     return { props: { data: { error: 'Error loading books' } } };
@@ -40,17 +41,6 @@ const BooksCatalog = ({
   //state
   const [searchValue, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // const columns: GridColDef[] = [
-  //   { field: 'id', headerName: 'UUID', width: 200 },
-  //   { field: 'title', headerName: 'Book Title', width: 200, flex: 1 },
-  //   { field: 'author', headerName: 'Author', width: 200 },
-  //   { field: 'genres', headerName: 'Genre(s)', width: 200 },
-  //   { field: 'regions', headerName: 'Region(s)', width: 200 },
-  //   { field: 'location', headerName: 'Location', width: 200 },
-  //   { field: 'member', headerName: 'Member', width: 200 },
-  //   { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
-  // ];
 
   const loadData = () => {
     setIsLoading(true);

@@ -11,10 +11,13 @@ export default async function handler(
       case 'GET': {
         const books = await getHandler();
         if (!books) {
-          res.status(500).json({ message: 'Something went wrong' });
+          console.log('failure');
+          res
+            .status(500)
+            .json({ message: 'An error ocurred when fetching books' });
         }
         res.status(200).json(books);
-        return;
+        break;
       }
       case 'POST': {
         const message = await postHandler(req);
@@ -24,6 +27,11 @@ export default async function handler(
           res.status(500).json({ message });
         }
         res.status(200).json(message);
+        break;
+      }
+      default: {
+        res.status(405).json({ message: 'Method not allowed' });
+        break;
       }
     }
   } catch {

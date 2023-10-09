@@ -12,26 +12,33 @@ model Book {
   barcodeId      String          @unique @default(cuid())
   title          String
   author         String
+  checkedOut     Boolean         @default(false)
+  lastCheckedOut DateTime
+  locationId     String?
+  location       Location?       @relation(fields: [locationId], references: [id])
   genres         Genre[]
   regions        Region[]
-  location       Location?       @relation(fields: [locationId], references: [id])
-  members        LibraryMember[]
-  lastCheckedOut DateTime
-  locationId     String
+  members        LibraryMember[] @relation("BookToLibraryMember")
+
+  @@index([locationId], map: "Book_locationId_fkey")
 }
 
 model Genre {
   id     String  @id @default(cuid())
   name   String
-  Book   Book?   @relation(fields: [bookId], references: [id])
   bookId String?
+  Book   Book?   @relation(fields: [bookId], references: [id])
+
+  @@index([bookId], map: "Genre_bookId_fkey")
 }
 
 model Region {
   id     String  @id @default(cuid())
   name   String
-  Book   Book?   @relation(fields: [bookId], references: [id])
   bookId String?
+  Book   Book?   @relation(fields: [bookId], references: [id])
+
+  @@index([bookId], map: "Region_bookId_fkey")
 }
 
 model Location {
@@ -46,6 +53,6 @@ model LibraryMember {
   lastName   String
   email      String
   phone      String?
-  checkedOut Book[]
   history    String
+  checkedOut Book[]  @relation("BookToLibraryMember")
 }
