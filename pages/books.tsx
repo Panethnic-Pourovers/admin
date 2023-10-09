@@ -8,7 +8,7 @@ import React, { useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 
 // custom components
-import AddBook from '@/components/BookCatalog/AddBookFlow/AddBookModal';
+import AddBookModal from '@/components/BookCatalog/AddBookFlow/AddBookModal';
 import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
@@ -75,7 +75,10 @@ const BooksCatalog = ({
   // search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
     return books.filter((item) => {
-      return new RegExp(searchValue, 'i').test(Object.values(item).toString());
+      return new RegExp(
+        searchValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+        'i'
+      ).test(Object.values(item).toString());
     });
   }, [books, searchValue]);
 
@@ -94,7 +97,7 @@ const BooksCatalog = ({
             <Search search={searchValue} setSearch={setSearch} />
           </div>
           <div className="bookCatalog-topbar-buttons">
-            <AddBook bookData={data} />
+            <AddBookModal bookData={data} />
           </div>
         </Box>
         <Table rows={filteredItems || []} columns={columns} />
