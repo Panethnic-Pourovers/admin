@@ -69,7 +69,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
           label="Title"
           variant="standard"
           type="text"
-          defaultValue={props.title || ''}
+          value={props.title || ''}
           name="title"
           id="title"
         />
@@ -77,7 +77,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
           label="Author"
           variant="standard"
           type="text"
-          defaultValue={props.author || ''}
+          value={props.author || ''}
           name="author"
           id="author"
         />

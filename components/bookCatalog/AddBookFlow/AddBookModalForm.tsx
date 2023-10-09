@@ -10,8 +10,8 @@ type addBookModalFormProps = {
 };
 
 const AddBookModalForm = (props: addBookModalFormProps) => {
-  const [titleStateString, setTitle] = useState('');
-  const [authorStateString, setAuthor] = useState('');
+  const [titleStateString, setTitleStateString] = useState('');
+  const [authorStateString, setAuthorStateString] = useState('');
 
   const [showSearchCatalog, setShowSearchCatalog] = useState(false);
   const [promptToProceedToStepTwo, setShowStepTwoPrompt] = useState(false);
@@ -77,7 +77,7 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
           variant="standard"
           style={{ margin: '0.5rem 0' }}
           value={titleStateString}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitleStateString(e.target.value)}
         />
         <TextField
           id="author"
@@ -86,7 +86,7 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
           variant="standard"
           style={{ margin: '0.5rem 0' }}
           value={authorStateString}
-          onChange={(e) => setAuthor(e.target.value)}
+          onChange={(e) => setAuthorStateString(e.target.value)}
         />
         <Button
           onClick={() =>
@@ -131,7 +131,10 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
           >
             {'< Back'}
           </Button>
-          <AddNewCopyOfBookForm />
+          <AddNewCopyOfBookForm
+            title={titleStateString}
+            author={authorStateString}
+          />
         </>
       </Box>
     </>
