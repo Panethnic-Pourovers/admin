@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
 //next imports
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
@@ -21,11 +18,6 @@ import { GridColDef } from '@mui/x-data-grid';
 
 // dummy data import
 import axios from 'axios';
-import jsonData from 'dummyData.json';
-
-// const getBooks = async (): Promise<any | undefined> => {
-//   return new Promise((resolve, reject) => {});
-// };
 
 export const getServerSideProps: GetServerSideProps<{
   data: Record<string, any>;
@@ -49,16 +41,16 @@ const BooksCatalog = ({
   const [searchValue, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'UUID', width: 100, flex: 1 },
-    { field: 'title', headerName: 'Title', width: 300 },
-    { field: 'author', headerName: 'Author', width: 200 },
-    { field: 'genres', headerName: 'Genre(s)', width: 200 },
-    { field: 'regions', headerName: 'Region(s)', width: 200 },
-    { field: 'location', headerName: 'Location', width: 200 },
-    { field: 'availability', headerName: 'Availability', width: 200 },
-  ];
-  const { response } = jsonData.data;
+  // const columns: GridColDef[] = [
+  //   { field: 'id', headerName: 'UUID', width: 200 },
+  //   { field: 'title', headerName: 'Book Title', width: 200, flex: 1 },
+  //   { field: 'author', headerName: 'Author', width: 200 },
+  //   { field: 'genres', headerName: 'Genre(s)', width: 200 },
+  //   { field: 'regions', headerName: 'Region(s)', width: 200 },
+  //   { field: 'location', headerName: 'Location', width: 200 },
+  //   { field: 'member', headerName: 'Member', width: 200 },
+  //   { field: 'lastCheckedOut', headerName: 'Last Checked Out', width: 200 },
+  // ];
 
   const loadData = () => {
     setIsLoading(true);
@@ -75,15 +67,17 @@ const BooksCatalog = ({
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
-  //search query filters based on all fields, with memoization
+  const { books, schema } = data;
+  const columns: GridColDef[] = schema.map((column) => {
+    return { field: column, headerName: column, flex: 1 };
+  });
+
+  // search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
-    return response.filter((item) => {
-      return new RegExp(
-        searchValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-        'i'
-      ).test(Object.values(item).toString());
+    return books.filter((item) => {
+      return new RegExp(searchValue, 'i').test(Object.values(item).toString());
     });
-  }, [response, searchValue]);
+  }, [books, searchValue]);
 
   return (
     <Layout>
@@ -100,11 +94,10 @@ const BooksCatalog = ({
             <Search search={searchValue} setSearch={setSearch} />
           </div>
           <div className="bookCatalog-topbar-buttons">
-            <AddBook bookData={jsonData} />
+            <AddBook bookData={data} />
           </div>
         </Box>
-
-        <Table rows={isLoading ? [] : filteredItems || []} columns={columns} />
+        <Table rows={filteredItems || []} columns={columns} />
         <Box
           className="bookCatalog-checkButtons"
           sx={{
@@ -112,8 +105,8 @@ const BooksCatalog = ({
             flexFlow: 'row-reverse nowrap',
           }}
         >
-          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
           <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
+          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
         </Box>
       </div>
     </Layout>

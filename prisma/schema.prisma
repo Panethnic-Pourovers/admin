@@ -9,14 +9,15 @@ datasource db {
 
 model Book {
   id             String          @id @default(cuid())
-  barcodeId      String
+  barcodeId      String          @unique @default(cuid())
   title          String
   author         String
   genres         Genre[]
   regions        Region[]
-  location       String
+  location       Location?       @relation(fields: [locationId], references: [id])
   members        LibraryMember[]
   lastCheckedOut DateTime
+  locationId     String
 }
 
 model Genre {
@@ -31,6 +32,12 @@ model Region {
   name   String
   Book   Book?   @relation(fields: [bookId], references: [id])
   bookId String?
+}
+
+model Location {
+  id   String @id @default(cuid())
+  name String
+  Book Book[]
 }
 
 model LibraryMember {
