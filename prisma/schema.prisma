@@ -8,17 +8,19 @@ datasource db {
 }
 
 model Book {
-  id             String          @id @default(cuid())
-  barcodeId      String          @unique @default(cuid())
+  id             String         @id @default(cuid())
+  barcodeId      String         @unique @default(cuid())
   title          String
   author         String
-  checkedOut     Boolean         @default(false)
+  checkedOut     Boolean        @default(false)
+  member         LibraryMember? @relation("BookToLibraryMember", fields: [libraryMemberId], references: [id])
   lastCheckedOut DateTime
-  locationId     String?
-  location       Location?       @relation(fields: [locationId], references: [id])
+  location       Location       @relation(fields: [locationId], references: [id])
   genres         Genre[]
   regions        Region[]
-  members        LibraryMember[] @relation("BookToLibraryMember")
+
+  locationId      String
+  libraryMemberId String?
 
   @@index([locationId], map: "Book_locationId_fkey")
 }

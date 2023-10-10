@@ -1,4 +1,5 @@
 //next imports
+import type { Book } from '@prisma/client';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 // React imports
@@ -19,25 +20,79 @@ import { GridColDef } from '@mui/x-data-grid';
 // dummy data import
 import axios from 'axios';
 
-export const getServerSideProps: GetServerSideProps<{
-  data: Record<string, any>;
-}> = async () => {
-  const url =
-    process.env.NODE_ENV === 'production'
-      ? 'http://localhost:3000'
-      : 'http://localhost:3000';
+const isBook = (book: any): book is Book => {
+  return (
+    book.title &&
+    book.author &&
+    book.checkedOut &&
+    book.lastCheckedOut &&
+    book.location &&
+    book.barcodeId &&
+    book.checkedOutBy
+  );
+};
+
+export const getServerSideProps = async () => {
   try {
+    const url =
+      process.env.NODE_ENV === 'production'
+        ? 'http://localhost:3000'
+        : 'http://localhost:3000';
     const response = await axios.get(`${url}/api/books`);
-    console.log(response);
-    return { props: { data: response.data } };
+
+    const { books } = response.data;
+    if (!books) {
+      return {
+        props: {
+          data: { error: 'Error loading books' },
+        },
+      };
+    }
+    const bookData: Record<string, unknown>[] = await Promise.all(
+      books.map(async (book): Promise<Record<string, unknown>> => {
+        const { locationId } = book;
+        const location = await axios.get(`${url}/api/locations/${locationId}`);
+        const { name } = location.data;
+        const checkedoutMember = book.checkedOut ? book.libraryMemberId : 'N/A';
+        return {
+          id: book.id,
+          Title: book.title,
+          Author: book.author,
+          Genres: book.genres || [],
+          Regions: book.regions || [],
+          'Checked Out': book.checkedOut,
+          'Checked Out By': checkedoutMember,
+          'Last Checked Out': book.lastCheckedOut,
+          Location: name,
+          'Barcode ID': book.barcodeId,
+        };
+      })
+    );
+
+    return {
+      props: {
+        data: bookData,
+        columns: [
+          'Title',
+          'Author',
+          'Genre(s)',
+          'Region(s)',
+          'Checked Out',
+          'Last Checked Out',
+          'Location',
+          'Barcode ID',
+          'Checked Out By',
+        ],
+      },
+    };
   } catch {
     return { props: { data: { error: 'Error loading books' } } };
   }
 };
 
-const BooksCatalog = ({
-  data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const BooksCatalog = (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) => {
   //state
   const [searchValue, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -57,21 +112,39 @@ const BooksCatalog = ({
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
-  const { books, schema } = data;
-  const columns: GridColDef[] = schema.map((column) => {
+  const { data, columns } = props;
+
+  if (data === undefined || columns === undefined) setIsLoading(true);
+
+  const tableColumns: GridColDef[] = columns.map((column) => {
     return { field: column, headerName: column, flex: 1 };
   });
 
   // search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
-    return books.filter((item) => {
+    if (!Array.isArray(data)) return [];
+    const reformattedData = data.map((book) => {
+      const { Genres, Regions } = book;
+      const genresString = Array.isArray(Genres)
+        ? Genres.map((genre) => genre.name || '').join(', ')
+        : '';
+      const regionsString = Array.isArray(Regions)
+        ? Regions.map((region) => region.name || '').join(', ')
+        : '';
+      return {
+        ...book,
+        'Genre(s)': genresString,
+        'Region(s)': regionsString,
+      };
+    });
+    console.log(reformattedData);
+    return reformattedData.filter((item) => {
       return new RegExp(
         searchValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
         'i'
       ).test(Object.values(item).toString());
     });
-  }, [books, searchValue]);
-
+  }, [data, searchValue]);
   return (
     <Layout>
       <div id="bookCatalog">
@@ -90,7 +163,7 @@ const BooksCatalog = ({
             <AddBookModal bookData={data} />
           </div>
         </Box>
-        <Table rows={filteredItems || []} columns={columns} />
+        <Table rows={filteredItems || []} columns={tableColumns} />
         <Box
           className="bookCatalog-checkButtons"
           sx={{
