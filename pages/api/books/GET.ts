@@ -8,6 +8,5 @@ export default async function getHandler() {
         regions: true,
       },
     })) || {};
-  console.log(books);
   return { books };
 }

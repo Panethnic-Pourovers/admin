@@ -64,7 +64,6 @@ export default async function postHandler(req: NextApiRequest) {
   });
   const getGenres = await Promise.all(
     body.genres.map((genre) => {
-      console.log(genre);
       return prisma.genre.findFirst({ where: { name: genre } });
     })
   );
@@ -73,7 +72,7 @@ export default async function postHandler(req: NextApiRequest) {
       return prisma.region.findFirst({ where: { name: regions } });
     })
   );
-  console.log(getRegions.length);
+
   if (!getLocation || !getGenres || !getRegions) {
     return {
       success: false,
@@ -86,7 +85,6 @@ export default async function postHandler(req: NextApiRequest) {
   bookToSend.locationId = getLocation.id as Book['locationId'];
   // bookToSend.genres = getGenres[0] === null ? [] : getGenres;
   // bookToSend.regions = getRegions[0] === null ? [] : getRegions;
-  console.log(bookToSend);
 
   await prisma.book.create({ data: bookToSend });
   return { success: true, message: 'Book Successfully Created' };
