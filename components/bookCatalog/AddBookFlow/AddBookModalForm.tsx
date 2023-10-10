@@ -42,7 +42,7 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
 
     // Find a book that matches the entered title and author
     const bookFound = booksArray.find((book) => {
-      return book.title === title && book.author === author;
+      return book.Title === title && book.Author === author;
     });
     if (bookFound) {
       setFoundBookId(bookFound.id);
