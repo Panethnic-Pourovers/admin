@@ -1,3 +1,4 @@
+import LogoSVG from '@/public/images/LogoSVG';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
@@ -12,7 +13,6 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
-import LogoSVG from '../public/images/LogoSVG';
 
 import { PAGES } from 'src/utils/constants';
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import Modal from '@/components/Modal';
 
-import AddBookModalForm from './AddBookModalForm';
+import AddBookModalForm from '@/components/BookCatalog/AddBookFlow/AddBookModalForm';
 
 import { addBookStyle } from '@/components/BookCatalog/AddBookFlow/styles/addBookStyles';
 

@@ -2,8 +2,8 @@ import { searchBookCatalogButton } from '@/components/BookCatalog/AddBookFlow/st
 import { Box, Button, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
+import AddNewCopyOfBookForm from '@/components/BookCatalog/AddBookFlow/AddNewCopyOfBookForm';
 import BookFoundModalForm from '@/components/BookCatalog/AddBookFlow/BookFoundModalForm';
-import AddNewCopyOfBookForm from './AddNewCopyOfBookForm';
 
 type addBookModalFormProps = {
   bookData: Record<string, any>;

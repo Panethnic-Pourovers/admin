@@ -1,6 +1,6 @@
+import getHandler from '@/pages/api/books/GET';
+import postHandler from '@/pages/api/books/POST';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import getHandler from './GET';
-import postHandler from './POST';
 
 export default async function handler(
   req: NextApiRequest,
