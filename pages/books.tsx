@@ -137,7 +137,6 @@ const BooksCatalog = (
         'Region(s)': regionsString,
       };
     });
-    console.log(reformattedData);
     return reformattedData.filter((item) => {
       return new RegExp(
         searchValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),

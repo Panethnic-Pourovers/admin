@@ -11,7 +11,6 @@ export default async function handler(
       case 'GET': {
         const books = await getHandler();
         if (!books) {
-          console.log('failure');
           res
             .status(500)
             .json({ message: 'An error ocurred when fetching books' });

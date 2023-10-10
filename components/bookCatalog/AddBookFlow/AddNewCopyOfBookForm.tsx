@@ -3,6 +3,7 @@ import {
   showSearchCatalogStyle,
 } from '@/components/BookCatalog/AddBookFlow/styles/addBookStyles';
 import { Box, Button, TextField } from '@mui/material';
+import axios from 'axios';
 
 const genres = [
   {
@@ -55,16 +56,31 @@ type addNewCopyOfBookFormProps = {
   author?: string;
 };
 
+const sendBook = async (e) => {
+  e.preventDefault();
+  const url =
+    process.env.NODE_ENV === 'production'
+      ? 'http://localhost:3000'
+      : 'http://localhost:3000';
+  const { title, author, genre, region } = e.target;
+  const book = {
+    title: title.value,
+    author: author.value,
+    checkedOut: false,
+    lastCheckedOut: null,
+    location: 'PEPO Library',
+    genres: [genre.value],
+    regions: [region.value],
+  };
+  const response = await axios.post(`${url}/api/books`, book);
+  return response;
+};
+
 const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
   return (
-    <Box
-      component="form"
-      sx={showSearchCatalogStyle}
-      noValidate
-      autoComplete="off"
-    >
+    <Box component="div" sx={showSearchCatalogStyle}>
       <h3>Add New Book to Catalog</h3>
-      <form>
+      <form onSubmit={sendBook}>
         <TextField
           label="Title"
           variant="standard"
@@ -82,9 +98,10 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
           id="author"
         />
         <TextField
-          id="standard-select-currency-native"
+          id="Genre"
           select
           label="Genre"
+          name="genre"
           defaultValue=""
           SelectProps={{
             native: true,
@@ -98,9 +115,10 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
           ))}
         </TextField>
         <TextField
-          id="standard-select-currency-native"
+          id="Region"
           select
           label="Region"
+          name="region"
           defaultValue=""
           SelectProps={{
             native: true,
@@ -113,7 +131,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
             </option>
           ))}
         </TextField>
-        <Button variant="outlined" sx={searchBookCatalogStyle}>
+        <Button variant="outlined" type="submit" sx={searchBookCatalogStyle}>
           Add new book
         </Button>
       </form>

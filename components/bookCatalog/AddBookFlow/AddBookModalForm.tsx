@@ -31,21 +31,19 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
     setHideStepOne(true);
     setHideStepTwo(false);
   };
-
   const handleSearchBookCatalogButtonClick = (
     title: string,
     author: string
   ) => {
     setShowStepTwoPrompt(false);
-    const { data } = props.bookData;
+    const data = props.bookData;
     if (!data) return;
-    const booksArray = props.bookData.data.response;
+    const booksArray = props.bookData;
 
     // Find a book that matches the entered title and author
     const bookFound = booksArray.find((book) => {
       return book.title === title && book.author === author;
     });
-
     if (bookFound) {
       setFoundBookId(bookFound.id);
       setShowSearchCatalog(true);
