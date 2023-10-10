@@ -5,7 +5,7 @@ import Modal from '@/components/Modal';
 
 import AddBookModalForm from './AddBookModalForm';
 
-import { addBookStyle } from './styles/addBookStyles';
+import { addBookStyle } from '@/components/BookCatalog/AddBookFlow/styles/addBookStyles';
 
 export default function AddBookModal({ bookData }) {
   const [open, setOpen] = useState(false);
