@@ -1,7 +1,27 @@
 import prisma from '@/prisma/prisma';
+import { Book } from '@prisma/client';
 
-export default async function getHandler() {
-  const books = await prisma.book.findMany();
-  const schema = Object.keys(books[0]);
-  return { books, schema };
+export default async function getHandler(id?: string) {
+  let books: Book | Book[];
+  if (id) {
+    books = await prisma.book.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        genres: true,
+        regions: true,
+        location: true,
+      },
+    });
+  } else {
+    books = await prisma.book.findMany({
+      include: {
+        genres: true,
+        regions: true,
+        location: true,
+      },
+    });
+  }
+  return books;
 }
