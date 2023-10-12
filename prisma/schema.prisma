@@ -21,6 +21,7 @@ model Book {
 
   locationId      String
   libraryMemberId String?
+  Checkout        Checkout[]
 
   @@index([locationId], map: "Book_locationId_fkey")
 }
@@ -50,11 +51,25 @@ model Location {
 }
 
 model LibraryMember {
-  id         String  @id @default(cuid())
+  id         String     @id @default(cuid())
   firstName  String
   lastName   String
   email      String
   phone      String?
   history    String
-  checkedOut Book[]  @relation("BookToLibraryMember")
+  checkedOut Book[]     @relation("BookToLibraryMember")
+  Checkout   Checkout[]
+}
+
+model Checkout {
+  id           String        @id @default(cuid())
+  book         Book          @relation(fields: [bookId], references: [id])
+  member       LibraryMember @relation(fields: [memberId], references: [id])
+  memberId     String
+  bookId       String
+  checkoutDate DateTime
+  dueDate      DateTime
+  checkinDate  DateTime?
+
+  @@unique([memberId, bookId, checkinDate])
 }
