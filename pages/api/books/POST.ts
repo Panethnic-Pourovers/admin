@@ -49,43 +49,34 @@ export default async function postHandler(req: NextApiRequest) {
     };
   }
 
+  const { title, author, genres, regions } = body;
+
+  const formattedGenres = genres.map((str) => ({ id: str }));
+  const formattedRegions = regions.map((str) => ({ id: str }));
+
   const bookToSend = {
-    title: body.title,
-    author: body.author,
+    title: title,
+    author: author,
     checkedOut: false,
     lastCheckedOut: null,
     locationId: '',
-    libraryMemberId: null,
-    // genres: [],
-    // regions: [],
+    genres: { connect: formattedGenres },
+    regions: { connect: formattedRegions },
   };
   const getLocation = await prisma.location.findFirst({
     where: { name: 'PEPO Checkin' },
   });
-  const getGenres = await Promise.all(
-    body.genres.map((genre) => {
-      return prisma.genre.findFirst({ where: { name: genre } });
-    })
-  );
-  const getRegions = await Promise.all(
-    body.regions.map((regions) => {
-      return prisma.region.findFirst({ where: { name: regions } });
-    })
-  );
-
-  if (!getLocation || !getGenres || !getRegions) {
-    return {
-      success: false,
-      message:
-        'Invalid book, please check the book object and resend after correcting the data',
-    };
-  }
 
   bookToSend.lastCheckedOut = new Date();
-  bookToSend.locationId = getLocation.id as Book['locationId'];
-  // bookToSend.genres = getGenres[0] === null ? [] : getGenres;
-  // bookToSend.regions = getRegions[0] === null ? [] : getRegions;
+  bookToSend.locationId = getLocation.id as string;
 
-  await prisma.book.create({ data: bookToSend });
+  await prisma.book.create({
+    data: bookToSend,
+    include: {
+      genres: true,
+      regions: true,
+      location: true,
+    },
+  });
   return { success: true, message: 'Book Successfully Created' };
 }
