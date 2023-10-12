@@ -40,7 +40,7 @@ export const getServerSideProps = async () => {
         : 'http://localhost:3000';
     const response = await axios.get(`${url}/api/books`);
 
-    const { books } = response.data;
+    const books = response.data;
     if (!books) {
       return {
         props: {
@@ -114,11 +114,14 @@ const BooksCatalog = (
 
   const { data, columns } = props;
 
-  if (data === undefined || columns === undefined) setIsLoading(true);
+  if (isLoading === false && (data === undefined || columns === undefined))
+    setIsLoading(true);
 
-  const tableColumns: GridColDef[] = columns.map((column) => {
-    return { field: column, headerName: column, flex: 1 };
-  });
+  const tableColumns: GridColDef[] = columns
+    ? columns.map((column) => {
+        return { field: column, headerName: column, flex: 1 };
+      })
+    : [];
 
   // search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
