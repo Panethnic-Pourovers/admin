@@ -1,6 +1,6 @@
 //next imports
 import type { Book } from '@prisma/client';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { InferGetServerSidePropsType } from 'next';
 
 // React imports
 import React, { useMemo, useState } from 'react';
