@@ -27,7 +27,7 @@ export default async function postHandler(body: PostBody) {
         id: bookId,
       },
       data: {
-        available: false,
+        checkedOut: true,
         lastCheckedOut: new Date(),
       },
     }),
