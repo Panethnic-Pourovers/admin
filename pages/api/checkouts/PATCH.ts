@@ -33,7 +33,8 @@ export default async function updateHandler(body: UpdateBody) {
         id: bookId,
       },
       data: {
-        available: true,
+        checkedOut: false,
+        member: { connect: { id: '' } },
       },
     }),
   ]);
