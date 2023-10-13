@@ -17,7 +17,6 @@ import Table from '@/components/Table';
 
 import { GridColDef } from '@mui/x-data-grid';
 
-// dummy data import
 import axios from 'axios';
 
 const isBook = (book: any): book is Book => {
