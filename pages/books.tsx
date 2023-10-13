@@ -9,7 +9,7 @@ import React, { useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 
 // custom components
-import AddBookModal from '@/components/BookCatalog/AddBookFlow/AddBookModal';
+import AddBookModal from '@/components/BookCatalog/AddBookModal';
 import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
