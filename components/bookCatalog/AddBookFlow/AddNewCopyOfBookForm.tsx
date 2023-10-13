@@ -1,9 +1,9 @@
+import { Box, Button, TextField } from '@mui/material';
+import axios from 'axios';
 import {
   searchBookCatalogStyle,
   showSearchCatalogStyle,
-} from '@/components/BookCatalog/AddBookFlow/styles/addBookStyles';
-import { Box, Button, TextField } from '@mui/material';
-import axios from 'axios';
+} from './styles/addBookStyles';
 
 const genres = [
   {

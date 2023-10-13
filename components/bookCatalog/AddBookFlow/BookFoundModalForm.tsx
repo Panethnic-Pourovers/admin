@@ -1,8 +1,8 @@
+import { Box, Button } from '@mui/material';
 import {
   searchBookCatalogStyle,
   showSearchCatalogStyle,
-} from '@/components/BookCatalog/AddBookFlow/styles/addBookStyles';
-import { Box, Button } from '@mui/material';
+} from './styles/addBookStyles';
 
 type bookFoundModalFormProps = {
   foundBookId: number;

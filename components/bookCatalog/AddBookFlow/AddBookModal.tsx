@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 import Modal from '@/components/Modal';
 
-import AddBookModalForm from '@/components/BookCatalog/AddBookFlow/AddBookModalForm';
+import AddBookModalForm from './AddBookModalForm';
 
-import { addBookStyle } from '@/components/BookCatalog/AddBookFlow/styles/addBookStyles';
+import { addBookStyle } from './styles/addBookStyles';
 
 export default function AddBookModal({ bookData }) {
   const [open, setOpen] = useState(false);
