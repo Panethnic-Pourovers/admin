@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
 //next imports
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import type { Book } from '@prisma/client';
+import { InferGetServerSidePropsType } from 'next';
 
 // React imports
 import React, { useMemo, useState } from 'react';
@@ -11,54 +9,92 @@ import React, { useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 
 // custom components
+import AddBookModal from '@/components/BookCatalog/AddBookModal';
+import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
-import AddBook from '@/components/bookCatalog/AddBook';
-import CheckInOrOut from '@/components/bookCatalog/CheckInOrOut';
 
 import { GridColDef } from '@mui/x-data-grid';
 
-// dummy data import
 import axios from 'axios';
-import jsonData from 'dummyData.json';
 
-// const getBooks = async (): Promise<any | undefined> => {
-//   return new Promise((resolve, reject) => {});
-// };
+const isBook = (book: any): book is Book => {
+  return (
+    book.title &&
+    book.author &&
+    book.checkedOut &&
+    book.lastCheckedOut &&
+    book.location &&
+    book.barcodeId &&
+    book.checkedOutBy
+  );
+};
 
-export const getServerSideProps: GetServerSideProps<{
-  data: Record<string, any>;
-}> = async () => {
-  const url =
-    process.env.NODE_ENV === 'production'
-      ? 'http://localhost:3000'
-      : 'http://localhost:3000';
+export const getServerSideProps = async () => {
   try {
+    const url =
+      process.env.NODE_ENV === 'production'
+        ? 'http://localhost:3000'
+        : 'http://localhost:3000';
     const response = await axios.get(`${url}/api/books`);
-    return { props: { data: response.data } };
+
+    const books = response.data;
+    if (!books) {
+      return {
+        props: {
+          data: { error: 'Error loading books' },
+        },
+      };
+    }
+    const bookData: Record<string, unknown>[] = await Promise.all(
+      books.map(async (book): Promise<Record<string, unknown>> => {
+        const { locationId } = book;
+        const location = await axios.get(`${url}/api/locations/${locationId}`);
+        const { name } = location.data;
+        const checkedoutMember = book.checkedOut ? book.libraryMemberId : 'N/A';
+        return {
+          id: book.id,
+          Title: book.title,
+          Author: book.author,
+          Genres: book.genres || [],
+          Regions: book.regions || [],
+          'Checked Out': book.checkedOut,
+          'Checked Out By': checkedoutMember,
+          'Last Checked Out': book.lastCheckedOut,
+          Location: name,
+          'Barcode ID': book.barcodeId,
+        };
+      })
+    );
+
+    return {
+      props: {
+        data: bookData,
+        columns: [
+          'Title',
+          'Author',
+          'Genre(s)',
+          'Region(s)',
+          'Checked Out',
+          'Last Checked Out',
+          'Location',
+          'Barcode ID',
+          'Checked Out By',
+        ],
+      },
+    };
   } catch {
     return { props: { data: { error: 'Error loading books' } } };
   }
 };
 
-const Catalog = ({
-  data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const BooksCatalog = (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) => {
   //state
   const [searchValue, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'UUID', width: 100, flex: 1 },
-    { field: 'title', headerName: 'Title', width: 300 },
-    { field: 'author', headerName: 'Author', width: 200 },
-    { field: 'genres', headerName: 'Genre(s)', width: 200 },
-    { field: 'regions', headerName: 'Region(s)', width: 200 },
-    { field: 'location', headerName: 'Location', width: 200 },
-    { field: 'availability', headerName: 'Availability', width: 200 },
-  ];
-  const { response } = jsonData.data;
 
   const loadData = () => {
     setIsLoading(true);
@@ -75,16 +111,41 @@ const Catalog = ({
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
-  //search query filters based on all fields, with memoization
+  const { data, columns } = props;
+
+  if (isLoading === false && (data === undefined || columns === undefined))
+    setIsLoading(true);
+
+  const tableColumns: GridColDef[] = columns
+    ? columns.map((column) => {
+        return { field: column, headerName: column, flex: 1 };
+      })
+    : [];
+
+  // search query filters based on all fields, with memoization
   const filteredItems = useMemo(() => {
-    return response.filter((item) => {
+    if (!Array.isArray(data)) return [];
+    const reformattedData = data.map((book) => {
+      const { Genres, Regions } = book;
+      const genresString = Array.isArray(Genres)
+        ? Genres.map((genre) => genre.name || '').join(', ')
+        : '';
+      const regionsString = Array.isArray(Regions)
+        ? Regions.map((region) => region.name || '').join(', ')
+        : '';
+      return {
+        ...book,
+        'Genre(s)': genresString,
+        'Region(s)': regionsString,
+      };
+    });
+    return reformattedData.filter((item) => {
       return new RegExp(
         searchValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
         'i'
       ).test(Object.values(item).toString());
     });
-  }, [response, searchValue]);
-
+  }, [data, searchValue]);
   return (
     <Layout>
       <div id="bookCatalog">
@@ -100,11 +161,10 @@ const Catalog = ({
             <Search search={searchValue} setSearch={setSearch} />
           </div>
           <div className="bookCatalog-topbar-buttons">
-            <AddBook />
+            <AddBookModal bookData={data} />
           </div>
         </Box>
-
-        <Table rows={isLoading ? [] : filteredItems || []} columns={columns} />
+        <Table rows={filteredItems || []} columns={tableColumns} />
         <Box
           className="bookCatalog-checkButtons"
           sx={{
@@ -112,12 +172,12 @@ const Catalog = ({
             flexFlow: 'row-reverse nowrap',
           }}
         >
-          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
           <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
+          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
         </Box>
       </div>
     </Layout>
   );
 };
 
-export default Catalog;
+export default BooksCatalog;

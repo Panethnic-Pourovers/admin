@@ -1,7 +1,7 @@
+import deleteHandler from '@/pages/api/members/DELETE';
+import getHandler from '@/pages/api/members/GET';
+import postHandler from '@/pages/api/members/POST';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import getHandler from './GET';
-import deleteHandler from './DELETE';
-import postHandler from './POST';
 
 export default async function handler(
   req: NextApiRequest,

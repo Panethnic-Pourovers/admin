@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import getHandler from './GET';
 import deleteHandler from './DELETE';
+import getHandler from './GET';
 import postHandler from './POST';
 
 export default async function handler(

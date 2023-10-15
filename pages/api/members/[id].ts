@@ -1,7 +1,7 @@
+import deleteHandler from '@/pages/api/members/DELETE';
+import getHandler from '@/pages/api/members/GET';
+import updateHandler from '@/pages/api/members/PATCH';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import getHandler from './GET';
-import deleteHandler from './DELETE';
-import updateHandler from './PATCH';
 
 export default async function getBookById(
   req: NextApiRequest,

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // React import
+import TableEditButton from '@/components/Table/TableEditButton';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
-import TableEditButton from './TableEditButton';
 
 // datagrid dependency imports
 import { DataGrid, GridColDef } from '@mui/x-data-grid';

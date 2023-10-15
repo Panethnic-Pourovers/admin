@@ -7,6 +7,9 @@ export default async function handler(
   try {
     res.status(200).json({ message: 'Hello world!' });
   } catch {
-    res.status(500).json({ message: 'Something went wrong' });
+    res.status(500).json({
+      message:
+        "We're sorry, something went wrong. Please try again in a few minutes",
+    });
   }
 }

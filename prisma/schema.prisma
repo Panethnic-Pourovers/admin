@@ -8,47 +8,57 @@ datasource db {
 }
 
 model Book {
-  id             String     @id @default(cuid())
-  barcodeId      String
+  id             String         @id @default(cuid())
+  barcodeId      String         @unique @default(cuid())
   title          String
   author         String
+  checkedOut     Boolean        @default(false)
+  member         LibraryMember? @relation("BookToLibraryMember", fields: [libraryMemberId], references: [id])
+  lastCheckedOut DateTime
+  location       Location       @relation(fields: [locationId], references: [id])
   genres         Genre[]
   regions        Region[]
-  location       Location   @relation(fields: [locationId], references: [id])
-  lastCheckedOut DateTime
-  available      Boolean    @default(true)
-  checkout       Checkout[]
-  locationId     String
-}
 
-model Location {
-  id    String @id @default(cuid())
-  name  String
-  books Book[]
+  locationId      String
+  libraryMemberId String?
+  Checkout        Checkout[]
+
+  @@index([locationId], map: "Book_locationId_fkey")
 }
 
 model Genre {
   id     String  @id @default(cuid())
   name   String
-  book   Book?   @relation(fields: [bookId], references: [id])
   bookId String?
+  Book   Book?   @relation(fields: [bookId], references: [id])
+
+  @@index([bookId], map: "Genre_bookId_fkey")
 }
 
 model Region {
   id     String  @id @default(cuid())
   name   String
-  book   Book?   @relation(fields: [bookId], references: [id])
   bookId String?
+  Book   Book?   @relation(fields: [bookId], references: [id])
+
+  @@index([bookId], map: "Region_bookId_fkey")
+}
+
+model Location {
+  id   String @id @default(cuid())
+  name String
+  Book Book[]
 }
 
 model LibraryMember {
-  id        String     @id @default(cuid())
-  firstName String
-  lastName  String
-  email     String
-  phone     String?
-  isStaff   Boolean    @default(false)
-  checkout  Checkout[]
+  id         String     @id @default(cuid())
+  firstName  String
+  lastName   String
+  email      String
+  phone      String?
+  history    String
+  checkedOut Book[]     @relation("BookToLibraryMember")
+  Checkout   Checkout[]
 }
 
 model Checkout {
