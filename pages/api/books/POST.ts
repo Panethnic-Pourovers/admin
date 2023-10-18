@@ -48,8 +48,9 @@ export default async function postHandler(req: NextApiRequest) {
         'Invalid book, please check the book object and resend after correcting the data',
     };
   }
-
+  console.log('here we are');
   const { title, author, genres, regions } = body;
+  console.log(title, author);
 
   const formattedGenres = genres.map((str) => ({ id: str }));
   const formattedRegions = regions.map((str) => ({ id: str }));
