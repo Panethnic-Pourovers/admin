@@ -9,12 +9,12 @@ import {
   Menu,
   MenuItem,
   Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { PAGES } from 'src/utils/constants';
+import { PAGES } from '@/src/utils/constants';
 
 function Navbar() {
   // the anchorEl prop on the menu is the button that will open the mobile nav menu. When set, the menu will open.
@@ -51,7 +51,7 @@ function Navbar() {
               fontWeight: 400,
               letterSpacing: '.3rem',
               color: 'inherit',
-              textDecoration: 'none',
+              textDecoration: 'none'
             }}
           >
             <LogoSVG />
@@ -72,17 +72,17 @@ function Navbar() {
               anchorEl={mobileAnchorElForNav}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'left',
+                horizontal: 'left'
               }}
               open={Boolean(mobileAnchorElForNav)}
               onClose={handleCloseMobileNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'block', md: 'none' }
               }}
             >
               {PAGES.map((page) => (
@@ -105,7 +105,7 @@ function Navbar() {
               fontWeight: 400,
               letterSpacing: '.3rem',
               color: 'inherit',
-              textDecoration: 'none',
+              textDecoration: 'none'
             }}
           >
             <LogoSVG />
@@ -125,9 +125,9 @@ function Navbar() {
                   color: 'black',
                   display: 'block',
                   '&:hover': {
-                    color: 'white',
+                    color: 'white'
                   },
-                  whiteSpace: 'nowrap',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {page.name}

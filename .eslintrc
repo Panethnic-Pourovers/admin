@@ -43,6 +43,7 @@
         "block-opening-brace-newline-after": "always-multi-line",
         "tabs": false,
         "indent_size": 2,
+        "trailingComma": "none",
         "comma-dangle": ["error", {
           "arrays": "never",
           "objects": "never",

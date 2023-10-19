@@ -17,6 +17,7 @@ import Table from '@/components/Table';
 
 import { GridColDef } from '@mui/x-data-grid';
 
+import getEnvUrl from '@/src/utils/getEnvUrl';
 import axios from 'axios';
 
 const isBook = (book: any): book is Book => {
@@ -33,18 +34,14 @@ const isBook = (book: any): book is Book => {
 
 export const getServerSideProps = async () => {
   try {
-    const url =
-      process.env.NODE_ENV === 'production'
-        ? 'http://localhost:3000'
-        : 'http://localhost:3000';
+    const url = getEnvUrl();
     const response = await axios.get(`${url}/api/books`);
-
     const books = response.data;
     if (!books) {
       return {
         props: {
-          data: { error: 'Error loading books' },
-        },
+          data: { error: 'Error loading books' }
+        }
       };
     }
     const bookData: Record<string, unknown>[] = await Promise.all(
@@ -63,7 +60,7 @@ export const getServerSideProps = async () => {
           'Checked Out By': checkedoutMember,
           'Last Checked Out': book.lastCheckedOut,
           Location: name,
-          'Barcode ID': book.barcodeId,
+          'Barcode ID': book.barcodeId
         };
       })
     );
@@ -80,9 +77,9 @@ export const getServerSideProps = async () => {
           'Last Checked Out',
           'Location',
           'Barcode ID',
-          'Checked Out By',
-        ],
-      },
+          'Checked Out By'
+        ]
+      }
     };
   } catch {
     return { props: { data: { error: 'Error loading books' } } };
@@ -136,7 +133,7 @@ const BooksCatalog = (
       return {
         ...book,
         'Genre(s)': genresString,
-        'Region(s)': regionsString,
+        'Region(s)': regionsString
       };
     });
     return reformattedData.filter((item) => {
@@ -153,7 +150,7 @@ const BooksCatalog = (
           sx={{
             display: 'flex',
             flexFlow: 'row nowrap',
-            justifyContent: 'space-between',
+            justifyContent: 'space-between'
           }}
           className="bookCatalog-topbar"
         >
@@ -169,7 +166,7 @@ const BooksCatalog = (
           className="bookCatalog-checkButtons"
           sx={{
             display: 'flex',
-            flexFlow: 'row-reverse nowrap',
+            flexFlow: 'row-reverse nowrap'
           }}
         >
           <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
