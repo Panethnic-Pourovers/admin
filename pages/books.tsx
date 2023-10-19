@@ -35,6 +35,7 @@ const isBook = (book: any): book is Book => {
 export const getServerSideProps = async () => {
   try {
     const url = getEnvUrl();
+    console.log(`${url}/api/books`);
     const response = await axios.get(`${url}/api/books`);
     const books = response.data;
     if (!books) {
