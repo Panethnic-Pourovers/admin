@@ -9,7 +9,7 @@ datasource db {
 
 model Book {
   id             String         @id @default(cuid())
-  barcodeId      String         @unique @default(cuid())
+  barcodeId      String         @unique
   title          String
   author         String
   checkedOut     Boolean        @default(false)
@@ -22,6 +22,7 @@ model Book {
   locationId      String
   libraryMemberId String?
   Checkout        Checkout[]
+  dateCreated     DateTime   @default(now())
 
   @@index([locationId], map: "Book_locationId_fkey")
 }
