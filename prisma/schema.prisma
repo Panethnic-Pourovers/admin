@@ -34,12 +34,9 @@ model Genre {
 }
 
 model Region {
-  id     String  @id @default(cuid())
-  name   String  @unique
-  bookId String?
-  Book   Book?   @relation(fields: [bookId], references: [id])
-
-  @@index([bookId], map: "Region_bookId_fkey")
+  id   String @id @default(cuid())
+  name String @unique
+  Book Book[]
 }
 
 model Location {
