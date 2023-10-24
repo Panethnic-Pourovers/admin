@@ -27,17 +27,14 @@ model Book {
 }
 
 model Genre {
-  id     String  @id @default(cuid())
-  name   String
-  bookId String?
-  Book   Book?   @relation(fields: [bookId], references: [id])
-
-  @@index([bookId], map: "Genre_bookId_fkey")
+  id   String @id @default(cuid())
+  name String @unique
+  Book Book[]
 }
 
 model Region {
   id     String  @id @default(cuid())
-  name   String
+  name   String  @unique
   bookId String?
   Book   Book?   @relation(fields: [bookId], references: [id])
 
