@@ -9,13 +9,13 @@ export const modalContentContainerStyles: React.CSSProperties = {
   padding: '25px 40px',
   borderRadius: '4px',
   width: '80%',
-  maxWidth: '400px',
+  maxWidth: '400px'
 };
 
 export const modalHeaderStyles = {
   display: 'flex',
   justifyContent: 'flex-end',
-  marginBottom: '0px',
+  marginBottom: '0px'
 };
 
 export const closeModalButtonStyles = {
@@ -24,5 +24,5 @@ export const closeModalButtonStyles = {
   position: 'absolute',
   top: '0px',
   right: '-5px',
-  padding: 0,
+  padding: 0
 };

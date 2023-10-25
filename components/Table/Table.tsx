@@ -37,7 +37,7 @@ export default function Table(props: tableProps) {
     if (column.field === 'availability') {
       return {
         ...column,
-        renderCell: renderAvailabilityColumn,
+        renderCell: renderAvailabilityColumn
       };
     }
     return column;
@@ -60,8 +60,8 @@ export default function Table(props: tableProps) {
         columns={updatedColumns}
         initialState={{
           pagination: {
-            paginationModel: { page: page || 0, pageSize: pageSize || 10 },
-          },
+            paginationModel: { page: page || 0, pageSize: pageSize || 10 }
+          }
         }}
         pageSizeOptions={[5, 10, 25, 50, 100]}
         autoHeight
@@ -79,7 +79,7 @@ export default function Table(props: tableProps) {
             padding: '25px 40px',
             borderRadius: '4px',
             width: '80%',
-            maxWidth: '400px',
+            maxWidth: '400px'
           }}
         >
           {selectedRowData && (
@@ -88,7 +88,7 @@ export default function Table(props: tableProps) {
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  marginBottom: '0px',
+                  marginBottom: '0px'
                 }}
               >
                 <Button
@@ -99,7 +99,7 @@ export default function Table(props: tableProps) {
                     position: 'absolute',
                     top: '0px',
                     right: '-5px',
-                    padding: 0,
+                    padding: 0
                   }}
                 >
                   <CloseIcon />

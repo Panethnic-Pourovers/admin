@@ -14,12 +14,12 @@ export default async function getHandler(body: GetBody) {
   const checkout = await prisma.checkout.findMany({
     where: {
       memberId,
-      bookId,
+      bookId
     },
     include: {
       member: true,
-      book: true,
-    },
+      book: true
+    }
   });
 
   return checkout;

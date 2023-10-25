@@ -13,7 +13,7 @@ import {
   InputLabel,
   Modal,
   ThemeProvider,
-  Typography,
+  Typography
 } from '@mui/material';
 
 // custom components
@@ -35,7 +35,7 @@ const style = {
   width: 350,
   bgcolor: 'background.paper',
   boxShadow: 24,
-  padding: '32px 32px 12px 32px',
+  padding: '32px 32px 12px 32px'
 };
 
 const Staff = () => {
@@ -50,7 +50,7 @@ const Staff = () => {
     { field: 'firstName', headerName: 'First Name', width: 300 },
     { field: 'lastName', headerName: 'Last Name', width: 300 },
     { field: 'email', headerName: 'Email', width: 500 },
-    { field: 'phone', headerName: 'Phone Number', width: 200 },
+    { field: 'phone', headerName: 'Phone Number', width: 200 }
   ];
 
   return (
@@ -60,7 +60,7 @@ const Staff = () => {
           sx={{
             display: 'flex',
             flexFlow: 'row nowrap',
-            justifyContent: 'space-between',
+            justifyContent: 'space-between'
           }}
           className="bookCatalog-topbar"
         >
@@ -87,7 +87,7 @@ const Staff = () => {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    marginBottom: '0px',
+                    marginBottom: '0px'
                   }}
                 >
                   <Button
@@ -98,7 +98,7 @@ const Staff = () => {
                       position: 'absolute',
                       top: '0px',
                       right: '-5px',
-                      padding: 0,
+                      padding: 0
                     }}
                   >
                     <CloseIcon />

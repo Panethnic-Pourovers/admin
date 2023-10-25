@@ -3,7 +3,7 @@ import React from 'react';
 import {
   closeModalButtonStyles,
   modalContentContainerStyles,
-  modalHeaderStyles,
+  modalHeaderStyles
 } from '@/components/Modal/styles/modalStyles';
 
 import CloseIcon from '@mui/icons-material/Close';

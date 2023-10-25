@@ -1,14 +1,14 @@
-import React from 'react';
+import theme from '@/styles/Theme';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Button,
-  Typography,
   Modal,
   TextField,
   ThemeProvider,
+  Typography
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import theme from '@/styles/Theme';
+import React from 'react';
 
 const style = {
   position: 'absolute' as const,
@@ -18,7 +18,7 @@ const style = {
   width: 350,
   bgcolor: 'background.paper',
   boxShadow: 24,
-  padding: '32px 32px 12px 32px',
+  padding: '32px 32px 12px 32px'
 };
 
 export default function CheckInOrOut({ title, CheckInOrOut }) {
@@ -36,8 +36,8 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
     border: `1px solid ${theme.palette.primary.main}`,
     padding: '0rem 1rem',
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-    },
+      backgroundColor: theme.palette.primary.main
+    }
   };
 
   const checkInAndOutButtonStyle = {
@@ -50,8 +50,8 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
     backgroundColor: theme.palette.primary.main,
     border: `0.1rem solid ${theme.palette.primary.main}`,
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-    },
+      backgroundColor: theme.palette.primary.main
+    }
   };
 
   return (
@@ -71,7 +71,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
               style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                marginBottom: '0px',
+                marginBottom: '0px'
               }}
             >
               <Button
@@ -82,7 +82,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                   position: 'absolute',
                   top: '0px',
                   right: '-5px',
-                  padding: 0,
+                  padding: 0
                 }}
               >
                 <CloseIcon />
@@ -119,7 +119,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                 sx={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  marginTop: '16px',
+                  marginTop: '16px'
                 }}
               >
                 <Button onClick={handleOpen} sx={checkInAndOutButtonStyle}>

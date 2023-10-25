@@ -13,30 +13,30 @@ export default async function updateHandler(body: UpdateBody) {
       memberId,
       bookId,
       checkinDate: {
-        equals: null,
-      },
-    },
+        equals: null
+      }
+    }
   });
 
   const transactionRes = await prisma.$transaction([
     prisma.checkout.update({
       where: {
-        id: checkout.id,
+        id: checkout.id
       },
 
       data: {
-        checkinDate: new Date(),
-      },
+        checkinDate: new Date()
+      }
     }),
     prisma.book.update({
       where: {
-        id: bookId,
+        id: bookId
       },
       data: {
         checkedOut: false,
-        member: { connect: { id: '' } },
-      },
-    }),
+        member: { connect: { id: '' } }
+      }
+    })
   ]);
 
   return transactionRes;
