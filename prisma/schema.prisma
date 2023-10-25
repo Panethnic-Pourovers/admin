@@ -8,35 +8,35 @@ datasource db {
 }
 
 model Book {
-  id             String         @id @default(cuid())
-  barcodeId      String         @unique
-  title          String
-  author         String
-  checkedOut     Boolean        @default(false)
-  member         LibraryMember? @relation("BookToLibraryMember", fields: [libraryMemberId], references: [id])
-  lastCheckedOut DateTime
-  location       Location       @relation(fields: [locationId], references: [id])
-  genres         Genre[]
-  regions        Region[]
-
+  id              String         @id @default(cuid())
+  barcodeId       String         @unique
+  title           String
+  author          String
+  lastCheckedOut  DateTime
   locationId      String
+  checkedOut      Boolean        @default(false)
   libraryMemberId String?
+  dateCreated     DateTime       @default(now())
+  member          LibraryMember? @relation("BookToLibraryMember", fields: [libraryMemberId], references: [id])
+  location        Location       @relation(fields: [locationId], references: [id])
   Checkout        Checkout[]
-  dateCreated     DateTime   @default(now())
+  genres          Genre[]        @relation("BookToGenre")
+  regions         Region[]       @relation("BookToRegion")
 
   @@index([locationId], map: "Book_locationId_fkey")
+  @@index([libraryMemberId], map: "Book_libraryMemberId_fkey")
 }
 
 model Genre {
   id   String @id @default(cuid())
   name String @unique
-  Book Book[]
+  Book Book[] @relation("BookToGenre")
 }
 
 model Region {
   id   String @id @default(cuid())
   name String @unique
-  Book Book[]
+  Book Book[] @relation("BookToRegion")
 }
 
 model Location {
@@ -58,13 +58,14 @@ model LibraryMember {
 
 model Checkout {
   id           String        @id @default(cuid())
-  book         Book          @relation(fields: [bookId], references: [id])
-  member       LibraryMember @relation(fields: [memberId], references: [id])
   memberId     String
   bookId       String
   checkoutDate DateTime
   dueDate      DateTime
   checkinDate  DateTime?
+  book         Book          @relation(fields: [bookId], references: [id])
+  member       LibraryMember @relation(fields: [memberId], references: [id])
 
   @@unique([memberId, bookId, checkinDate])
+  @@index([bookId], map: "Checkout_bookId_fkey")
 }
