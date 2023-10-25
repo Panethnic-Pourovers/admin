@@ -19,7 +19,7 @@ export default async function handler(
         return res;
       }
       case 'POST': {
-        const newBook = await postHandler(req.body);
+        const newBook = await postHandler(req);
         if (!newBook) {
           res.status(500).json({ message: 'Book failed to be created.' });
         }

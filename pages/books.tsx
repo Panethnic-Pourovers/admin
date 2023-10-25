@@ -32,6 +32,24 @@ const isBook = (book: any): book is Book => {
   );
 };
 
+const formatDate = (date: string): string => {
+  const month = date.substring(5, 7);
+  const day = date.substring(8, 10);
+  const year = date.substring(0, 4);
+  let hours = date.substring(11, 13);
+  const minutes = date.substring(14, 16);
+  let timePeriod = 'AM';
+  const hoursInt = parseInt(hours);
+  if (hoursInt > 12) {
+    timePeriod = 'PM';
+    hours = (hoursInt - 12).toString();
+  }
+  if (hours.length < 2) {
+    hours = '0' + hours;
+  }
+  return `${month}/${day}/${year} ${hours}:${minutes}${timePeriod}`;
+};
+
 export const getServerSideProps = async () => {
   try {
     const url = getEnvUrl();
@@ -51,6 +69,8 @@ export const getServerSideProps = async () => {
         const location = await axios.get(`${url}/api/locations/${locationId}`);
         const { name } = location.data;
         const checkedoutMember = book.checkedOut ? book.libraryMemberId : 'N/A';
+        const formattedDate = formatDate(book.lastCheckedOut);
+
         return {
           id: book.id,
           Title: book.title,
@@ -59,7 +79,7 @@ export const getServerSideProps = async () => {
           Regions: book.regions || [],
           'Checked Out': book.checkedOut,
           'Checked Out By': checkedoutMember,
-          'Last Checked Out': book.lastCheckedOut,
+          'Last Checked Out': formattedDate,
           Location: name,
           'Barcode ID': book.barcodeId
         };
