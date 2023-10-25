@@ -1,5 +1,4 @@
 import prisma from '@/prisma/prisma';
-import type { Book } from '@prisma/client';
 import { NextApiRequest } from 'next';
 
 type BookObject = {
@@ -34,6 +33,26 @@ export default async function postHandler(req: NextApiRequest) {
     return exists.length > 0;
   };
 
+  const generateBarcode = async () => {
+    // generates 5-digit barcodes from 00000-99999
+    // increments barcode of last created book
+    const padWithZeros = (number) => {
+      let strNumber = number.toString();
+      while (strNumber.length < 5) {
+        strNumber = '0' + strNumber;
+      }
+      return strNumber;
+    };
+
+    const latestObject = await prisma.book.findFirst({
+      orderBy: { dateCreated: 'desc' },
+    });
+    if (!latestObject) {
+      return '00000';
+    }
+    return padWithZeros(parseInt(latestObject.barcodeId) + 1);
+  };
+
   if (!checkForLocation(body.location)) {
     return {
       success: false,
@@ -48,27 +67,49 @@ export default async function postHandler(req: NextApiRequest) {
         'Invalid book, please check the book object and resend after correcting the data',
     };
   }
-
-  const { title, author, genres, regions } = body;
-
-  const formattedGenres = genres.map((str) => ({ id: str }));
-  const formattedRegions = regions.map((str) => ({ id: str }));
-
-  const bookToSend = {
-    title: title,
-    author: author,
-    checkedOut: false,
-    lastCheckedOut: null,
-    locationId: '',
-    genres: { connect: formattedGenres },
-    regions: { connect: formattedRegions },
-  };
+  const { title, author, genres, regions, location } = body;
   const getLocation = await prisma.location.findFirst({
     where: { name: 'PEPO Checkin' },
   });
 
-  bookToSend.lastCheckedOut = new Date();
-  bookToSend.locationId = getLocation.id as string;
+  // create genres and regions if they do not exist
+  for (const genre of genres) {
+    const res = await prisma.genre.findUnique({ where: { name: genre } });
+    if (!res) {
+      await prisma.genre.create({ data: { name: genre } });
+    }
+  }
+
+  for (const region of regions) {
+    const res = await prisma.region.findUnique({ where: { name: region } });
+    if (!res) {
+      await prisma.region.create({ data: { name: region } });
+    }
+  }
+
+  const bookToSend = {
+    title: title,
+    barcodeId: await generateBarcode(),
+    author: author,
+    checkedOut: false,
+    lastCheckedOut: new Date(),
+    location: {
+      connectOrCreate: {
+        where: {
+          id: getLocation.id,
+        },
+        create: {
+          name: location,
+        },
+      },
+    },
+    genres: {
+      connect: genres.map((genreName) => ({ name: genreName })),
+    },
+    regions: {
+      connect: regions.map((regionName) => ({ name: regionName })),
+    },
+  };
 
   await prisma.book.create({
     data: bookToSend,
