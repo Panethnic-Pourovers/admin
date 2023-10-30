@@ -6,8 +6,8 @@ export default async function getHandler(id?: string) {
   if (id) {
     members = await prisma.libraryMember.findUnique({
       where: {
-        id,
-      },
+        id
+      }
     });
   } else {
     members = await prisma.libraryMember.findMany();

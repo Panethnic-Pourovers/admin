@@ -28,7 +28,7 @@ export default async function postHandler(req: NextApiRequest) {
 
   const checkForLocation = async (location: string) => {
     const exists = await prisma.location.findMany({
-      where: { name: body.location },
+      where: { name: body.location }
     });
     return exists.length > 0;
   };
@@ -45,7 +45,7 @@ export default async function postHandler(req: NextApiRequest) {
     };
 
     const latestObject = await prisma.book.findFirst({
-      orderBy: { dateCreated: 'desc' },
+      orderBy: { dateCreated: 'desc' }
     });
     if (!latestObject) {
       return '00000';
@@ -57,19 +57,19 @@ export default async function postHandler(req: NextApiRequest) {
     return {
       success: false,
       message:
-        'Invalid location, please check the location and resend after correcting the data',
+        'Invalid location, please check the location and resend after correcting the data'
     };
   }
   if (!checkIfObjectIsBook(body)) {
     return {
       success: false,
       message:
-        'Invalid book, please check the book object and resend after correcting the data',
+        'Invalid book, please check the book object and resend after correcting the data'
     };
   }
   const { title, author, genres, regions, location } = body;
   const getLocation = await prisma.location.findFirst({
-    where: { name: 'PEPO Checkin' },
+    where: { name: 'PEPO Checkin' }
   });
 
   // create genres and regions if they do not exist
@@ -96,19 +96,19 @@ export default async function postHandler(req: NextApiRequest) {
     location: {
       connectOrCreate: {
         where: {
-          id: getLocation.id,
+          id: getLocation.id
         },
         create: {
-          name: location,
-        },
-      },
+          name: location
+        }
+      }
     },
     genres: {
-      connect: genres.map((genreName) => ({ name: genreName })),
+      connect: genres.map((genreName) => ({ name: genreName }))
     },
     regions: {
-      connect: regions.map((regionName) => ({ name: regionName })),
-    },
+      connect: regions.map((regionName) => ({ name: regionName }))
+    }
   };
 
   await prisma.book.create({
@@ -116,8 +116,8 @@ export default async function postHandler(req: NextApiRequest) {
     include: {
       genres: true,
       regions: true,
-      location: true,
-    },
+      location: true
+    }
   });
   return { success: true, message: 'Book Successfully Created' };
 }

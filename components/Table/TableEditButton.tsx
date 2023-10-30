@@ -1,16 +1,16 @@
 // TableEditButton.tsx
 
-import React, { useState, useEffect } from 'react';
+import theme from '@/styles/Theme';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Button,
-  Typography,
   Modal,
   TextField,
   ThemeProvider,
+  Typography
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import theme from '@/styles/Theme';
+import React, { useEffect, useState } from 'react';
 
 const style = {
   position: 'absolute' as const,
@@ -20,7 +20,7 @@ const style = {
   width: 350,
   bgcolor: 'background.paper',
   boxShadow: 24,
-  padding: '32px 32px 12px 32px',
+  padding: '32px 32px 12px 32px'
 };
 
 export default function TableEditButton({ rowData, columns }) {
@@ -87,7 +87,7 @@ export default function TableEditButton({ rowData, columns }) {
               style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                marginBottom: '0px',
+                marginBottom: '0px'
               }}
             >
               <Button
@@ -98,7 +98,7 @@ export default function TableEditButton({ rowData, columns }) {
                   position: 'absolute',
                   top: '0px',
                   right: '-5px',
-                  padding: 0,
+                  padding: 0
                 }}
               >
                 <CloseIcon />

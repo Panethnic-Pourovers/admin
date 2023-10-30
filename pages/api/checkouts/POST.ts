@@ -16,21 +16,21 @@ export default async function postHandler(body: PostBody) {
         memberId,
         bookId,
         dueDate: dueDateObj,
-        checkoutDate: new Date(),
+        checkoutDate: new Date()
       },
       include: {
-        member: true,
-      },
+        member: true
+      }
     }),
     prisma.book.update({
       where: {
-        id: bookId,
+        id: bookId
       },
       data: {
         checkedOut: true,
-        lastCheckedOut: new Date(),
-      },
-    }),
+        lastCheckedOut: new Date()
+      }
+    })
   ]);
 
   return transactionRes;

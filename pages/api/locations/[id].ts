@@ -9,8 +9,8 @@ export default async function getBookById(
   const { id } = req.query;
   const location = await prisma.location.findUnique({
     where: {
-      id: String(id),
-    },
+      id: String(id)
+    }
   });
   if (!location) {
     return res.status(404).json({ error: 'Book not found.' });

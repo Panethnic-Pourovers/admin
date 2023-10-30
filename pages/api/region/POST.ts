@@ -8,8 +8,8 @@ export default async function postHandler(body: PostBody) {
   const { name } = body;
   const newRegion = await prisma.region.create({
     data: {
-      name,
-    },
+      name
+    }
   });
   return newRegion;
 }
