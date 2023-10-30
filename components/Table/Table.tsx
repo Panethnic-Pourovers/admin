@@ -2,12 +2,13 @@
 // React import
 import TableEditButton from '@/components/Table/TableEditButton';
 import CloseIcon from '@mui/icons-material/Close';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // datagrid dependency imports
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import { Button, Modal } from '@mui/material';
+import axios from 'axios';
 
 type tableProps = {
   rows: Record<string, unknown>[];
@@ -51,6 +52,21 @@ export default function Table(props: tableProps) {
   const handleClose = () => {
     setSelectedRowData(null);
     setIsModalOpen(false);
+  };
+
+  const handleDelete = async () => {
+    const url =
+      process.env.NODE_ENV === 'production'
+        ? 'http://localhost:3000'
+        : 'http://localhost:3000';
+    const res = await axios.delete(`${url}/api/books/${selectedRowData.id}`);
+  };
+
+  const convertValue = (value: any): string => {
+    if (typeof value === 'boolean') {
+      return value ? 'Yes' : 'No';
+    }
+    return value.toString();
   };
 
   return (
@@ -108,11 +124,15 @@ export default function Table(props: tableProps) {
               <h2>{selectedRowData.title}</h2>
               <ul style={{ listStyleType: 'none', padding: 0 }}>
                 {Object.entries(selectedRowData).map(([key, value]) => {
-                  if (key !== 'title' && key !== 'availability') {
+                  if (
+                    key !== 'title' &&
+                    key !== 'Genres' &&
+                    key !== 'Regions'
+                  ) {
                     return (
                       <li key={key} style={{ marginBottom: '8px' }}>
                         <span style={{ fontWeight: 'bold' }}>{key}:</span>{' '}
-                        {value}
+                        {convertValue(value)}
                       </li>
                     );
                   }
@@ -127,6 +147,7 @@ export default function Table(props: tableProps) {
               variant="outlined"
               color="error"
               style={{ marginLeft: '8px' }}
+              onClick={handleDelete}
             >
               Delete
             </Button>

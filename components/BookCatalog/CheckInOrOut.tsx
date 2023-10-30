@@ -1,4 +1,6 @@
 import React from 'react';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   Box,
   Button,
@@ -9,6 +11,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import theme from '@/styles/Theme';
+import axios from 'axios';
 
 const style = {
   position: 'absolute' as const,
@@ -25,6 +28,19 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handleCheckInOrOut = async () => {
+    let response;
+    const url =
+      process.env.NODE_ENV === 'production'
+        ? 'http://localhost:3000'
+        : 'http://localhost:3000';
+    if (CheckInOrOut === 'Check In') {
+      // response = await axios.get(`${url}/api/books`);
+    } else {
+      // response = await axios.get(`${url}/api/books`);
+    }
+    console.log(response);
+  };
 
   const scanButtonStyle = {
     fontSize: '0.9rem',
@@ -115,6 +131,10 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
               <Button onClick={handleOpen} sx={scanButtonStyle}>
                 Scan
               </Button>
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker />
+              </LocalizationProvider>
               <Box
                 sx={{
                   display: 'flex',
@@ -122,7 +142,10 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                   marginTop: '16px',
                 }}
               >
-                <Button onClick={handleOpen} sx={checkInAndOutButtonStyle}>
+                <Button
+                  onClick={handleCheckInOrOut}
+                  sx={checkInAndOutButtonStyle}
+                >
                   {title}
                 </Button>
               </Box>

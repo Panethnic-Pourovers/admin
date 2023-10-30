@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import theme from '@/styles/Theme';
+import axios from 'axios';
 
 const style = {
   position: 'absolute' as const,
@@ -18,9 +19,12 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 350,
+  height: '100%',
   bgcolor: 'background.paper',
   boxShadow: 24,
   padding: '32px 32px 12px 32px',
+  overflowY: 'auto',
+  overflowX: 'hidden',
 };
 
 export default function TableEditButton({ rowData, columns }) {
@@ -34,8 +38,14 @@ export default function TableEditButton({ rowData, columns }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     handleClose();
+    // fill in patch request with correct data once the edit modal fields are finalized
+    const url =
+      process.env.NODE_ENV === 'production'
+        ? 'http://localhost:3000'
+        : 'http://localhost:3000';
+    // const response = await axios.patch(`${url}/api/books`);
   };
 
   const renderInputField = (field, value) => {
