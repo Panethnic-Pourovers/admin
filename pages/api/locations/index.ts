@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import postHandler from './POST';
+import getHandler from './GET';
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,12 +7,13 @@ export default async function handler(
 ) {
   try {
     switch (req.method) {
-      case 'POST': {
-        const newGenre = await postHandler(req.body);
-        if (!newGenre) {
-          res.status(500).json({ message: 'Genre failed to be created.' });
+      case 'GET': {
+        const locations = await getHandler();
+        if (!locations) {
+          res.status(500).json({ message: 'Unable to retrieve genres.' });
+        } else {
+          res.status(200).json(locations);
         }
-        res.status(200).json(newGenre);
         return res;
       }
     }

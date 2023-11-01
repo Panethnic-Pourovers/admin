@@ -30,11 +30,10 @@ export default async function updateHandler(body: UpdateBody) {
     }),
     prisma.book.update({
       where: {
-        id: bookId,
+        barcodeId: bookId,
       },
       data: {
         checkedOut: false,
-        member: { connect: { id: '' } },
       },
     }),
   ]);

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 import {
   Box,
   Button,
@@ -24,8 +25,28 @@ const style = {
   padding: '32px 32px 12px 32px',
 };
 
+interface CheckoutPostBody {
+  memberId: string;
+  bookId: string;
+  dueDate: string;
+}
+
+interface CheckoutPatchBody {
+  memberId: string;
+  bookId: string;
+}
+
 export default function CheckInOrOut({ title, CheckInOrOut }) {
+  const currentDate = new Date();
+  const defaultDueDate = new Date(
+    currentDate.getTime() + 3 * 7 * 24 * 60 * 60 * 1000
+  );
+
   const [open, setOpen] = React.useState(false);
+  const [dueDate, setDueDate] = useState<dayjs.Dayjs>(dayjs(new Date()));
+  const [barcode, setBarcode] = useState<string>('');
+  const [memberId, setMemberId] = useState<string>('');
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleCheckInOrOut = async () => {
@@ -34,13 +55,28 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
       process.env.NODE_ENV === 'production'
         ? 'http://localhost:3000'
         : 'http://localhost:3000';
+
     if (CheckInOrOut === 'Check In') {
-      // response = await axios.get(`${url}/api/books`);
+      const patchBody: CheckoutPatchBody = {
+        memberId: memberId,
+        bookId: barcode,
+      };
+      response = await axios.patch(`${url}/api/checkouts`, patchBody);
     } else {
-      // response = await axios.get(`${url}/api/books`);
+      const postBody: CheckoutPostBody = {
+        memberId: memberId,
+        bookId: barcode,
+        dueDate: dueDate.format('YYYY-MM-DD') + 'T21:59',
+      };
+      response = await axios.post(`${url}/api/checkouts`, postBody);
     }
+
     console.log(response);
   };
+
+  useEffect(() => {
+    console.log(dueDate, barcode, memberId);
+  }, [dueDate]);
 
   const scanButtonStyle = {
     fontSize: '0.9rem',
@@ -115,9 +151,10 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               <TextField
                 id="standard-required"
-                label="UUID"
+                label="Barcode ID"
                 placeholder="Value"
                 variant="standard"
+                onChange={(e) => setBarcode(e.target.value)}
               />
               <Button onClick={handleOpen} sx={scanButtonStyle}>
                 Scan
@@ -127,13 +164,26 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                 label="Member ID"
                 placeholder="Value"
                 variant="standard"
+                onChange={(e) => setMemberId(e.target.value)}
               />
               <Button onClick={handleOpen} sx={scanButtonStyle}>
                 Scan
               </Button>
-
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker />
+                {CheckInOrOut === 'Check Out' ? (
+                  <DatePicker
+                    label="Due Date"
+                    slotProps={{
+                      textField: {
+                        helperText: 'MM/DD/YYYY',
+                      },
+                    }}
+                    // value={dayjs(dueDate)}
+                    onChange={(newValue: Date) => setDueDate(dayjs(newValue))}
+                  />
+                ) : (
+                  <></>
+                )}
               </LocalizationProvider>
               <Box
                 sx={{

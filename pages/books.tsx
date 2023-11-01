@@ -3,7 +3,7 @@ import type { Book } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // MUI components
 import { Box } from '@mui/material';
@@ -14,6 +14,10 @@ import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
+import {
+  useBooksContext,
+  BooksContextProvider,
+} from '@/components/BookCatalog/BooksContext';
 
 import { GridColDef } from '@mui/x-data-grid';
 
@@ -55,9 +59,20 @@ export const getServerSideProps = async () => {
       process.env.NODE_ENV === 'production'
         ? 'http://localhost:3000'
         : 'http://localhost:3000';
-    const response = await axios.get(`${url}/api/books`);
 
-    const books = response.data;
+    const [responseBooks, responseRegions, responseLocations, responseGenres] =
+      await Promise.all([
+        axios.get(`${url}/api/books`),
+        axios.get(`${url}/api/regions`),
+        axios.get(`${url}/api/locations`),
+        axios.get(`${url}/api/genres`),
+      ]);
+
+    const books = responseBooks.data;
+    const regionsData = responseRegions.data;
+    const locationsData = responseLocations.data;
+    const genresData = responseGenres.data;
+
     if (!books) {
       return {
         props: {
@@ -102,6 +117,9 @@ export const getServerSideProps = async () => {
           'Barcode ID',
           'Checked Out By',
         ],
+        genres: genresData,
+        locations: locationsData,
+        regions: regionsData,
       },
     };
   } catch {
@@ -115,6 +133,7 @@ const BooksCatalog = (
   //state
   const [searchValue, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { value1, value2 } = useBooksContext();
 
   const loadData = () => {
     setIsLoading(true);
@@ -131,7 +150,16 @@ const BooksCatalog = (
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
-  const { data, columns } = props;
+  const { data, columns, genres, locations, regions } = props;
+  useEffect(() => {
+    console.log(genres, locations, regions);
+  }, [genres, locations, regions]);
+
+  const dropdownItems = {
+    genres: genres,
+    locations: locations,
+    regions: regions,
+  };
 
   if (isLoading === false && (data === undefined || columns === undefined))
     setIsLoading(true);
@@ -184,7 +212,13 @@ const BooksCatalog = (
             <AddBookModal bookData={data} />
           </div>
         </Box>
-        <Table rows={filteredItems || []} columns={tableColumns} />
+        <Table
+          rows={filteredItems || []}
+          columns={tableColumns}
+          genres={genres}
+          regions={regions}
+          locations={locations}
+        />
         <Box
           className="bookCatalog-checkButtons"
           sx={{

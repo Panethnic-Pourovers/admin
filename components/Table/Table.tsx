@@ -15,10 +15,13 @@ type tableProps = {
   columns: GridColDef[];
   page?: number;
   pageSize?: number;
+  genres: { id; name };
+  regions: { id; name };
+  locations: string;
 };
 
 export default function Table(props: tableProps) {
-  const { rows, columns, page, pageSize } = props;
+  const { rows, columns, page, pageSize, genres, regions, locations } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState<Record<
     string,
@@ -152,7 +155,13 @@ export default function Table(props: tableProps) {
               Delete
             </Button>
             <Button>
-              <TableEditButton rowData={selectedRowData} columns={columns} />
+              <TableEditButton
+                rowData={selectedRowData}
+                columns={columns}
+                genres={genres}
+                regions={regions}
+                locations={locations}
+              />
             </Button>
           </div>
         </div>

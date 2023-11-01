@@ -12,8 +12,32 @@ type UpdateBody = {
 export default async function updateHandler(id: string, body: UpdateBody) {
   const { barcodeId, title, author, genres, regions, location } = body;
 
-  const formattedGenres = genres.map((str) => ({ id: str }));
-  const formattedRegions = regions.map((str) => ({ id: str }));
+  const genreIds = [];
+  for (const name of genres) {
+    const { id } = await prisma.genre.findFirst({
+      where: {
+        name: name,
+      },
+    });
+    genreIds.push(id);
+  }
+  const regionIds = [];
+  for (const name of regions) {
+    const { id } = await prisma.region.findFirst({
+      where: {
+        name: name,
+      },
+    });
+    regionIds.push(id);
+  }
+  const locationObj = await prisma.location.findFirst({
+    where: {
+      name: location,
+    },
+  });
+
+  const formattedGenres = genreIds.map((str) => ({ id: str }));
+  const formattedRegions = regionIds.map((str) => ({ id: str }));
 
   try {
     const updated = await prisma.book.update({
@@ -24,7 +48,7 @@ export default async function updateHandler(id: string, body: UpdateBody) {
         barcodeId,
         title,
         author,
-        locationId: location,
+        locationId: locationObj.id,
         genres: {
           set: [],
           connect: formattedGenres,

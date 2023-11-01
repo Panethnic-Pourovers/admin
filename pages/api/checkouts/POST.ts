@@ -24,7 +24,7 @@ export default async function postHandler(body: PostBody) {
     }),
     prisma.book.update({
       where: {
-        id: bookId,
+        barcodeId: bookId,
       },
       data: {
         checkedOut: true,
