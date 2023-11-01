@@ -111,7 +111,7 @@ export default async function postHandler(req: NextApiRequest) {
     },
   };
 
-  await prisma.book.create({
+  const res = await prisma.book.create({
     data: bookToSend,
     include: {
       genres: true,
@@ -119,5 +119,5 @@ export default async function postHandler(req: NextApiRequest) {
       location: true,
     },
   });
-  return { success: true, message: 'Book Successfully Created' };
+  return res;
 }

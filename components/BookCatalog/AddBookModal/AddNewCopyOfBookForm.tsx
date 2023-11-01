@@ -4,6 +4,8 @@ import {
   searchBookCatalogStyle,
   showSearchCatalogStyle,
 } from './styles/addBookStyles';
+import { useContext } from 'react';
+import { BooksContext } from '@/pages/books';
 
 const genres = [
   {
@@ -56,27 +58,48 @@ type addNewCopyOfBookFormProps = {
   author?: string;
 };
 
-const sendBook = async (e) => {
-  e.preventDefault();
-  const url =
-    process.env.NODE_ENV === 'production'
-      ? 'http://localhost:3000'
-      : 'http://localhost:3000';
-  const { title, author, genre, region } = e.target;
-  const book = {
-    title: title.value,
-    author: author.value,
-    checkedOut: false,
-    lastCheckedOut: null,
-    location: 'PEPO Library',
-    genres: [genre.value],
-    regions: [region.value],
-  };
-  const response = await axios.post(`${url}/api/books`, book);
-  return response;
-};
-
 const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
+  const { data, setData } = useContext(BooksContext);
+
+  const sendBook = async (e) => {
+    e.preventDefault();
+    const url =
+      process.env.NODE_ENV === 'production'
+        ? 'http://localhost:3000'
+        : 'http://localhost:3000';
+    const { title, author, genre, region } = e.target;
+    const book = {
+      title: title.value,
+      author: author.value,
+      checkedOut: false,
+      lastCheckedOut: null,
+      location: 'PEPO Library',
+      genres: [genre.value],
+      regions: [region.value],
+    };
+
+    const response = await axios.post(`${url}/api/books`, book);
+    console.log(response);
+
+    const localUpdate = {
+      id: response.data.id,
+      Title: response.data.title,
+      Author: response.data.author,
+      Genres: response.data.genres || [],
+      Regions: response.data.regions || [],
+      'Checked Out': response.data.checkedOut || false,
+      'Checked Out By': response.data.checkedOutBy,
+      'Last Checked Out': response.data.lastCheckedOut,
+      Location: response.data.location.name,
+      'Barcode ID': response.data.barcodeId,
+    };
+
+    console.log(localUpdate);
+    setData([...data, localUpdate]);
+
+    return response;
+  };
+
   return (
     <Box component="div" sx={showSearchCatalogStyle}>
       <h3>Add New Book to Catalog</h3>

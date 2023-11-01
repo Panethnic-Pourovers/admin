@@ -39,6 +39,7 @@ export default function TableEditButton({
   genres,
   regions,
   locations,
+  data,
 }) {
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState(rowData);

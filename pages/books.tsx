@@ -3,7 +3,7 @@ import type { Book } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, createContext } from 'react';
 
 // MUI components
 import { Box } from '@mui/material';
@@ -127,13 +127,14 @@ export const getServerSideProps = async () => {
   }
 };
 
+export const BooksContext = createContext(null);
+
 const BooksCatalog = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
   //state
   const [searchValue, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { value1, value2 } = useBooksContext();
 
   const loadData = () => {
     setIsLoading(true);
@@ -150,16 +151,8 @@ const BooksCatalog = (
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
-  const { data, columns, genres, locations, regions } = props;
-  useEffect(() => {
-    console.log(genres, locations, regions);
-  }, [genres, locations, regions]);
-
-  const dropdownItems = {
-    genres: genres,
-    locations: locations,
-    regions: regions,
-  };
+  const { columns, genres, locations, regions } = props;
+  const [data, setData] = useState(props.data);
 
   if (isLoading === false && (data === undefined || columns === undefined))
     setIsLoading(true);
@@ -195,42 +188,46 @@ const BooksCatalog = (
     });
   }, [data, searchValue]);
   return (
-    <Layout>
-      <div id="bookCatalog">
-        <Box
-          sx={{
-            display: 'flex',
-            flexFlow: 'row nowrap',
-            justifyContent: 'space-between',
-          }}
-          className="bookCatalog-topbar"
-        >
-          <div className="bookCatalog-topbar-search">
-            <Search search={searchValue} setSearch={setSearch} />
-          </div>
-          <div className="bookCatalog-topbar-buttons">
-            <AddBookModal bookData={data} />
-          </div>
-        </Box>
-        <Table
-          rows={filteredItems || []}
-          columns={tableColumns}
-          genres={genres}
-          regions={regions}
-          locations={locations}
-        />
-        <Box
-          className="bookCatalog-checkButtons"
-          sx={{
-            display: 'flex',
-            flexFlow: 'row-reverse nowrap',
-          }}
-        >
-          <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
-          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
-        </Box>
-      </div>
-    </Layout>
+    <BooksContext.Provider value={{ data: data, setData: setData }}>
+      <Layout>
+        <div id="bookCatalog">
+          <Box
+            sx={{
+              display: 'flex',
+              flexFlow: 'row nowrap',
+              justifyContent: 'space-between',
+            }}
+            className="bookCatalog-topbar"
+          >
+            <div className="bookCatalog-topbar-search">
+              <Search search={searchValue} setSearch={setSearch} />
+            </div>
+            <div className="bookCatalog-topbar-buttons">
+              <AddBookModal bookData={data} />
+            </div>
+          </Box>
+          <Table
+            rows={filteredItems || []}
+            columns={tableColumns}
+            genres={genres}
+            regions={regions}
+            locations={locations}
+            data={data}
+            setData={setData}
+          />
+          <Box
+            className="bookCatalog-checkButtons"
+            sx={{
+              display: 'flex',
+              flexFlow: 'row-reverse nowrap',
+            }}
+          >
+            <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
+            <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
+          </Box>
+        </div>
+      </Layout>
+    </BooksContext.Provider>
   );
 };
 

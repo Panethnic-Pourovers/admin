@@ -18,10 +18,22 @@ type tableProps = {
   genres: { id; name };
   regions: { id; name };
   locations: string;
+  data: any;
+  setData;
 };
 
 export default function Table(props: tableProps) {
-  const { rows, columns, page, pageSize, genres, regions, locations } = props;
+  const {
+    rows,
+    columns,
+    page,
+    pageSize,
+    genres,
+    regions,
+    locations,
+    data,
+    setData,
+  } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState<Record<
     string,
@@ -58,6 +70,8 @@ export default function Table(props: tableProps) {
   };
 
   const handleDelete = async () => {
+    setData(data.filter((item) => item.id !== selectedRowData.id));
+
     const url =
       process.env.NODE_ENV === 'production'
         ? 'http://localhost:3000'
@@ -69,7 +83,7 @@ export default function Table(props: tableProps) {
     if (typeof value === 'boolean') {
       return value ? 'Yes' : 'No';
     }
-    return value.toString();
+    return value?.toString();
   };
 
   return (
@@ -161,6 +175,7 @@ export default function Table(props: tableProps) {
                 genres={genres}
                 regions={regions}
                 locations={locations}
+                data={data}
               />
             </Button>
           </div>
