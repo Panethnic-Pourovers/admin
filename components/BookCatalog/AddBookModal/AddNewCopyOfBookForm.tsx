@@ -5,7 +5,7 @@ import {
   showSearchCatalogStyle,
 } from './styles/addBookStyles';
 import { useContext } from 'react';
-import { BooksContext } from '@/pages/books';
+import { BooksContext, formatDate } from '@/pages/books';
 
 const genres = [
   {
@@ -88,8 +88,8 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
       Genres: response.data.genres || [],
       Regions: response.data.regions || [],
       'Checked Out': response.data.checkedOut || false,
-      'Checked Out By': response.data.checkedOutBy,
-      'Last Checked Out': response.data.lastCheckedOut,
+      'Checked Out By': 'N/A',
+      'Last Checked Out': formatDate(response.data.lastCheckedOut),
       Location: response.data.location.name,
       'Barcode ID': response.data.barcodeId,
     };

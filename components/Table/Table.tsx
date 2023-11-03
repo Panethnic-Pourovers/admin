@@ -35,6 +35,7 @@ export default function Table(props: tableProps) {
     setData,
   } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteButtonText, setDeleteButtonText] = useState<string>('Delete');
   const [selectedRowData, setSelectedRowData] = useState<Record<
     string,
     unknown
@@ -70,13 +71,23 @@ export default function Table(props: tableProps) {
   };
 
   const handleDelete = async () => {
-    setData(data.filter((item) => item.id !== selectedRowData.id));
-
+    setDeleteButtonText('Deleting...');
+    // disable delete button
     const url =
       process.env.NODE_ENV === 'production'
         ? 'http://localhost:3000'
         : 'http://localhost:3000';
     const res = await axios.delete(`${url}/api/books/${selectedRowData.id}`);
+    if (res.status === 200) {
+      setData(data.filter((item) => item.id !== selectedRowData.id));
+      setIsModalOpen(false);
+      setDeleteButtonText('Delete');
+    } else {
+      setDeleteButtonText('Failed');
+      setTimeout(() => {
+        setDeleteButtonText('Delete');
+      }, 1000);
+    }
   };
 
   const convertValue = (value: any): string => {
@@ -166,16 +177,16 @@ export default function Table(props: tableProps) {
               style={{ marginLeft: '8px' }}
               onClick={handleDelete}
             >
-              Delete
+              {deleteButtonText}
             </Button>
             <Button>
               <TableEditButton
                 rowData={selectedRowData}
+                setRowData={setSelectedRowData}
                 columns={columns}
                 genres={genres}
                 regions={regions}
                 locations={locations}
-                data={data}
               />
             </Button>
           </div>

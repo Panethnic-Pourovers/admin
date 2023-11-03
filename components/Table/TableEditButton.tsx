@@ -1,6 +1,7 @@
 // TableEditButton.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { BooksContext, formatDate } from '@/pages/books';
 import {
   Box,
   Button,
@@ -12,7 +13,6 @@ import {
   MenuItem,
   InputLabel,
   Stack,
-  FormControl,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import theme from '@/styles/Theme';
@@ -35,19 +35,21 @@ const style = {
 
 export default function TableEditButton({
   rowData,
+  setRowData,
   columns,
   genres,
   regions,
   locations,
-  data,
 }) {
+  const { data, setData } = useContext(BooksContext);
+
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState(rowData);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
-    rowData['Genre(s)'].split(', ')
+    rowData['Genre(s)']?.split(', ')
   );
   const [selectedRegions, setSelectedRegions] = useState<string[]>(
-    rowData['Region(s)'].split(', ')
+    rowData['Region(s)']?.split(', ')
   );
   const [selectedLocation, setSelectedLocation] = useState<string>(
     rowData['Location']
@@ -62,24 +64,26 @@ export default function TableEditButton({
     setEditedData(rowData);
   }, [rowData]);
 
-  useEffect(() => {
-    console.log(editedData);
-  });
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleEdit = async (e) => {
     e.preventDefault();
+    const toUpdate = data.filter((item) => item.id === rowData.id)[0];
+    const filteredData = data.filter((item) => item.id !== rowData.id);
+
     setButtonText('Saving...');
     const patchData = {
       barcodeId: editedData['Barcode ID'],
       title: editedData.Title,
       author: editedData.Author,
-      genres: selectedGenres,
-      regions: selectedRegions,
+      genres: selectedGenres.filter((item) => item !== ''),
+      regions: selectedRegions.filter((item) => item !== ''),
       location: selectedLocation,
     };
+    console.log('patch data = ....');
+    console.log(patchData);
+    console.log('patch data above');
     const url =
       process.env.NODE_ENV === 'production'
         ? 'http://localhost:3000'
@@ -89,12 +93,30 @@ export default function TableEditButton({
       patchData
     );
     if (response.status === 200) {
+      const toUpdate = [response.data].map((book) => {
+        return {
+          id: book.id,
+          Title: book.title,
+          Author: book.author,
+          Genres: book.genres,
+          Regions: book.regions,
+          'Genre(s)': book.genres.map((genre) => genre.name).join(', '),
+          'Regions(s)': book.regions.map((region) => region.name).join(', '),
+          'Checked Out': book.checkedOut,
+          'Checked Out By': 'N/A',
+          'Last Checked Out': formatDate(book.lastCheckedOut),
+          Location: book.location.name,
+          'Barcode ID': book.barcodeId,
+        };
+      });
+      setData([...filteredData, toUpdate[0]]);
+      setRowData(toUpdate[0]);
       setButtonText('Success');
       setTimeout(() => {
         setButtonText('Save');
-      }, 2000);
+      }, 1000);
     } else {
-      setButtonText('Error');
+      setButtonText('Er ror');
     }
 
     console.log(response);

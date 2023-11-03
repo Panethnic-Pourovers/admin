@@ -25,10 +25,8 @@ export default function MultipleSelect({
     const {
       target: { value },
     } = event;
-    setSelectedOptions(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    );
+    console.log(`value = ${value}`);
+    setSelectedOptions(value);
   };
 
   return (

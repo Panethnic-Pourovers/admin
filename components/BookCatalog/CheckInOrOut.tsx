@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { BooksContext, formatDate } from '@/pages/books';
 import dayjs from 'dayjs';
 import {
   Box,
@@ -13,6 +14,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import theme from '@/styles/Theme';
 import axios from 'axios';
+import prisma from '@/prisma/prisma';
 
 const style = {
   position: 'absolute' as const,
@@ -32,20 +34,26 @@ interface CheckoutPostBody {
 }
 
 interface CheckoutPatchBody {
-  memberId: string;
   bookId: string;
 }
 
 export default function CheckInOrOut({ title, CheckInOrOut }) {
-  const currentDate = new Date();
-  const defaultDueDate = new Date(
-    currentDate.getTime() + 3 * 7 * 24 * 60 * 60 * 1000
-  );
+  // const currentDate = new Date();
+  // const defaultDueDate = new Date(
+  //   currentDate.getTime() + 3 * 7 * 24 * 60 * 60 * 1000
+  // );
 
-  const [open, setOpen] = React.useState(false);
-  const [dueDate, setDueDate] = useState<dayjs.Dayjs>(dayjs(new Date()));
+  const [open, setOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [dueDate, setDueDate] = useState(null);
+  // const [dueDate, setDueDate] = useState<dayjs.Dayjs>(dayjs(new Date()));
+
   const [barcode, setBarcode] = useState<string>('');
   const [memberId, setMemberId] = useState<string>('');
+  const [buttonText, setButtonText] = useState<string>(
+    title === 'Check Out' ? 'Check Out' : 'Check In'
+  );
+  const { data, setData } = useContext(BooksContext);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -57,26 +65,105 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
         : 'http://localhost:3000';
 
     if (CheckInOrOut === 'Check In') {
+      const filteredData = data.filter(
+        (item) => item['Barcode ID'] !== barcode
+      );
+      const toUpdate = data.filter((item) => item['Barcode ID'] === barcode)[0];
+      if (barcode === '') {
+        setErrorMessage('Please fill in the barcode.');
+        return;
+      } else if (!toUpdate) {
+        setErrorMessage('The book was not found in the catalogue.');
+        return;
+      } else if (!toUpdate['Checked Out']) {
+        setErrorMessage('This book is not checked out.');
+        return;
+      }
+
       const patchBody: CheckoutPatchBody = {
-        memberId: memberId,
         bookId: barcode,
       };
+      setButtonText('Checking in...');
       response = await axios.patch(`${url}/api/checkouts`, patchBody);
+      if (response.status === 200) {
+        setButtonText('Success');
+        setTimeout(() => {
+          setButtonText('Check In');
+        }, 1000);
+
+        toUpdate['Checked Out'] = false;
+        toUpdate['Checked Out By'] = 'N/A';
+        setData([...filteredData, toUpdate]);
+      } else {
+        setButtonText('Error');
+        setTimeout(() => {
+          setButtonText('Check Out');
+        }, 1000);
+      }
     } else {
+      const toUpdate = data.filter((item) => item['Barcode ID'] === barcode)[0];
+
+      if (barcode === '' || memberId === '' || dueDate === null) {
+        setErrorMessage('Please fill in all fields.');
+        return;
+      } else if (!toUpdate) {
+        setErrorMessage('The book was not found in the catalogue.');
+        return;
+      } else if (toUpdate['Checked Out']) {
+        setErrorMessage('This book is already checked out.');
+        return;
+      } else if (dueDate.isBefore(dayjs(new Date()))) {
+        setErrorMessage('Due date must be after today.');
+        return;
+      }
       const postBody: CheckoutPostBody = {
         memberId: memberId,
         bookId: barcode,
         dueDate: dueDate.format('YYYY-MM-DD') + 'T21:59',
       };
-      response = await axios.post(`${url}/api/checkouts`, postBody);
+
+      try {
+        response = await axios.post(`${url}/api/checkouts`, postBody);
+      } catch (e) {
+        setErrorMessage(e.response.data.message);
+        setButtonText('Error');
+        setTimeout(() => {
+          setButtonText('Check Out');
+        }, 1000);
+        return;
+      }
+
+      setButtonText('Checking out...');
+      if (response.status === 200) {
+        setErrorMessage(null);
+        setBarcode('');
+        setMemberId('');
+        setDueDate(null);
+        setButtonText('Success');
+        setTimeout(() => {
+          setButtonText('Check Out');
+        }, 1000);
+        const filteredData = data.filter(
+          (item) => item['Barcode ID'] !== barcode
+        );
+
+        toUpdate['Checked Out'] = true;
+        toUpdate['Checked Out By'] =
+          response.data[0].member.firstName +
+          ' ' +
+          response.data[0].member.lastName;
+        toUpdate['Last Checked Out'] = formatDate(
+          response.data[0].checkoutDate
+        );
+        setData([...filteredData, toUpdate]);
+      } else {
+        setButtonText('Error');
+        setTimeout(() => {
+          setButtonText('Check Out');
+        }, 1000);
+      }
     }
-
-    console.log(response);
   };
-
-  useEffect(() => {
-    console.log(dueDate, barcode, memberId);
-  }, [dueDate]);
 
   const scanButtonStyle = {
     fontSize: '0.9rem',
@@ -154,21 +241,30 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                 label="Barcode ID"
                 placeholder="Value"
                 variant="standard"
+                value={barcode}
                 onChange={(e) => setBarcode(e.target.value)}
               />
               <Button onClick={handleOpen} sx={scanButtonStyle}>
                 Scan
               </Button>
-              <TextField
-                id="standard-required"
-                label="Member ID"
-                placeholder="Value"
-                variant="standard"
-                onChange={(e) => setMemberId(e.target.value)}
-              />
-              <Button onClick={handleOpen} sx={scanButtonStyle}>
-                Scan
-              </Button>
+              {title === 'Check Out' ? (
+                <>
+                  <TextField
+                    id="standard-required"
+                    label="Member ID"
+                    placeholder="Value"
+                    variant="standard"
+                    value={memberId}
+                    onChange={(e) => setMemberId(e.target.value)}
+                  />
+                  <Button onClick={handleOpen} sx={scanButtonStyle}>
+                    Scan
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 {CheckInOrOut === 'Check Out' ? (
                   <DatePicker
@@ -178,13 +274,18 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                         helperText: 'MM/DD/YYYY',
                       },
                     }}
-                    // value={dayjs(dueDate)}
+                    value={dueDate}
                     onChange={(newValue: Date) => setDueDate(dayjs(newValue))}
                   />
                 ) : (
                   <></>
                 )}
               </LocalizationProvider>
+              {errorMessage ? (
+                <Typography color="error">{errorMessage}</Typography>
+              ) : (
+                <></>
+              )}
               <Box
                 sx={{
                   display: 'flex',
@@ -196,7 +297,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                   onClick={handleCheckInOrOut}
                   sx={checkInAndOutButtonStyle}
                 >
-                  {title}
+                  {buttonText}
                 </Button>
               </Box>
             </Typography>

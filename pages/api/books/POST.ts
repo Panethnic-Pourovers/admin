@@ -48,6 +48,7 @@ export default async function postHandler(req: NextApiRequest) {
       orderBy: { dateCreated: 'desc' },
     });
     if (!latestObject) {
+      console.log('barcode 0');
       return '00000';
     }
     return padWithZeros(parseInt(latestObject.barcodeId) + 1);
@@ -68,9 +69,15 @@ export default async function postHandler(req: NextApiRequest) {
     };
   }
   const { title, author, genres, regions, location } = body;
-  const getLocation = await prisma.location.findFirst({
+  let getLocation;
+  getLocation = await prisma.location.findFirst({
     where: { name: 'PEPO Checkin' },
   });
+  if (!getLocation) {
+    getLocation = await prisma.location.create({
+      data: { name: 'PEPO Checkin' },
+    });
+  }
 
   // create genres and regions if they do not exist
   for (const genre of genres) {
@@ -111,6 +118,8 @@ export default async function postHandler(req: NextApiRequest) {
     },
   };
 
+  console.log('after book to send ');
+
   const res = await prisma.book.create({
     data: bookToSend,
     include: {
@@ -119,5 +128,7 @@ export default async function postHandler(req: NextApiRequest) {
       location: true,
     },
   });
+
+  console.log('book created??');
   return res;
 }

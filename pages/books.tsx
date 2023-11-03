@@ -35,7 +35,7 @@ const isBook = (book: any): book is Book => {
   );
 };
 
-const formatDate = (date: string): string => {
+export const formatDate = (date: string): string => {
   const month = date.substring(5, 7);
   const day = date.substring(8, 10);
   const year = date.substring(0, 4);
@@ -84,9 +84,19 @@ export const getServerSideProps = async () => {
       books.map(async (book): Promise<Record<string, unknown>> => {
         const { locationId } = book;
         const location = await axios.get(`${url}/api/locations/${locationId}`);
+        let memberResponse;
+        if (book.libraryMemberId) {
+          memberResponse = await axios.get(
+            `${url}/api/members/${book.libraryMemberId}`
+          );
+        }
         const { name } = location.data;
-        const checkedoutMember = book.checkedOut ? book.libraryMemberId : 'N/A';
         const formattedDate = formatDate(book.lastCheckedOut);
+        let memberName = 'N/A';
+        if (memberResponse) {
+          memberName =
+            memberResponse.data.firstName + ' ' + memberResponse.data.lastName;
+        }
 
         return {
           id: book.id,
@@ -95,7 +105,7 @@ export const getServerSideProps = async () => {
           Genres: book.genres || [],
           Regions: book.regions || [],
           'Checked Out': book.checkedOut,
-          'Checked Out By': checkedoutMember,
+          'Checked Out By': memberName,
           'Last Checked Out': formattedDate,
           Location: name,
           'Barcode ID': book.barcodeId,
