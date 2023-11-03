@@ -34,7 +34,7 @@ export default async function handler(
           res.status(200).json(newCheckout);
         } catch (e) {
           console.log(e.message);
-          res.status(500).json({ message: 'MY MESSAGE' });
+          res.status(500).json({ message: e.message });
         }
         return res;
       }

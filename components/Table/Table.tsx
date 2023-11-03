@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 // datagrid dependency imports
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import { Button, Modal } from '@mui/material';
+import { Button, Modal, Typography, Box } from '@mui/material';
 import axios from 'axios';
 
 type tableProps = {
@@ -36,6 +36,9 @@ export default function Table(props: tableProps) {
   } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteButtonText, setDeleteButtonText] = useState<string>('Delete');
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [confirmationStage, setConfirmationStage] = useState<boolean>(false);
+
   const [selectedRowData, setSelectedRowData] = useState<Record<
     string,
     unknown
@@ -63,27 +66,57 @@ export default function Table(props: tableProps) {
   const handleRowClick = (params: any) => {
     setSelectedRowData(params.row);
     setIsModalOpen(true);
+    setErrorMessage(null);
+    setConfirmationStage(false);
+    setDeleteButtonText('Delete');
   };
 
   const handleClose = () => {
     setSelectedRowData(null);
     setIsModalOpen(false);
   };
+  const url =
+    process.env.NODE_ENV === 'production'
+      ? 'http://localhost:3000'
+      : 'http://localhost:3000';
+  const handleConfirmation = async () => {
+    // if current book is checked out, do not allow deletion
+    if (selectedRowData['Checked Out']) {
+      setErrorMessage('Cannot delete a checked out book.');
+      setDeleteButtonText('Error');
+      setTimeout(() => {
+        setDeleteButtonText('Delete');
+      }, 1000);
+      return;
+    }
 
+    // call endpoint for checkouts, if there are associated checkouts show warning
+
+    const relatedCheckouts = await axios.get(
+      `${url}/api/checkouts/${selectedRowData['Barcode ID']}`
+    );
+    const numRelatedCheckouts = relatedCheckouts.data.length;
+    if (numRelatedCheckouts > 0) {
+      setErrorMessage(
+        `${numRelatedCheckouts} previous checkout(s) associated with this book will also be deleted. If this is OK, click continue.`
+      );
+      setDeleteButtonText('Continue');
+      setConfirmationStage(true);
+      return;
+    } else {
+      handleDelete();
+    }
+  };
   const handleDelete = async () => {
     setDeleteButtonText('Deleting...');
-    // disable delete button
-    const url =
-      process.env.NODE_ENV === 'production'
-        ? 'http://localhost:3000'
-        : 'http://localhost:3000';
+
     const res = await axios.delete(`${url}/api/books/${selectedRowData.id}`);
     if (res.status === 200) {
       setData(data.filter((item) => item.id !== selectedRowData.id));
       setIsModalOpen(false);
       setDeleteButtonText('Delete');
     } else {
-      setDeleteButtonText('Failed');
+      setDeleteButtonText('Error');
       setTimeout(() => {
         setDeleteButtonText('Delete');
       }, 1000);
@@ -169,13 +202,17 @@ export default function Table(props: tableProps) {
               </ul>
             </div>
           )}
-
+          {errorMessage ? (
+            <Typography color="error">{errorMessage}</Typography>
+          ) : (
+            <></>
+          )}
           <div style={{ textAlign: 'right' }}>
             <Button
               variant="outlined"
               color="error"
               style={{ marginLeft: '8px' }}
-              onClick={handleDelete}
+              onClick={confirmationStage ? handleDelete : handleConfirmation}
             >
               {deleteButtonText}
             </Button>

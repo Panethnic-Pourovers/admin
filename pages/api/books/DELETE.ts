@@ -10,7 +10,8 @@ export default async function deleteHandler(id?: string, body?) {
         },
       });
       return deleted;
-    } catch {
+    } catch (e) {
+      console.log(e.message);
       return;
     }
   } else if (body) {

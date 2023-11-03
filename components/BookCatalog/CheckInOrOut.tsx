@@ -86,6 +86,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
       setButtonText('Checking in...');
       response = await axios.patch(`${url}/api/checkouts`, patchBody);
       if (response.status === 200) {
+        setBarcode('');
         setButtonText('Success');
         setTimeout(() => {
           setButtonText('Check In');

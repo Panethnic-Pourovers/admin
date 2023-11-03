@@ -1,26 +1,15 @@
 import prisma from '@/prisma/prisma';
 
-type GetBody = {
-  memberId: string;
-  bookId: string;
-};
+export default async function getHandler(id?: string) {
+  console.log(id);
 
-// change the contents of the request body to filter by member or book,
-// leave the body empty {} to get all
+  if (id) {
+    const checkout = await prisma.checkout.findMany({
+      where: {
+        bookId: id,
+      },
+    });
 
-export default async function getHandler(body: GetBody) {
-  const { memberId, bookId } = body;
-
-  const checkout = await prisma.checkout.findMany({
-    where: {
-      memberId,
-      bookId,
-    },
-    include: {
-      member: true,
-      book: true,
-    },
-  });
-
-  return checkout;
+    return checkout;
+  }
 }

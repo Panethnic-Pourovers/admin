@@ -58,7 +58,7 @@ model LibraryMember {
 
 model Checkout {
   id           String        @id @default(cuid())
-  book         Book          @relation(fields: [bookId], references: [barcodeId])
+  book         Book          @relation(fields: [bookId], references: [barcodeId], onDelete: Cascade)
   member       LibraryMember @relation(fields: [memberId], references: [id])
   memberId     String
   bookId       String

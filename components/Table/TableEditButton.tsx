@@ -45,6 +45,7 @@ export default function TableEditButton({
 
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState(rowData);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
     rowData['Genre(s)']?.split(', ')
   );
@@ -69,7 +70,34 @@ export default function TableEditButton({
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    const toUpdate = data.filter((item) => item.id === rowData.id)[0];
+    const listOfBlanks = [];
+    if (editedData['Barcode ID'] === '') {
+      listOfBlanks.push('barcode');
+    }
+    if (editedData.Title === '') {
+      listOfBlanks.push('title');
+    }
+    if (editedData.Author === '') {
+      listOfBlanks.push('author');
+    }
+    if (listOfBlanks.length > 0) {
+      setErrorMessage(
+        `The following fields cannot be blank: ${listOfBlanks.join(', ')}`
+      );
+      return;
+    }
+
+    // if barcode exists in the data, AND the barcode does not equal the selected row's barcode.....
+    const duplicateBarcode = data.filter(
+      (item) => item['Barcode ID'] === editedData['Barcode ID']
+    );
+    if (
+      duplicateBarcode.length > 0 &&
+      editedData['Barcode ID'] !== rowData['Barcode ID']
+    ) {
+      setErrorMessage('This barcode already exists.');
+      return;
+    }
     const filteredData = data.filter((item) => item.id !== rowData.id);
 
     setButtonText('Saving...');
@@ -81,9 +109,7 @@ export default function TableEditButton({
       regions: selectedRegions.filter((item) => item !== ''),
       location: selectedLocation,
     };
-    console.log('patch data = ....');
-    console.log(patchData);
-    console.log('patch data above');
+
     const url =
       process.env.NODE_ENV === 'production'
         ? 'http://localhost:3000'
@@ -103,7 +129,7 @@ export default function TableEditButton({
           'Genre(s)': book.genres.map((genre) => genre.name).join(', '),
           'Regions(s)': book.regions.map((region) => region.name).join(', '),
           'Checked Out': book.checkedOut,
-          'Checked Out By': 'N/A',
+          'Checked Out By': rowData['Checked Out By'],
           'Last Checked Out': formatDate(book.lastCheckedOut),
           Location: book.location.name,
           'Barcode ID': book.barcodeId,
@@ -112,14 +138,13 @@ export default function TableEditButton({
       setData([...filteredData, toUpdate[0]]);
       setRowData(toUpdate[0]);
       setButtonText('Success');
+      setErrorMessage(null);
       setTimeout(() => {
         setButtonText('Save');
       }, 1000);
     } else {
-      setButtonText('Er ror');
+      setButtonText('Error');
     }
-
-    console.log(response);
   };
 
   const renderInputField = (field, value) => {
@@ -233,6 +258,11 @@ export default function TableEditButton({
                   );
                 })}
               </Select>
+              {errorMessage ? (
+                <Typography color="error">{errorMessage}</Typography>
+              ) : (
+                <></>
+              )}
               <Stack spacing={2} width={400}>
                 <Typography>ID: {editedData.id}</Typography>
                 <Typography>
