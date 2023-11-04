@@ -41,7 +41,7 @@ model Region {
 
 model Location {
   id   String @id @default(cuid())
-  name String
+  name String @unique
   Book Book[]
 }
 

@@ -94,6 +94,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
 
         toUpdate['Checked Out'] = false;
         toUpdate['Checked Out By'] = 'N/A';
+        toUpdate.Location = 'PEPO Checkin';
         setData([...filteredData, toUpdate]);
       } else {
         setButtonText('Error');
@@ -156,6 +157,8 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
         toUpdate['Last Checked Out'] = formatDate(
           response.data[0].checkoutDate
         );
+        toUpdate.Location = 'Checked Out';
+        console.log(toUpdate);
         setData([...filteredData, toUpdate]);
       } else {
         setButtonText('Error');

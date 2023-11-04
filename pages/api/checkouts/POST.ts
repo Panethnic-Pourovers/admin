@@ -19,6 +19,17 @@ export default async function postHandler(body: PostBody) {
     return 'memberNotFound';
   }
 
+  let location = await prisma.location.findUnique({
+    where: {
+      name: 'Checked Out',
+    },
+  });
+  if (!location) {
+    location = await prisma.location.create({
+      data: { name: 'Checked Out' },
+    });
+  }
+
   const transactionRes = await prisma.$transaction([
     prisma.checkout.create({
       data: {
@@ -39,6 +50,7 @@ export default async function postHandler(body: PostBody) {
         checkedOut: true,
         lastCheckedOut: new Date(),
         libraryMemberId: memberId,
+        locationId: location.id,
       },
     }),
   ]);

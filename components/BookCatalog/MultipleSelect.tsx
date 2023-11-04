@@ -2,15 +2,25 @@ import * as React from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import Chip from '@mui/material/Chip';
+import Box from '@mui/material/Box';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
+export const MenuProps = {
+  getContentAnchorEl: null,
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'left',
+  },
+  transformOrigin: {
+    vertical: top,
+    horizontal: 'right',
+  },
+
   PaperProps: {
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
+      maxHeight: '100%',
+      width: 'fit-content',
     },
   },
 };
@@ -25,14 +35,14 @@ export default function MultipleSelect({
     const {
       target: { value },
     } = event;
-    console.log(`value = ${value}`);
     setSelectedOptions(value);
   };
 
   return (
-    <div>
+    <Box sx={{ width: '100%' }}>
       <InputLabel id="multiple-input-label">{label}</InputLabel>
       <Select
+        sx={{ width: '100%' }}
         labelId="multiple-input-label"
         id="multiple-input"
         multiple
@@ -40,6 +50,13 @@ export default function MultipleSelect({
         onChange={handleChange}
         input={<OutlinedInput label="Name" />}
         MenuProps={MenuProps}
+        renderValue={() => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {selectedOptions.map((value) => (
+              <Chip key={value} label={value} />
+            ))}
+          </Box>
+        )}
       >
         {options.map((option) => (
           <MenuItem key={option} value={option}>
@@ -47,6 +64,6 @@ export default function MultipleSelect({
           </MenuItem>
         ))}
       </Select>
-    </div>
+    </Box>
   );
 }

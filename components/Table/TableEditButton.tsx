@@ -18,13 +18,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import theme from '@/styles/Theme';
 import axios from 'axios';
 import MultipleSelect from '../BookCatalog/MultipleSelect';
+import { MenuProps } from '../BookCatalog/MultipleSelect';
 
 const style = {
   position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 350,
+  width: 375,
   height: '100%',
   bgcolor: 'background.paper',
   boxShadow: 24,
@@ -245,10 +246,12 @@ export default function TableEditButton({
               />
               <InputLabel id="location-select-label">Location</InputLabel>
               <Select
+                sx={{ minWidth: '100%' }}
                 id="location-select"
                 value={selectedLocation}
                 label="Location"
                 onChange={(e) => setSelectedLocation(e.target.value)}
+                MenuProps={MenuProps}
               >
                 {locationsList.map((location) => {
                   return (
@@ -264,15 +267,21 @@ export default function TableEditButton({
                 <></>
               )}
               <Stack spacing={2} width={400}>
-                <Typography>ID: {editedData.id}</Typography>
                 <Typography>
-                  Checked Out: {editedData['Checked Out'].toString()}
+                  <span style={{ fontWeight: 'bold' }}>ID</span>:{' '}
+                  {editedData.id}
                 </Typography>
                 <Typography>
-                  Checked Out By: {editedData['Checked Out By']}
+                  <span style={{ fontWeight: 'bold' }}>Checked Out</span>:{' '}
+                  {editedData['Checked Out'].toString()}
                 </Typography>
                 <Typography>
-                  Last Checked Out: {editedData['Last Checked Out']}
+                  <span style={{ fontWeight: 'bold' }}>Checked Out By</span>:{' '}
+                  {editedData['Checked Out By']}
+                </Typography>
+                <Typography>
+                  <span style={{ fontWeight: 'bold' }}>Last Checked Out</span>:{' '}
+                  {editedData['Last Checked Out']}
                 </Typography>
               </Stack>
               <div style={{ textAlign: 'right' }}>

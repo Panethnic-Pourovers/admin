@@ -6,7 +6,7 @@ import { InferGetServerSidePropsType } from 'next';
 import React, { useEffect, useMemo, useState, createContext } from 'react';
 
 // MUI components
-import { Box } from '@mui/material';
+import { Box, MenuItem, Select } from '@mui/material';
 
 // custom components
 import AddBookModal from '@/components/BookCatalog/AddBookModal';
