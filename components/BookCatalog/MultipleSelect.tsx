@@ -13,7 +13,7 @@ export const MenuProps = {
     horizontal: 'left',
   },
   transformOrigin: {
-    vertical: top,
+    vertical: 'top',
     horizontal: 'right',
   },
 
