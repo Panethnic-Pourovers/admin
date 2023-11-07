@@ -6,21 +6,21 @@ export default async function getHandler(id?: string) {
   if (id) {
     books = await prisma.book.findUnique({
       where: {
-        id,
+        id
       },
       include: {
         genres: true,
         regions: true,
-        location: true,
-      },
+        location: true
+      }
     });
   } else {
     books = await prisma.book.findMany({
       include: {
         genres: true,
         regions: true,
-        location: true,
-      },
+        location: true
+      }
     });
   }
   return books;

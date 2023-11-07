@@ -1,4 +1,4 @@
-import prisma from '@/prisma/prisma';
+import prisma from "@/prisma/prisma";
 
 export default async function getHandler(id?: string) {
   console.log(id);

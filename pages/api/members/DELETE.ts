@@ -6,8 +6,8 @@ export default async function deleteHandler(id?: string, body?) {
     try {
       deletedMember = await prisma.libraryMember.delete({
         where: {
-          id,
-        },
+          id
+        }
       });
       return deletedMember;
     } catch {
@@ -17,15 +17,15 @@ export default async function deleteHandler(id?: string, body?) {
     const { count } = await prisma.libraryMember.deleteMany({
       where: {
         id: {
-          in: body.ids,
-        },
-      },
+          in: body.ids
+        }
+      }
     });
     return {
-      message: `${count} of ${body.ids.length} members were successfully deleted.`,
+      message: `${count} of ${body.ids.length} members were successfully deleted.`
     };
   }
   return {
-    message: 'Error, provide a single ID or a body with a list of IDs.',
+    message: 'Error, provide a single ID or a body with a list of IDs.'
   };
 }

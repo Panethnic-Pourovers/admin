@@ -13,14 +13,14 @@ export default async function updateHandler(id: string, body: UpdateBody) {
   try {
     const updatedMember = await prisma.libraryMember.update({
       where: {
-        id,
+        id
       },
       data: {
         firstName,
         lastName,
         email,
-        phone,
-      },
+        phone
+      }
     });
     return updatedMember;
   } catch {

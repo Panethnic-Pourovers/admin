@@ -9,7 +9,7 @@ export default async function handler(
   } catch {
     res.status(500).json({
       message:
-        "We're sorry, something went wrong. Please try again in a few minutes",
+        "We're sorry, something went wrong. Please try again in a few minutes"
     });
   }
 }

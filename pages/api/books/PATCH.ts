@@ -42,7 +42,7 @@ export default async function updateHandler(id: string, body: UpdateBody) {
   try {
     const updated = await prisma.book.update({
       where: {
-        id,
+        id
       },
       data: {
         barcodeId,
@@ -51,18 +51,18 @@ export default async function updateHandler(id: string, body: UpdateBody) {
         locationId: locationObj.id,
         genres: {
           set: [],
-          connect: formattedGenres,
+          connect: formattedGenres
         },
         regions: {
           set: [],
-          connect: formattedRegions,
-        },
+          connect: formattedRegions
+        }
       },
       include: {
         genres: true,
         regions: true,
-        location: true,
-      },
+        location: true
+      }
     });
     return updated;
   } catch {

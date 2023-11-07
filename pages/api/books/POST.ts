@@ -1,5 +1,5 @@
-import prisma from '@/prisma/prisma';
-import { NextApiRequest } from 'next';
+import prisma from "@/prisma/prisma";
+import { NextApiRequest } from "next";
 
 type BookObject = {
   title: string;
@@ -16,11 +16,11 @@ export default async function postHandler(req: NextApiRequest) {
 
   const checkIfObjectIsBook = (body: any): body is BookObject => {
     return (
-      typeof body.title === 'string' &&
-      typeof body.author === 'string' &&
-      typeof body.checkedOut === 'boolean' &&
+      typeof body.title === "string" &&
+      typeof body.author === "string" &&
+      typeof body.checkedOut === "boolean" &&
       body.lastCheckedOut === null &&
-      typeof body.location === 'string' &&
+      typeof body.location === "string" &&
       Array.isArray(body.genres) &&
       Array.isArray(body.regions)
     );
@@ -39,17 +39,17 @@ export default async function postHandler(req: NextApiRequest) {
     const padWithZeros = (number) => {
       let strNumber = number.toString();
       while (strNumber.length < 5) {
-        strNumber = '0' + strNumber;
+        strNumber = "0" + strNumber;
       }
       return strNumber;
     };
 
     const latestObject = await prisma.book.findFirst({
-      orderBy: { dateCreated: 'desc' },
+      orderBy: { dateCreated: "desc" },
     });
     if (!latestObject) {
-      console.log('barcode 0');
-      return '00000';
+      console.log("barcode 0");
+      return "00000";
     }
     return padWithZeros(parseInt(latestObject.barcodeId) + 1);
   };
@@ -58,24 +58,23 @@ export default async function postHandler(req: NextApiRequest) {
     return {
       success: false,
       message:
-        'Invalid location, please check the location and resend after correcting the data',
+        "Invalid location, please check the location and resend after correcting the data",
     };
   }
   if (!checkIfObjectIsBook(body)) {
     return {
       success: false,
       message:
-        'Invalid book, please check the book object and resend after correcting the data',
+        "Invalid book, please check the book object and resend after correcting the data",
     };
   }
   const { title, author, genres, regions, location } = body;
-  let getLocation;
-  getLocation = await prisma.location.findFirst({
-    where: { name: 'PEPO Checkin' },
+  let getLocation = await prisma.location.findFirst({
+    where: { name: "PEPO Checkin" },
   });
   if (!getLocation) {
     getLocation = await prisma.location.create({
-      data: { name: 'PEPO Checkin' },
+      data: { name: "PEPO Checkin" },
     });
   }
 
@@ -118,7 +117,7 @@ export default async function postHandler(req: NextApiRequest) {
     },
   };
 
-  console.log('after book to send ');
+  console.log("after book to send ");
 
   const res = await prisma.book.create({
     data: bookToSend,
@@ -129,6 +128,6 @@ export default async function postHandler(req: NextApiRequest) {
     },
   });
 
-  console.log('book created??');
+  console.log("book created??");
   return res;
 }

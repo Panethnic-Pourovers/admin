@@ -3,24 +3,25 @@ import type { Book } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useEffect, useMemo, useState, createContext } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 
 // MUI components
 import { Box, MenuItem, Select } from '@mui/material';
 
 // custom components
 import AddBookModal from '@/components/BookCatalog/AddBookModal';
+import {
+  BooksContextProvider,
+  useBooksContext
+} from '@/components/BookCatalog/BooksContext';
 import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
-import {
-  useBooksContext,
-  BooksContextProvider,
-} from '@/components/BookCatalog/BooksContext';
 
 import { GridColDef } from '@mui/x-data-grid';
 
+import getEnvUrl from '@/src/utils/getEnvUrl';
 import axios from 'axios';
 
 const isBook = (book: any): book is Book => {
@@ -55,17 +56,14 @@ export const formatDate = (date: string): string => {
 
 export const getServerSideProps = async () => {
   try {
-    const url =
-      process.env.NODE_ENV === 'production'
-        ? 'http://localhost:3000'
-        : 'http://localhost:3000';
+    const url = getEnvUrl();
 
     const [responseBooks, responseRegions, responseLocations, responseGenres] =
       await Promise.all([
         axios.get(`${url}/api/books`),
         axios.get(`${url}/api/regions`),
         axios.get(`${url}/api/locations`),
-        axios.get(`${url}/api/genres`),
+        axios.get(`${url}/api/genres`)
       ]);
 
     const books = responseBooks.data;
@@ -76,8 +74,8 @@ export const getServerSideProps = async () => {
     if (!books) {
       return {
         props: {
-          data: { error: 'Error loading books' },
-        },
+          data: { error: 'Error loading books' }
+        }
       };
     }
     const bookData: Record<string, unknown>[] = await Promise.all(
@@ -108,7 +106,7 @@ export const getServerSideProps = async () => {
           'Checked Out By': memberName,
           'Last Checked Out': formattedDate,
           Location: name,
-          'Barcode ID': book.barcodeId,
+          'Barcode ID': book.barcodeId
         };
       })
     );
@@ -125,12 +123,12 @@ export const getServerSideProps = async () => {
           'Last Checked Out',
           'Location',
           'Barcode ID',
-          'Checked Out By',
+          'Checked Out By'
         ],
         genres: genresData,
         locations: locationsData,
-        regions: regionsData,
-      },
+        regions: regionsData
+      }
     };
   } catch {
     return { props: { data: { error: 'Error loading books' } } };
@@ -187,7 +185,7 @@ const BooksCatalog = (
       return {
         ...book,
         'Genre(s)': genresString,
-        'Region(s)': regionsString,
+        'Region(s)': regionsString
       };
     });
     return reformattedData.filter((item) => {
@@ -205,7 +203,7 @@ const BooksCatalog = (
             sx={{
               display: 'flex',
               flexFlow: 'row nowrap',
-              justifyContent: 'space-between',
+              justifyContent: 'space-between'
             }}
             className="bookCatalog-topbar"
           >
@@ -229,7 +227,7 @@ const BooksCatalog = (
             className="bookCatalog-checkButtons"
             sx={{
               display: 'flex',
-              flexFlow: 'row-reverse nowrap',
+              flexFlow: 'row-reverse nowrap'
             }}
           >
             <CheckInOrOut title="Check In" CheckInOrOut="Check In" />

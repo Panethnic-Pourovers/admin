@@ -15,8 +15,8 @@ export default async function postHandler(body: PostBody) {
       lastName,
       email,
       phone,
-      history: '',
-    },
+      history: ''
+    }
   });
   return newMember;
 }
