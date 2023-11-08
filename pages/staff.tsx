@@ -68,7 +68,9 @@ const Staff = () => {
             <Search search={searchValue} setSearch={setSearch} />
           </div>
         </Box>
-        <Table rows={jsonData || []} columns={columns} />
+        {/* <Table rows={jsonData || []} columns={columns} /> */}
+        {/* temporarily commenting this out because of conflict with prop type from books table */}
+
         <ThemeProvider theme={theme}>
           <div>
             <div style={{ textAlign: 'right' }}>

@@ -9,12 +9,12 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 export const MenuProps = {
   getContentAnchorEl: null,
   anchorOrigin: {
-    vertical: 'bottom',
-    horizontal: 'left',
+    vertical: 'bottom' as const,
+    horizontal: 'left' as const,
   },
   transformOrigin: {
-    vertical: 'top',
-    horizontal: 'right',
+    vertical: 'top' as const,
+    horizontal: 'right' as const,
   },
 
   PaperProps: {
