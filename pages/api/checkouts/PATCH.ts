@@ -1,4 +1,4 @@
-import prisma from "@/prisma/prisma";
+import prisma from '@/prisma/prisma';
 
 type UpdateBody = {
   bookId: string;
@@ -11,30 +11,30 @@ export default async function updateHandler(body: UpdateBody) {
     where: {
       bookId,
       checkinDate: {
-        equals: null,
-      },
-    },
+        equals: null
+      }
+    }
   });
   try {
     const transactionRes = await prisma.$transaction([
       prisma.checkout.update({
         where: {
-          id: checkout.id,
+          id: checkout.id
         },
 
         data: {
-          checkinDate: new Date(),
-        },
+          checkinDate: new Date()
+        }
       }),
       prisma.book.update({
         where: {
-          barcodeId: bookId,
+          barcodeId: bookId
         },
         data: {
           checkedOut: false,
-          libraryMemberId: null,
-        },
-      }),
+          libraryMemberId: null
+        }
+      })
     ]);
 
     return transactionRes;

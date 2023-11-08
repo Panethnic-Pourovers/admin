@@ -10,30 +10,30 @@ export const MenuProps = {
   getContentAnchorEl: null,
   anchorOrigin: {
     vertical: 'bottom' as const,
-    horizontal: 'left' as const,
+    horizontal: 'left' as const
   },
   transformOrigin: {
     vertical: 'top' as const,
-    horizontal: 'right' as const,
+    horizontal: 'right' as const
   },
 
   PaperProps: {
     style: {
       maxHeight: '100%',
-      width: 'fit-content',
-    },
-  },
+      width: 'fit-content'
+    }
+  }
 };
 
 export default function MultipleSelect({
   selectedOptions,
   setSelectedOptions,
   options,
-  label,
+  label
 }) {
   const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
     const {
-      target: { value },
+      target: { value }
     } = event;
     setSelectedOptions(value);
   };

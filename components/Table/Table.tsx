@@ -9,6 +9,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import { Button, Modal, Typography, Box } from '@mui/material';
 import axios from 'axios';
+import getEnvUrl from '@/src/utils/getEnvUrl';
 
 type tableProps = {
   rows: Record<string, unknown>[];
@@ -32,7 +33,7 @@ export default function Table(props: tableProps) {
     regions,
     locations,
     data,
-    setData,
+    setData
   } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteButtonText, setDeleteButtonText] = useState<string>('Delete');
@@ -75,10 +76,7 @@ export default function Table(props: tableProps) {
     setSelectedRowData(null);
     setIsModalOpen(false);
   };
-  const url =
-    process.env.NODE_ENV === 'production'
-      ? 'http://localhost:3000'
-      : 'http://localhost:3000';
+  const url = getEnvUrl();
   const handleConfirmation = async () => {
     // if current book is checked out, do not allow deletion
     if (selectedRowData['Checked Out']) {

@@ -16,8 +16,8 @@ export default async function updateHandler(id: string, body: UpdateBody) {
   for (const name of genres) {
     const { id } = await prisma.genre.findFirst({
       where: {
-        name: name,
-      },
+        name: name
+      }
     });
     genreIds.push(id);
   }
@@ -25,15 +25,15 @@ export default async function updateHandler(id: string, body: UpdateBody) {
   for (const name of regions) {
     const { id } = await prisma.region.findFirst({
       where: {
-        name: name,
-      },
+        name: name
+      }
     });
     regionIds.push(id);
   }
   const locationObj = await prisma.location.findFirst({
     where: {
-      name: location,
-    },
+      name: location
+    }
   });
 
   const formattedGenres = genreIds.map((str) => ({ id: str }));

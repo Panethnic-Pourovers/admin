@@ -10,10 +10,7 @@ import { Box, MenuItem, Select } from '@mui/material';
 
 // custom components
 import AddBookModal from '@/components/BookCatalog/AddBookModal';
-import {
-  BooksContextProvider,
-  useBooksContext
-} from '@/components/BookCatalog/BooksContext';
+
 import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
@@ -57,6 +54,16 @@ export const formatDate = (date: string): string => {
 export const getServerSideProps = async () => {
   try {
     const url = getEnvUrl();
+    console.log(url);
+    console.log(url);
+
+    console.log(url);
+
+    console.log(url);
+
+    console.log(url);
+
+    console.log(url);
 
     const [responseBooks, responseRegions, responseLocations, responseGenres] =
       await Promise.all([
@@ -70,6 +77,8 @@ export const getServerSideProps = async () => {
     const regionsData = responseRegions.data;
     const locationsData = responseLocations.data;
     const genresData = responseGenres.data;
+
+    console.log(books);
 
     if (!books) {
       return {

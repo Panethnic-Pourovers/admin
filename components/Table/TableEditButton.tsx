@@ -12,11 +12,13 @@ import {
   Select,
   Stack,
   TextField,
-  ThemeProvider
+  ThemeProvider,
+  Typography
 } from '@mui/material';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import MultipleSelect, { MenuProps } from '../BookCatalog/MultipleSelect';
+import getEnvUrl from '@/src/utils/getEnvUrl';
 
 const style = {
   position: 'absolute' as const,
@@ -109,10 +111,7 @@ export default function TableEditButton({
       location: selectedLocation
     };
 
-    const url =
-      process.env.NODE_ENV === 'production'
-        ? 'http://localhost:3000'
-        : 'http://localhost:3000';
+    const url = getEnvUrl();
     const response = await axios.patch(
       `${url}/api/books/${editedData.id}`,
       patchData

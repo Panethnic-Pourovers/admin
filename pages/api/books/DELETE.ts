@@ -11,7 +11,6 @@ export default async function deleteHandler(id?: string, body?) {
       });
       return deleted;
     } catch (e) {
-      console.log(e.message);
       return;
     }
   } else if (body) {

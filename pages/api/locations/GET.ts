@@ -6,8 +6,8 @@ export default async function getHandler(id?: string) {
   if (id) {
     locations = await prisma.location.findUnique({
       where: {
-        id,
-      },
+        id
+      }
     });
   } else {
     locations = await prisma.location.findMany();

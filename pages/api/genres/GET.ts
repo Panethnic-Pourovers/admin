@@ -6,8 +6,8 @@ export default async function getHandler(id?: string) {
   if (id) {
     genres = await prisma.genre.findUnique({
       where: {
-        id,
-      },
+        id
+      }
     });
   } else {
     genres = await prisma.genre.findMany();

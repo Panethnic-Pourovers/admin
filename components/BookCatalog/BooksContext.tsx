@@ -9,11 +9,11 @@ interface BookContextProps {
 const BooksContext = createContext<BookContextProps | undefined>(undefined);
 
 export const BooksContextProvider: React.FC<{ children: ReactNode }> = ({
-  children,
+  children
 }) => {
   const contextValues: BookContextProps = {
     value1: 'Hello from value1!',
-    value2: 42,
+    value2: 42
   };
 
   return (

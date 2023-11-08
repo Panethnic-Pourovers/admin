@@ -1,4 +1,4 @@
-import prisma from "@/prisma/prisma";
+import prisma from '@/prisma/prisma';
 
 type PostBody = {
   memberId: string;
@@ -11,22 +11,22 @@ export default async function postHandler(body: PostBody) {
   const dueDateObj = new Date(dueDate);
   const member = await prisma.libraryMember.findUnique({
     where: {
-      id: memberId,
-    },
+      id: memberId
+    }
   });
 
   if (!member) {
-    return "memberNotFound";
+    return 'memberNotFound';
   }
 
   let location = await prisma.location.findUnique({
     where: {
-      name: "Checked Out",
-    },
+      name: 'Checked Out'
+    }
   });
   if (!location) {
     location = await prisma.location.create({
-      data: { name: "Checked Out" },
+      data: { name: 'Checked Out' }
     });
   }
 
@@ -36,23 +36,23 @@ export default async function postHandler(body: PostBody) {
         memberId,
         bookId,
         dueDate: dueDateObj,
-        checkoutDate: new Date(),
+        checkoutDate: new Date()
       },
       include: {
-        member: true,
-      },
+        member: true
+      }
     }),
     prisma.book.update({
       where: {
-        barcodeId: bookId,
+        barcodeId: bookId
       },
       data: {
         checkedOut: true,
         lastCheckedOut: new Date(),
         libraryMemberId: memberId,
-        locationId: location.id,
-      },
-    }),
+        locationId: location.id
+      }
+    })
   ]);
 
   return transactionRes;

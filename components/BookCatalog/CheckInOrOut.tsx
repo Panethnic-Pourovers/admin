@@ -1,5 +1,5 @@
 import { BooksContext, formatDate } from '@/pages/books';
-import prisma from '@/prisma/prisma';
+import getEnvUrl from '@/src/utils/getEnvUrl';
 import theme from '@/styles/Theme';
 import CloseIcon from '@mui/icons-material/Close';
 import {
@@ -10,8 +10,7 @@ import {
   ThemeProvider,
   Typography
 } from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import React, { useContext, useState } from 'react';
@@ -38,16 +37,9 @@ interface CheckoutPatchBody {
 }
 
 export default function CheckInOrOut({ title, CheckInOrOut }) {
-  // const currentDate = new Date();
-  // const defaultDueDate = new Date(
-  //   currentDate.getTime() + 3 * 7 * 24 * 60 * 60 * 1000
-  // );
-
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [dueDate, setDueDate] = useState(null);
-  // const [dueDate, setDueDate] = useState<dayjs.Dayjs>(dayjs(new Date()));
-
   const [barcode, setBarcode] = useState<string>('');
   const [memberId, setMemberId] = useState<string>('');
   const [buttonText, setButtonText] = useState<string>(
@@ -59,10 +51,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
   const handleClose = () => setOpen(false);
   const handleCheckInOrOut = async () => {
     let response;
-    const url =
-      process.env.NODE_ENV === 'production'
-        ? 'http://localhost:3000'
-        : 'http://localhost:3000';
+    const url = getEnvUrl();
 
     if (CheckInOrOut === 'Check In') {
       const filteredData = data.filter(
@@ -158,7 +147,6 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
           response.data[0].checkoutDate
         );
         toUpdate.Location = 'Checked Out';
-        console.log(toUpdate);
         setData([...filteredData, toUpdate]);
       } else {
         setButtonText('Error');
@@ -269,22 +257,20 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                 <></>
               )}
 
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                {CheckInOrOut === 'Check Out' ? (
-                  <DatePicker
-                    label="Due Date"
-                    slotProps={{
-                      textField: {
-                        helperText: 'MM/DD/YYYY'
-                      }
-                    }}
-                    value={dueDate}
-                    onChange={(newValue: Date) => setDueDate(dayjs(newValue))}
-                  />
-                ) : (
-                  <></>
-                )}
-              </LocalizationProvider>
+              {CheckInOrOut === 'Check Out' ? (
+                <DatePicker
+                  label="Due Date"
+                  slotProps={{
+                    textField: {
+                      helperText: 'MM/DD/YYYY'
+                    }
+                  }}
+                  value={dueDate}
+                  onChange={(newValue: Date) => setDueDate(dayjs(newValue))}
+                />
+              ) : (
+                <></>
+              )}
               {errorMessage ? (
                 <Typography color="error">{errorMessage}</Typography>
               ) : (

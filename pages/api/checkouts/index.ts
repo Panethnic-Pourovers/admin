@@ -22,18 +22,16 @@ export default async function handler(
         try {
           const newCheckout = await postHandler(req.body);
           if (!newCheckout) {
-            console.log('no checkout was returned');
             res.status(500).json({ message: 'Server error, checkout failed.' });
             return res;
           } else if (newCheckout === 'memberNotFound') {
             res.status(404).json({
-              message: `Member with ID "${req.body.memberId}" not found.`,
+              message: `Member with ID "${req.body.memberId}" not found.`
             });
             return res;
           }
           res.status(200).json(newCheckout);
         } catch (e) {
-          console.log(e.message);
           res.status(500).json({ message: e.message });
         }
         return res;
@@ -48,7 +46,6 @@ export default async function handler(
 
           return res;
         } catch (e) {
-          console.log(e.message);
           res.status(404).json({ message: e.message });
         }
         return res;
