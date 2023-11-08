@@ -1,24 +1,22 @@
 // TableEditButton.tsx
 
-import React, { useState, useEffect, useContext } from 'react';
 import { BooksContext, formatDate } from '@/pages/books';
+import theme from '@/styles/Theme';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Button,
-  Typography,
-  Modal,
-  TextField,
-  ThemeProvider,
-  Select,
-  MenuItem,
   InputLabel,
+  MenuItem,
+  Modal,
+  Select,
   Stack,
+  TextField,
+  ThemeProvider
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import theme from '@/styles/Theme';
 import axios from 'axios';
-import MultipleSelect from '../BookCatalog/MultipleSelect';
-import { MenuProps } from '../BookCatalog/MultipleSelect';
+import React, { useContext, useEffect, useState } from 'react';
+import MultipleSelect, { MenuProps } from '../BookCatalog/MultipleSelect';
 
 const style = {
   position: 'absolute' as const,
@@ -31,7 +29,7 @@ const style = {
   boxShadow: 24,
   padding: '32px 32px 12px 32px',
   overflowY: 'auto',
-  overflowX: 'hidden',
+  overflowX: 'hidden'
 };
 
 export default function TableEditButton({
@@ -40,7 +38,7 @@ export default function TableEditButton({
   columns,
   genres,
   regions,
-  locations,
+  locations
 }) {
   const { data, setData } = useContext(BooksContext);
 
@@ -108,7 +106,7 @@ export default function TableEditButton({
       author: editedData.Author,
       genres: selectedGenres.filter((item) => item !== ''),
       regions: selectedRegions.filter((item) => item !== ''),
-      location: selectedLocation,
+      location: selectedLocation
     };
 
     const url =
@@ -133,7 +131,7 @@ export default function TableEditButton({
           'Checked Out By': rowData['Checked Out By'],
           'Last Checked Out': formatDate(book.lastCheckedOut),
           Location: book.location.name,
-          'Barcode ID': book.barcodeId,
+          'Barcode ID': book.barcodeId
         };
       });
       setData([...filteredData, toUpdate[0]]);
@@ -201,7 +199,7 @@ export default function TableEditButton({
               style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                marginBottom: '0px',
+                marginBottom: '0px'
               }}
             >
               <Button
@@ -212,7 +210,7 @@ export default function TableEditButton({
                   position: 'absolute',
                   top: '0px',
                   right: '-5px',
-                  padding: 0,
+                  padding: 0
                 }}
               >
                 <CloseIcon />

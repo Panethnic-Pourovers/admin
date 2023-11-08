@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import Header from '@/components/Header';
 
 //local imports
-import { PAGES } from 'src/utils/constants';
+import { PAGES } from '@/src/utils/constants';
 
 type Props = {
   children: ReactNode;

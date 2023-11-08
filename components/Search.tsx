@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction } from 'react';
 import { TextField } from '@mui/material';
+import React, { Dispatch, SetStateAction } from 'react';
 
 interface Props {
   search: string;
@@ -18,9 +18,9 @@ const Search: React.FC<Props> = ({ search, setSearch }) => {
           sm: 300,
           md: 300,
           lg: 400,
-          xl: 500,
+          xl: 500
         },
-        mb: 2,
+        mb: 2
       }}
       value={search}
       onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

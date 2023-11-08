@@ -1,7 +1,7 @@
 import { Box, Button } from '@mui/material';
 import {
   searchBookCatalogStyle,
-  showSearchCatalogStyle,
+  showSearchCatalogStyle
 } from './styles/addBookStyles';
 
 type bookFoundModalFormProps = {

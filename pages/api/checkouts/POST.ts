@@ -1,4 +1,4 @@
-import prisma from '@/prisma/prisma';
+import prisma from "@/prisma/prisma";
 
 type PostBody = {
   memberId: string;
@@ -16,17 +16,17 @@ export default async function postHandler(body: PostBody) {
   });
 
   if (!member) {
-    return 'memberNotFound';
+    return "memberNotFound";
   }
 
   let location = await prisma.location.findUnique({
     where: {
-      name: 'Checked Out',
+      name: "Checked Out",
     },
   });
   if (!location) {
     location = await prisma.location.create({
-      data: { name: 'Checked Out' },
+      data: { name: "Checked Out" },
     });
   }
 

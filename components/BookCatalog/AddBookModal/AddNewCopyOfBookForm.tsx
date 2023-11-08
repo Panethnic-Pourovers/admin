@@ -1,56 +1,57 @@
+import { BooksContext, formatDate } from '@/pages/books';
+import getEnvUrl from '@/src/utils/getEnvUrl';
 import { Box, Button, TextField } from '@mui/material';
 import axios from 'axios';
+import { useContext } from 'react';
 import {
   searchBookCatalogStyle,
-  showSearchCatalogStyle,
+  showSearchCatalogStyle
 } from './styles/addBookStyles';
-import { useContext } from 'react';
-import { BooksContext, formatDate } from '@/pages/books';
 
 const genres = [
   {
     value: 'Action',
-    label: 'Action',
+    label: 'Action'
   },
   {
     value: 'Comedy',
-    label: 'Comedy',
+    label: 'Comedy'
   },
   {
     value: 'History',
-    label: 'History',
+    label: 'History'
   },
   {
     value: 'Romance',
-    label: 'Romance',
-  },
+    label: 'Romance'
+  }
 ];
 
 const regions = [
   {
     value: 'China',
-    label: 'China',
+    label: 'China'
   },
   {
     value: 'India',
-    label: 'India',
+    label: 'India'
   },
   {
     value: 'Japan',
-    label: 'Japan',
+    label: 'Japan'
   },
   {
     value: 'Philippines',
-    label: 'Philippines',
+    label: 'Philippines'
   },
   {
     value: 'Vietnam',
-    label: 'Vietnam',
+    label: 'Vietnam'
   },
   {
     value: 'South Korea',
-    label: 'South Korea',
-  },
+    label: 'South Korea'
+  }
 ];
 
 type addNewCopyOfBookFormProps = {
@@ -63,10 +64,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
 
   const sendBook = async (e) => {
     e.preventDefault();
-    const url =
-      process.env.NODE_ENV === 'production'
-        ? 'http://localhost:3000'
-        : 'http://localhost:3000';
+    const url = getEnvUrl();
     const { title, author, genre, region } = e.target;
     const book = {
       title: title.value,
@@ -75,7 +73,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
       lastCheckedOut: null,
       location: 'PEPO Library',
       genres: [genre.value],
-      regions: [region.value],
+      regions: [region.value]
     };
 
     const response = await axios.post(`${url}/api/books`, book);
@@ -91,7 +89,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
       'Checked Out By': 'N/A',
       'Last Checked Out': formatDate(response.data.lastCheckedOut),
       Location: response.data.location.name,
-      'Barcode ID': response.data.barcodeId,
+      'Barcode ID': response.data.barcodeId
     };
 
     console.log(localUpdate);
@@ -127,7 +125,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
           name="genre"
           defaultValue=""
           SelectProps={{
-            native: true,
+            native: true
           }}
           variant="standard"
         >
@@ -144,7 +142,7 @@ const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
           name="region"
           defaultValue=""
           SelectProps={{
-            native: true,
+            native: true
           }}
           variant="standard"
         >

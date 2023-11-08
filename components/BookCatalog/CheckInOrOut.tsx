@@ -1,20 +1,20 @@
-import React, { useState, useContext } from 'react';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { BooksContext, formatDate } from '@/pages/books';
-import dayjs from 'dayjs';
+import prisma from '@/prisma/prisma';
+import theme from '@/styles/Theme';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Button,
-  Typography,
   Modal,
   TextField,
   ThemeProvider,
+  Typography
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import theme from '@/styles/Theme';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import axios from 'axios';
-import prisma from '@/prisma/prisma';
+import dayjs from 'dayjs';
+import React, { useContext, useState } from 'react';
 
 const style = {
   position: 'absolute' as const,
@@ -24,7 +24,7 @@ const style = {
   width: 350,
   bgcolor: 'background.paper',
   boxShadow: 24,
-  padding: '32px 32px 12px 32px',
+  padding: '32px 32px 12px 32px'
 };
 
 interface CheckoutPostBody {
@@ -81,7 +81,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
       }
 
       const patchBody: CheckoutPatchBody = {
-        bookId: barcode,
+        bookId: barcode
       };
       setButtonText('Checking in...');
       response = await axios.patch(`${url}/api/checkouts`, patchBody);
@@ -121,7 +121,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
       const postBody: CheckoutPostBody = {
         memberId: memberId,
         bookId: barcode,
-        dueDate: dueDate.format('YYYY-MM-DD') + 'T21:59',
+        dueDate: dueDate.format('YYYY-MM-DD') + 'T21:59'
       };
 
       try {
@@ -179,8 +179,8 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
     border: `1px solid ${theme.palette.primary.main}`,
     padding: '0rem 1rem',
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-    },
+      backgroundColor: theme.palette.primary.main
+    }
   };
 
   const checkInAndOutButtonStyle = {
@@ -193,8 +193,8 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
     backgroundColor: theme.palette.primary.main,
     border: `0.1rem solid ${theme.palette.primary.main}`,
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-    },
+      backgroundColor: theme.palette.primary.main
+    }
   };
 
   return (
@@ -214,7 +214,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
               style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                marginBottom: '0px',
+                marginBottom: '0px'
               }}
             >
               <Button
@@ -225,7 +225,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                   position: 'absolute',
                   top: '0px',
                   right: '-5px',
-                  padding: 0,
+                  padding: 0
                 }}
               >
                 <CloseIcon />
@@ -275,8 +275,8 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                     label="Due Date"
                     slotProps={{
                       textField: {
-                        helperText: 'MM/DD/YYYY',
-                      },
+                        helperText: 'MM/DD/YYYY'
+                      }
                     }}
                     value={dueDate}
                     onChange={(newValue: Date) => setDueDate(dayjs(newValue))}
@@ -294,7 +294,7 @@ export default function CheckInOrOut({ title, CheckInOrOut }) {
                 sx={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  marginTop: '16px',
+                  marginTop: '16px'
                 }}
               >
                 <Button

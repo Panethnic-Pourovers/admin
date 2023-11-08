@@ -8,8 +8,8 @@ export default async function postHandler(body: PostBody) {
   const { name } = body;
   const newGenre = await prisma.genre.create({
     data: {
-      name,
-    },
+      name
+    }
   });
   return newGenre;
 }
