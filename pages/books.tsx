@@ -54,17 +54,6 @@ export const formatDate = (date: string): string => {
 export const getServerSideProps = async () => {
   try {
     const url = getEnvUrl();
-    console.log(url);
-    console.log(url);
-
-    console.log(url);
-
-    console.log(url);
-
-    console.log(url);
-
-    console.log(url);
-
     const [responseBooks, responseRegions, responseLocations, responseGenres] =
       await Promise.all([
         axios.get(`${url}/api/books`),
@@ -77,8 +66,6 @@ export const getServerSideProps = async () => {
     const regionsData = responseRegions.data;
     const locationsData = responseLocations.data;
     const genresData = responseGenres.data;
-
-    console.log(books);
 
     if (!books) {
       return {
