@@ -1,43 +1,44 @@
 import prisma from '@/prisma/prisma';
 
 type UpdateBody = {
-  memberId: string;
   bookId: string;
 };
 
 export default async function updateHandler(body: UpdateBody) {
-  const { memberId, bookId } = body;
+  const { bookId } = body;
 
   const checkout = await prisma.checkout.findFirstOrThrow({
     where: {
-      memberId,
       bookId,
       checkinDate: {
         equals: null
       }
     }
   });
+  try {
+    const transactionRes = await prisma.$transaction([
+      prisma.checkout.update({
+        where: {
+          id: checkout.id
+        },
 
-  const transactionRes = await prisma.$transaction([
-    prisma.checkout.update({
-      where: {
-        id: checkout.id
-      },
+        data: {
+          checkinDate: new Date()
+        }
+      }),
+      prisma.book.update({
+        where: {
+          barcodeId: bookId
+        },
+        data: {
+          checkedOut: false,
+          libraryMemberId: null
+        }
+      })
+    ]);
 
-      data: {
-        checkinDate: new Date()
-      }
-    }),
-    prisma.book.update({
-      where: {
-        id: bookId
-      },
-      data: {
-        checkedOut: false,
-        member: { connect: { id: '' } }
-      }
-    })
-  ]);
-
-  return transactionRes;
+    return transactionRes;
+  } catch (e) {
+    console.log(e);
+  }
 }

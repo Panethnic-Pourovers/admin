@@ -41,7 +41,7 @@ model Region {
 
 model Location {
   id   String @id @default(cuid())
-  name String
+  name String @unique
   Book Book[]
 }
 
@@ -58,7 +58,7 @@ model LibraryMember {
 
 model Checkout {
   id           String        @id @default(cuid())
-  book         Book          @relation(fields: [bookId], references: [id])
+  book         Book          @relation(fields: [bookId], references: [barcodeId], onDelete: Cascade)
   member       LibraryMember @relation(fields: [memberId], references: [id])
   memberId     String
   bookId       String

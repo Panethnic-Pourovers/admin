@@ -1,6 +1,8 @@
+import { BooksContext, formatDate } from '@/pages/books';
 import getEnvUrl from '@/src/utils/getEnvUrl';
 import { Box, Button, TextField } from '@mui/material';
 import axios from 'axios';
+import { useContext } from 'react';
 import {
   searchBookCatalogStyle,
   showSearchCatalogStyle
@@ -57,24 +59,45 @@ type addNewCopyOfBookFormProps = {
   author?: string;
 };
 
-const sendBook = async (e) => {
-  e.preventDefault();
-  const url = getEnvUrl();
-  const { title, author, genre, region } = e.target;
-  const book = {
-    title: title.value,
-    author: author.value,
-    checkedOut: false,
-    lastCheckedOut: null,
-    location: 'PEPO Library',
-    genres: [genre.value],
-    regions: [region.value]
-  };
-  const response = await axios.post(`${url}/api/books`, book);
-  return response;
-};
-
 const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
+  const { data, setData } = useContext(BooksContext);
+
+  const sendBook = async (e) => {
+    e.preventDefault();
+    const url = getEnvUrl();
+    const { title, author, genre, region } = e.target;
+    const book = {
+      title: title.value,
+      author: author.value,
+      checkedOut: false,
+      lastCheckedOut: null,
+      location: 'PEPO Library',
+      genres: [genre.value],
+      regions: [region.value]
+    };
+
+    const response = await axios.post(`${url}/api/books`, book);
+    console.log(response);
+
+    const localUpdate = {
+      id: response.data.id,
+      Title: response.data.title,
+      Author: response.data.author,
+      Genres: response.data.genres || [],
+      Regions: response.data.regions || [],
+      'Checked Out': response.data.checkedOut || false,
+      'Checked Out By': 'N/A',
+      'Last Checked Out': formatDate(response.data.lastCheckedOut),
+      Location: response.data.location.name,
+      'Barcode ID': response.data.barcodeId
+    };
+
+    console.log(localUpdate);
+    setData([...data, localUpdate]);
+
+    return response;
+  };
+
   return (
     <Box component="div" sx={showSearchCatalogStyle}>
       <h3>Add New Book to Catalog</h3>

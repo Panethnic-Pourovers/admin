@@ -3,13 +3,14 @@ import type { Book } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 
 // React imports
-import React, { useMemo, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 
 // MUI components
-import { Box } from '@mui/material';
+import { Box, MenuItem, Select } from '@mui/material';
 
 // custom components
 import AddBookModal from '@/components/BookCatalog/AddBookModal';
+
 import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
@@ -32,7 +33,7 @@ const isBook = (book: any): book is Book => {
   );
 };
 
-const formatDate = (date: string): string => {
+export const formatDate = (date: string): string => {
   const month = date.substring(5, 7);
   const day = date.substring(8, 10);
   const year = date.substring(0, 4);
@@ -53,9 +54,19 @@ const formatDate = (date: string): string => {
 export const getServerSideProps = async () => {
   try {
     const url = getEnvUrl();
-    console.log(`${url}/api/books`);
-    const response = await axios.get(`${url}/api/books`);
-    const books = response.data;
+    const [responseBooks, responseRegions, responseLocations, responseGenres] =
+      await Promise.all([
+        axios.get(`${url}/api/books`),
+        axios.get(`${url}/api/regions`),
+        axios.get(`${url}/api/locations`),
+        axios.get(`${url}/api/genres`)
+      ]);
+
+    const books = responseBooks.data;
+    const regionsData = responseRegions.data;
+    const locationsData = responseLocations.data;
+    const genresData = responseGenres.data;
+
     if (!books) {
       return {
         props: {
@@ -67,9 +78,19 @@ export const getServerSideProps = async () => {
       books.map(async (book): Promise<Record<string, unknown>> => {
         const { locationId } = book;
         const location = await axios.get(`${url}/api/locations/${locationId}`);
+        let memberResponse;
+        if (book.libraryMemberId) {
+          memberResponse = await axios.get(
+            `${url}/api/members/${book.libraryMemberId}`
+          );
+        }
         const { name } = location.data;
-        const checkedoutMember = book.checkedOut ? book.libraryMemberId : 'N/A';
         const formattedDate = formatDate(book.lastCheckedOut);
+        let memberName = 'N/A';
+        if (memberResponse) {
+          memberName =
+            memberResponse.data.firstName + ' ' + memberResponse.data.lastName;
+        }
 
         return {
           id: book.id,
@@ -78,7 +99,7 @@ export const getServerSideProps = async () => {
           Genres: book.genres || [],
           Regions: book.regions || [],
           'Checked Out': book.checkedOut,
-          'Checked Out By': checkedoutMember,
+          'Checked Out By': memberName,
           'Last Checked Out': formattedDate,
           Location: name,
           'Barcode ID': book.barcodeId
@@ -99,13 +120,18 @@ export const getServerSideProps = async () => {
           'Location',
           'Barcode ID',
           'Checked Out By'
-        ]
+        ],
+        genres: genresData,
+        locations: locationsData,
+        regions: regionsData
       }
     };
   } catch {
     return { props: { data: { error: 'Error loading books' } } };
   }
 };
+
+export const BooksContext = createContext(null);
 
 const BooksCatalog = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -129,7 +155,8 @@ const BooksCatalog = (
   // TODO: as the data gets larger, do not pull the entire JSON response from database
   // TODO: Add an API endpoint between database call and frontend for more robust caching
 
-  const { data, columns } = props;
+  const { columns, genres, locations, regions } = props;
+  const [data, setData] = useState(props.data);
 
   if (isLoading === false && (data === undefined || columns === undefined))
     setIsLoading(true);
@@ -165,36 +192,46 @@ const BooksCatalog = (
     });
   }, [data, searchValue]);
   return (
-    <Layout>
-      <div id="bookCatalog">
-        <Box
-          sx={{
-            display: 'flex',
-            flexFlow: 'row nowrap',
-            justifyContent: 'space-between'
-          }}
-          className="bookCatalog-topbar"
-        >
-          <div className="bookCatalog-topbar-search">
-            <Search search={searchValue} setSearch={setSearch} />
-          </div>
-          <div className="bookCatalog-topbar-buttons">
-            <AddBookModal bookData={data} />
-          </div>
-        </Box>
-        <Table rows={filteredItems || []} columns={tableColumns} />
-        <Box
-          className="bookCatalog-checkButtons"
-          sx={{
-            display: 'flex',
-            flexFlow: 'row-reverse nowrap'
-          }}
-        >
-          <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
-          <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
-        </Box>
-      </div>
-    </Layout>
+    <BooksContext.Provider value={{ data: data, setData: setData }}>
+      <Layout>
+        <div id="bookCatalog">
+          <Box
+            sx={{
+              display: 'flex',
+              flexFlow: 'row nowrap',
+              justifyContent: 'space-between'
+            }}
+            className="bookCatalog-topbar"
+          >
+            <div className="bookCatalog-topbar-search">
+              <Search search={searchValue} setSearch={setSearch} />
+            </div>
+            <div className="bookCatalog-topbar-buttons">
+              <AddBookModal bookData={data} />
+            </div>
+          </Box>
+          <Table
+            rows={filteredItems || []}
+            columns={tableColumns}
+            genres={genres}
+            regions={regions}
+            locations={locations}
+            data={data}
+            setData={setData}
+          />
+          <Box
+            className="bookCatalog-checkButtons"
+            sx={{
+              display: 'flex',
+              flexFlow: 'row-reverse nowrap'
+            }}
+          >
+            <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
+            <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
+          </Box>
+        </div>
+      </Layout>
+    </BooksContext.Provider>
   );
 };
 

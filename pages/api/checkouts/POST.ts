@@ -9,6 +9,26 @@ type PostBody = {
 export default async function postHandler(body: PostBody) {
   const { memberId, bookId, dueDate } = body;
   const dueDateObj = new Date(dueDate);
+  const member = await prisma.libraryMember.findUnique({
+    where: {
+      id: memberId
+    }
+  });
+
+  if (!member) {
+    return 'memberNotFound';
+  }
+
+  let location = await prisma.location.findUnique({
+    where: {
+      name: 'Checked Out'
+    }
+  });
+  if (!location) {
+    location = await prisma.location.create({
+      data: { name: 'Checked Out' }
+    });
+  }
 
   const transactionRes = await prisma.$transaction([
     prisma.checkout.create({
@@ -24,11 +44,13 @@ export default async function postHandler(body: PostBody) {
     }),
     prisma.book.update({
       where: {
-        id: bookId
+        barcodeId: bookId
       },
       data: {
         checkedOut: true,
-        lastCheckedOut: new Date()
+        lastCheckedOut: new Date(),
+        libraryMemberId: memberId,
+        locationId: location.id
       }
     })
   ]);

@@ -69,7 +69,7 @@ const Members = () => {
             <Search search={searchValue} setSearch={setSearch} />
           </div>
         </Box>
-        <Table rows={jsonData || []} columns={columns} />
+        {/* <Table rows={jsonData || []} columns={columns} /> */}
         <ThemeProvider theme={theme}>
           <div>
             <div style={{ textAlign: 'right' }}>
