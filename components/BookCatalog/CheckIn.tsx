@@ -44,10 +44,15 @@ const CheckIn = () => {
     const toUpdate = data.filter(
       (item: any) => item['Barcode ID'] === barcode
     )[0];
-    if (!toUpdate) {
+    if (barcode === '') {
+      setErrorMessage('Please fill in the barcode.');
+      return;
+    } else if (!toUpdate) {
       setErrorMessage('The book was not found in the catalogue.');
+      return;
     } else if (!toUpdate['Checked Out']) {
       setErrorMessage('This book is not checked out.');
+      return;
     }
 
     const patchBody: CheckoutPatchBody = {
