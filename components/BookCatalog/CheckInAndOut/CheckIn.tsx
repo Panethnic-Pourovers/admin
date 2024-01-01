@@ -1,24 +1,13 @@
 import getEnvUrl from '@/src/utils/getEnvUrl';
-import theme from '@/styles/Theme';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { buttonStyle, scanButtonStyle, style } from './styles';
 
 import axios from 'axios';
 
 import React, { useCallback, useContext, useState } from 'react';
 
 import { BooksContext } from '@/pages/books';
-
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 350,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  padding: '32px 32px 12px 32px'
-};
 
 interface CheckoutPatchBody {
   bookId: string;
@@ -85,36 +74,9 @@ const CheckIn = () => {
     }
   };
 
-  const scanButtonStyle = {
-    fontSize: '0.9rem',
-    mx: 0,
-    color: 'black',
-    display: 'block',
-    whiteSpace: 'nowrap',
-    backgroundColor: theme.palette.primary.main,
-    border: `1px solid ${theme.palette.primary.main}`,
-    padding: '0rem 1rem',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main
-    }
-  };
-  const checkInButtonStyle = {
-    my: 2,
-    fontSize: '1rem',
-    mx: 1,
-    color: 'black',
-    display: 'block',
-    whiteSpace: 'nowrap',
-    backgroundColor: theme.palette.primary.main,
-    border: `0.1rem solid ${theme.palette.primary.main}`,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main
-    }
-  };
-
   return (
     <div>
-      <Button onClick={handleOpen} sx={checkInButtonStyle}>
+      <Button onClick={handleOpen} sx={buttonStyle}>
         Check In
       </Button>
       <Modal
@@ -178,7 +140,7 @@ const CheckIn = () => {
                 marginTop: '16px'
               }}
             >
-              <Button onClick={handleCheckInOrOut} sx={checkInButtonStyle}>
+              <Button onClick={handleCheckInOrOut} sx={buttonStyle}>
                 {buttonText}
               </Button>
             </Box>

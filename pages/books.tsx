@@ -2,8 +2,8 @@
 import type { Book } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 
-import CheckIn from '@/components/BookCatalog/CheckIn';
-import CheckOut from '@/components/BookCatalog/CheckOut';
+import CheckIn from '@/components/BookCatalog/CheckInAndOut/CheckIn';
+import CheckOut from '@/components/BookCatalog/CheckInAndOut/CheckOut';
 
 // React imports
 import React, { createContext, useEffect, useMemo, useState } from 'react';
