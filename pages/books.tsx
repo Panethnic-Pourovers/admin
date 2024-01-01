@@ -2,6 +2,9 @@
 import type { Book } from '@prisma/client';
 import { InferGetServerSidePropsType } from 'next';
 
+import CheckIn from '@/components/BookCatalog/CheckIn';
+import CheckOut from '@/components/BookCatalog/CheckOut';
+
 // React imports
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 
@@ -11,7 +14,7 @@ import { Box, MenuItem, Select } from '@mui/material';
 // custom components
 import AddBookModal from '@/components/BookCatalog/AddBookModal';
 
-import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut';
+import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut-Deprecated';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
@@ -75,7 +78,7 @@ export const getServerSideProps = async () => {
       };
     }
     const bookData: Record<string, unknown>[] = await Promise.all(
-      books.map(async (book): Promise<Record<string, unknown>> => {
+      books.map(async (book: any): Promise<Record<string, unknown>> => {
         const { locationId } = book;
         const location = await axios.get(`${url}/api/locations/${locationId}`);
         let memberResponse;
@@ -131,7 +134,7 @@ export const getServerSideProps = async () => {
   }
 };
 
-export const BooksContext = createContext(null);
+export const BooksContext = createContext<Record<string, any> | null>(null);
 
 const BooksCatalog = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -226,8 +229,8 @@ const BooksCatalog = (
               flexFlow: 'row-reverse nowrap'
             }}
           >
-            <CheckInOrOut title="Check In" CheckInOrOut="Check In" />
-            <CheckInOrOut title="Check Out" CheckInOrOut="Check Out" />
+            <CheckIn title="Check In" />
+            <CheckOut title="Check Out" />
           </Box>
         </div>
       </Layout>
