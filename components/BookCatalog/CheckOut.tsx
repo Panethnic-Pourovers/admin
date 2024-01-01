@@ -6,7 +6,7 @@ import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
 const style = {
   position: 'absolute' as const,
@@ -32,6 +32,12 @@ const CheckOut = () => {
   const [barcode, setBarcode] = useState<string>('');
   const [memberId, setMemberId] = useState<string>('');
   const [buttonText, setButtonText] = useState<string>('Check Out');
+  const updateButtonText = useCallback(
+    (newText: string) => {
+      setButtonText(newText);
+    },
+    [buttonText]
+  );
 
   const context = useContext(BooksContext);
   if (!context) throw new Error('Context is null');
@@ -70,22 +76,22 @@ const CheckOut = () => {
       response = await axios.post(`${url}/api/checkouts`, postBody);
     } catch (e: any) {
       setErrorMessage(e.response.data.message);
-      setButtonText('Error');
+      updateButtonText('Error');
       setTimeout(() => {
-        setButtonText('Check Out');
+        updateButtonText('Check Out');
       }, 1000);
       return;
     }
 
-    setButtonText('Checking out...');
+    updateButtonText('Checking out...');
     if (response.status === 200) {
       setErrorMessage(null);
       setBarcode('');
       setMemberId('');
       setDueDate(null);
-      setButtonText('Success');
+      updateButtonText('Success');
       setTimeout(() => {
-        setButtonText('Check Out');
+        updateButtonText('Check Out');
       }, 1000);
       const filteredData = data.filter(
         (item: any) => item['Barcode ID'] !== barcode
@@ -100,9 +106,9 @@ const CheckOut = () => {
       toUpdate.Location = 'Checked Out';
       setData([...filteredData, toUpdate]);
     } else {
-      setButtonText('Error');
+      updateButtonText('Error');
       setTimeout(() => {
-        setButtonText('Check Out');
+        updateButtonText('Check Out');
       }, 1000);
     }
   };

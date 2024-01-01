@@ -5,7 +5,7 @@ import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 
 import axios from 'axios';
 
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
 import { BooksContext } from '@/pages/books';
 
@@ -33,6 +33,12 @@ const CheckIn = () => {
   const handleClose = () => setOpen(false);
   const context = useContext(BooksContext);
   const [buttonText, setButtonText] = useState<string>('Check In');
+  const updateButtonText = useCallback(
+    (newText: string) => {
+      setButtonText(newText);
+    },
+    [buttonText]
+  );
   if (!context) throw new Error('Context is null');
   const { data, setData } = context;
 
@@ -58,13 +64,13 @@ const CheckIn = () => {
     const patchBody: CheckoutPatchBody = {
       bookId: barcode
     };
-    setButtonText('Checking in...');
+    updateButtonText('Checking in...');
     const response = await axios.patch(`${url}/api/checkouts`, patchBody);
     if (response.status === 200) {
       setBarcode('');
-      setButtonText('Success');
+      updateButtonText('Success');
       setTimeout(() => {
-        setButtonText('Check In');
+        updateButtonText('Check In');
       }, 1000);
 
       toUpdate['Checked Out'] = false;
@@ -72,9 +78,9 @@ const CheckIn = () => {
       toUpdate.Location = 'PEPO Checkin';
       setData([...filteredData, toUpdate]);
     } else {
-      setButtonText('Error');
+      updateButtonText('Error');
       setTimeout(() => {
-        setButtonText('Check Out');
+        updateButtonText('Check Out');
       }, 1000);
     }
   };
