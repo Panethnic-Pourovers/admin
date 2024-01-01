@@ -14,7 +14,6 @@ import { Box, MenuItem, Select } from '@mui/material';
 // custom components
 import AddBookModal from '@/components/BookCatalog/AddBookModal';
 
-import CheckInOrOut from '@/components/BookCatalog/CheckInOrOut-Deprecated';
 import Layout from '@/components/Layout';
 import Search from '@/components/Search';
 import Table from '@/components/Table';

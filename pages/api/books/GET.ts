@@ -2,9 +2,8 @@ import prisma from '@/prisma/prisma';
 import { Book } from '@prisma/client';
 
 export default async function getHandler(id?: string) {
-  let books: Book | Book[];
   if (id) {
-    books = await prisma.book.findUnique({
+    return await prisma.book.findUnique({
       where: {
         id
       },
@@ -15,7 +14,7 @@ export default async function getHandler(id?: string) {
       }
     });
   } else {
-    books = await prisma.book.findMany({
+    return await prisma.book.findMany({
       include: {
         genres: true,
         regions: true,
@@ -23,5 +22,4 @@ export default async function getHandler(id?: string) {
       }
     });
   }
-  return books;
 }

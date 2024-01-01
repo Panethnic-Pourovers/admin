@@ -7,7 +7,7 @@ import AddBookModalForm from './AddBookModalForm';
 
 import { addBookStyle } from './styles/addBookStyles';
 
-export default function AddBookModal({ bookData }) {
+export default function AddBookModal(props: { bookData: any }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -23,7 +23,7 @@ export default function AddBookModal({ bookData }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <AddBookModalForm bookData={bookData} />
+        <AddBookModalForm bookData={props.bookData} />
       </Modal>
     </div>
   );
