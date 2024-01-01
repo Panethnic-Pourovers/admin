@@ -8,6 +8,7 @@ import {
   showSearchCatalogStyle
 } from './styles/addBookStyles';
 
+// this feels bad, been a while since I worked on this but this probably shouldn't be hardcoded
 const genres = [
   {
     value: 'Action',

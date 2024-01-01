@@ -1,12 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import getHandler from './GET';
-import updateHandler from './PATCH';
 
 export default async function getBookById(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const id = req.query.id.toString();
+  const id = req.query.id ? req.query.id.toString() : '';
+  if (!id) {
+    res.status(400).json({ message: 'Missing book ID.' });
+    return res;
+  }
   try {
     switch (req.method) {
       case 'GET': {
