@@ -229,8 +229,8 @@ const BooksCatalog = (
               flexFlow: 'row-reverse nowrap'
             }}
           >
-            <CheckIn title="Check In" />
-            <CheckOut title="Check Out" />
+            <CheckIn />
+            <CheckOut />
           </Box>
         </div>
       </Layout>

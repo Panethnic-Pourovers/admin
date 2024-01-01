@@ -1,20 +1,13 @@
 import getEnvUrl from '@/src/utils/getEnvUrl';
 import theme from '@/styles/Theme';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  Box,
-  Button,
-  Modal,
-  TextField,
-  ThemeProvider,
-  Typography
-} from '@mui/material';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 
 import axios from 'axios';
 
 import React, { useContext, useState } from 'react';
 
-import { BooksContext, formatDate } from '@/pages/books';
+import { BooksContext } from '@/pages/books';
 
 const style = {
   position: 'absolute' as const,
@@ -27,19 +20,11 @@ const style = {
   padding: '32px 32px 12px 32px'
 };
 
-interface CheckoutPostBody {
-  memberId: string;
-  bookId: string;
-  dueDate: string;
-}
-
 interface CheckoutPatchBody {
   bookId: string;
 }
 
-const CheckIn = (props: { title: string }) => {
-  const url = getEnvUrl();
-
+const CheckIn = () => {
   const [open, setOpen] = useState(false);
   const [barcode, setBarcode] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -50,13 +35,6 @@ const CheckIn = (props: { title: string }) => {
   const [buttonText, setButtonText] = useState<string>('Check In');
   if (!context) throw new Error('Context is null');
   const { data, setData } = context;
-
-  const filteredData = data.filter(
-    (item: any) => item['Barcode ID'] !== barcode
-  );
-  const toUpdate = data.filter(
-    (item: any) => item['Barcode ID'] === barcode
-  )[0];
 
   const handleCheckInOrOut = async () => {
     const url = getEnvUrl();
@@ -190,7 +168,7 @@ const CheckIn = (props: { title: string }) => {
               }}
             >
               <Button onClick={handleCheckInOrOut} sx={checkInButtonStyle}>
-                Check In
+                {buttonText}
               </Button>
             </Box>
           </Typography>

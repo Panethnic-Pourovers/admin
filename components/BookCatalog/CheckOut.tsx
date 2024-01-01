@@ -2,14 +2,7 @@ import { BooksContext, formatDate } from '@/pages/books';
 import getEnvUrl from '@/src/utils/getEnvUrl';
 import theme from '@/styles/Theme';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  Box,
-  Button,
-  Modal,
-  TextField,
-  ThemeProvider,
-  Typography
-} from '@mui/material';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -32,11 +25,7 @@ interface CheckoutPostBody {
   dueDate: string;
 }
 
-interface CheckoutPatchBody {
-  bookId: string;
-}
-
-const CheckOut = (props: { title: string }) => {
+const CheckOut = () => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState<dayjs.Dayjs | null>(null);
