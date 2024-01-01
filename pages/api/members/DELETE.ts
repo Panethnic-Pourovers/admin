@@ -1,6 +1,6 @@
 import prisma from '@/prisma/prisma';
 
-export default async function deleteHandler(id?: string, body?) {
+export default async function deleteHandler(id?: string, body?: any) {
   let deletedMember;
   if (id) {
     try {

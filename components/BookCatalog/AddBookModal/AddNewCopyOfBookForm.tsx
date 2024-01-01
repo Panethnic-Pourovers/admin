@@ -8,6 +8,7 @@ import {
   showSearchCatalogStyle
 } from './styles/addBookStyles';
 
+// this feels bad, been a while since I worked on this but this probably shouldn't be hardcoded
 const genres = [
   {
     value: 'Action',
@@ -60,9 +61,11 @@ type addNewCopyOfBookFormProps = {
 };
 
 const AddNewCopyOfBookForm = (props: addNewCopyOfBookFormProps) => {
-  const { data, setData } = useContext(BooksContext);
+  const context = useContext(BooksContext);
+  if (!context) throw new Error('Context is null');
+  const { data, setData } = context;
 
-  const sendBook = async (e) => {
+  const sendBook = async (e: any) => {
     e.preventDefault();
     const url = getEnvUrl();
     const { title, author, genre, region } = e.target;

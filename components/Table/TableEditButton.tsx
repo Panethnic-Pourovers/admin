@@ -1,6 +1,7 @@
 // TableEditButton.tsx
 
 import { BooksContext, formatDate } from '@/pages/books';
+import getEnvUrl from '@/src/utils/getEnvUrl';
 import theme from '@/styles/Theme';
 import CloseIcon from '@mui/icons-material/Close';
 import {
@@ -18,7 +19,6 @@ import {
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import MultipleSelect, { MenuProps } from '../BookCatalog/MultipleSelect';
-import getEnvUrl from '@/src/utils/getEnvUrl';
 
 const style = {
   position: 'absolute' as const,
@@ -34,19 +34,22 @@ const style = {
   overflowX: 'hidden'
 };
 
-export default function TableEditButton({
-  rowData,
-  setRowData,
-  columns,
-  genres,
-  regions,
-  locations
+export default function TableEditButton(props: {
+  rowData: any;
+  setRowData: any;
+  columns: any;
+  genres: any;
+  regions: any;
+  locations: any;
 }) {
-  const { data, setData } = useContext(BooksContext);
+  const { rowData, setRowData, columns, genres, regions, locations } = props;
+  const context = useContext(BooksContext);
+  if (!context) throw new Error('BooksContext is null');
+  const { data, setData } = context;
 
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState(rowData);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
     rowData['Genre(s)']?.split(', ')
   );
@@ -58,9 +61,9 @@ export default function TableEditButton({
   );
   const [buttonText, setButtonText] = useState<string>('Save');
 
-  const genresList: string[] = genres.map((item) => item.name);
-  const regionsList: string[] = regions.map((item) => item.name);
-  const locationsList: string[] = locations.map((item) => item.name);
+  const genresList: string[] = genres.map((item: any) => item.name);
+  const regionsList: string[] = regions.map((item: any) => item.name);
+  const locationsList: string[] = locations.map((item: any) => item.name);
 
   useEffect(() => {
     setEditedData(rowData);
@@ -69,7 +72,7 @@ export default function TableEditButton({
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleEdit = async (e) => {
+  const handleEdit = async (e: any) => {
     e.preventDefault();
     const listOfBlanks = [];
     if (editedData['Barcode ID'] === '') {
@@ -90,7 +93,7 @@ export default function TableEditButton({
 
     // if barcode exists in the data, AND the barcode does not equal the selected row's barcode.....
     const duplicateBarcode = data.filter(
-      (item) => item['Barcode ID'] === editedData['Barcode ID']
+      (item: any) => item['Barcode ID'] === editedData['Barcode ID']
     );
     if (
       duplicateBarcode.length > 0 &&
@@ -99,7 +102,7 @@ export default function TableEditButton({
       setErrorMessage('This barcode already exists.');
       return;
     }
-    const filteredData = data.filter((item) => item.id !== rowData.id);
+    const filteredData = data.filter((item: any) => item.id !== rowData.id);
 
     setButtonText('Saving...');
     const patchData = {
@@ -124,8 +127,10 @@ export default function TableEditButton({
           Author: book.author,
           Genres: book.genres,
           Regions: book.regions,
-          'Genre(s)': book.genres.map((genre) => genre.name).join(', '),
-          'Regions(s)': book.regions.map((region) => region.name).join(', '),
+          'Genre(s)': book.genres.map((genre: any) => genre.name).join(', '),
+          'Regions(s)': book.regions
+            .map((region: any) => region.name)
+            .join(', '),
           'Checked Out': book.checkedOut,
           'Checked Out By': rowData['Checked Out By'],
           'Last Checked Out': formatDate(book.lastCheckedOut),
@@ -145,8 +150,8 @@ export default function TableEditButton({
     }
   };
 
-  const renderInputField = (field, value) => {
-    const column = columns.find((col) => col.field === field);
+  const renderInputField = (field: any, value: any) => {
+    const column = columns.find((col: any) => col.field === field);
 
     if (column) {
       return (

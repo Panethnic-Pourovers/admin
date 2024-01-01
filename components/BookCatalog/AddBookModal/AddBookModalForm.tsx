@@ -19,7 +19,7 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
   const [hideStepOne, setHideStepOne] = useState(false);
   const [hideStepTwo, setHideStepTwo] = useState(true);
 
-  const [foundBookId, setFoundBookId] = useState(null);
+  const [foundBookId, setFoundBookId] = useState<number | null>(null);
 
   const goToStepOne = () => {
     setHideStepOne(false);
@@ -41,7 +41,7 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
     const booksArray = props.bookData;
 
     // Find a book that matches the entered title and author
-    const bookFound = booksArray.find((book) => {
+    const bookFound = booksArray.find((book: any) => {
       return book.Title === title && book.Author === author;
     });
     if (bookFound) {
@@ -99,12 +99,12 @@ const AddBookModalForm = (props: addBookModalFormProps) => {
         >
           Search book catalog
         </Button>
-        {showSearchCatalog && (
+        {showSearchCatalog && foundBookId ? (
           <BookFoundModalForm
             foundBookId={foundBookId}
             showSecondStepFunction={goToStepTwo}
           />
-        )}
+        ) : null}
         {promptToProceedToStepTwo && (
           <>
             <p>Book not found, please add it to the catalog:</p>

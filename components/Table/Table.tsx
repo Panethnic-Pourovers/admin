@@ -7,20 +7,20 @@ import React, { useEffect, useState } from 'react';
 // datagrid dependency imports
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import { Button, Modal, Typography, Box } from '@mui/material';
-import axios from 'axios';
 import getEnvUrl from '@/src/utils/getEnvUrl';
+import { Box, Button, Modal, Typography } from '@mui/material';
+import axios from 'axios';
 
 type tableProps = {
   rows: Record<string, unknown>[];
   columns: GridColDef[];
   page?: number;
   pageSize?: number;
-  genres: { id; name };
-  regions: { id; name };
+  genres: { id: any; name: string };
+  regions: { id: any; name: string };
   locations: string;
   data: any;
-  setData;
+  setData: any;
 };
 
 export default function Table(props: tableProps) {
@@ -37,7 +37,7 @@ export default function Table(props: tableProps) {
   } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteButtonText, setDeleteButtonText] = useState<string>('Delete');
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [confirmationStage, setConfirmationStage] = useState<boolean>(false);
 
   const [selectedRowData, setSelectedRowData] = useState<Record<
@@ -79,6 +79,7 @@ export default function Table(props: tableProps) {
   const url = getEnvUrl();
   const handleConfirmation = async () => {
     // if current book is checked out, do not allow deletion
+    if (!selectedRowData) return;
     if (selectedRowData['Checked Out']) {
       setErrorMessage('Cannot delete a checked out book.');
       setDeleteButtonText('Error');
@@ -107,10 +108,10 @@ export default function Table(props: tableProps) {
   };
   const handleDelete = async () => {
     setDeleteButtonText('Deleting...');
-
+    if (!selectedRowData) return;
     const res = await axios.delete(`${url}/api/books/${selectedRowData.id}`);
     if (res.status === 200) {
-      setData(data.filter((item) => item.id !== selectedRowData.id));
+      setData(data.filter((item: any) => item.id !== selectedRowData.id));
       setIsModalOpen(false);
       setDeleteButtonText('Delete');
     } else {

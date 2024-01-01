@@ -36,7 +36,7 @@ export default async function postHandler(req: NextApiRequest) {
   const generateBarcode = async () => {
     // generates 5-digit barcodes from 00000-99999
     // increments barcode of last created book
-    const padWithZeros = (number) => {
+    const padWithZeros = (number: number) => {
       let strNumber = number.toString();
       while (strNumber.length < 5) {
         strNumber = '0' + strNumber;
