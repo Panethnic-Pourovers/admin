@@ -1,6 +1,5 @@
 import { BooksContext, formatDate } from '@/pages/books';
 import getEnvUrl from '@/src/utils/getEnvUrl';
-import theme from '@/styles/Theme';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
